@@ -10,7 +10,7 @@ const AppLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <SidebarProvider defaultIsOpen={true}>
+    <SidebarProvider defaultOpen={true}>
       <div className="flex h-screen w-full overflow-hidden bg-background">
         <AppSidebar />
         <div className="flex flex-col flex-1 w-full overflow-hidden">
