@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -24,7 +23,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-// Sample data for current orders from the Orders page structure
 const initialCurrentOrders = [
   {
     id: 1,
@@ -225,7 +223,6 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Enhanced metrics section with 6 important KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
           <CardHeader className="pb-2">
@@ -321,7 +318,6 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Current Orders Section with Tabs and Status Filters */}
       <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-6">
         <Tabs defaultValue="current-orders" className="w-full">
           <div className="flex border-b">
@@ -343,51 +339,6 @@ const Index = () => {
           
           <TabsContent value="current-orders" className="m-0">
             <div className="p-4 bg-white dark:bg-card">
-              <div className="flex flex-wrap gap-3 mb-4">
-                <Button 
-                  onClick={() => setActiveFilter("all")}
-                  variant={activeFilter === "all" ? "default" : "outline"}
-                  className={activeFilter === "all" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
-                >
-                  All Orders
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("new")}
-                  variant={activeFilter === "new" ? "default" : "outline"}
-                  className={activeFilter === "new" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
-                >
-                  New Orders
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("received")}
-                  variant={activeFilter === "received" ? "default" : "outline"}
-                  className={activeFilter === "received" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
-                >
-                  Order Received
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("progress")}
-                  variant={activeFilter === "progress" ? "default" : "outline"}
-                  className={activeFilter === "progress" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
-                >
-                  Orders In Progress
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("ready")}
-                  variant={activeFilter === "ready" ? "default" : "outline"}
-                  className={activeFilter === "ready" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
-                >
-                  Ready for collect
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("collected")}
-                  variant={activeFilter === "collected" ? "default" : "outline"}
-                  className={activeFilter === "collected" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
-                >
-                  Order collected
-                </Button>
-              </div>
-              
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-cyan-600 text-white">
@@ -479,7 +430,6 @@ const Index = () => {
         </Tabs>
       </div>
       
-      {/* Today's Schedule Section - Moved to the end */}
       <Card className="mb-6">
         <CardHeader>
           <CardTitle>Today's Schedule</CardTitle>
