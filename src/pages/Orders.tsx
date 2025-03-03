@@ -262,6 +262,11 @@ const Orders = () => {
     }
   };
 
+  // Function to get button variant based on selected status
+  const getButtonVariant = (status: string) => {
+    return statusFilter === status ? "default" : "outline";
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-6">
       <h1 className="text-3xl font-bold mb-6">Orders Management</h1>
@@ -278,61 +283,73 @@ const Orders = () => {
               <CardTitle>Current Orders</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-col md:flex-row gap-2 mb-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    type="text"
-                    placeholder="Search by order ID, customer name..."
-                    className="pl-8"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  {searchQuery && (
-                    <button 
-                      onClick={() => setSearchQuery("")}
-                      className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
+              {/* Search Bar */}
+              <div className="relative flex-1 mb-4">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  type="text"
+                  placeholder="Search by order ID, customer name..."
+                  className="pl-8"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery("")}
+                    className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+              
+              {/* Status Filter Buttons */}
+              <div className="flex flex-wrap gap-2 mb-4">
+                <Button 
+                  variant={statusFilter === null ? "default" : "outline"} 
+                  size="sm" 
+                  onClick={() => setStatusFilter(null)}
+                  className="flex items-center gap-1"
+                >
+                  All Statuses
+                </Button>
+                {currentOrderStatuses.map((status) => (
+                  <Button 
+                    key={status}
+                    variant={getButtonVariant(status)}
+                    size="sm"
+                    onClick={() => setStatusFilter(status)}
+                    className={`flex items-center gap-1 ${statusFilter === status ? '' : 'border-gray-200'}`}
+                  >
+                    {status}
+                  </Button>
+                ))}
+              </div>
+              
+              {/* Additional Filters */}
+              <div className="flex gap-2 mb-4">
+                <select 
+                  className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  value={serviceTypeFilter || ""}
+                  onChange={(e) => setServiceTypeFilter(e.target.value || null)}
+                >
+                  <option value="">All Service Types</option>
+                  {uniqueServiceTypes.map(type => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
                 
-                <div className="flex gap-2">
-                  <select 
-                    className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={statusFilter || ""}
-                    onChange={(e) => setStatusFilter(e.target.value || null)}
+                {(searchQuery || statusFilter || serviceTypeFilter) && (
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={clearFilters}
+                    className="flex items-center gap-1"
                   >
-                    <option value="">All Statuses</option>
-                    {currentOrderStatuses.map(status => (
-                      <option key={status} value={status}>{status}</option>
-                    ))}
-                  </select>
-                  
-                  <select 
-                    className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    value={serviceTypeFilter || ""}
-                    onChange={(e) => setServiceTypeFilter(e.target.value || null)}
-                  >
-                    <option value="">All Service Types</option>
-                    {uniqueServiceTypes.map(type => (
-                      <option key={type} value={type}>{type}</option>
-                    ))}
-                  </select>
-                  
-                  {(searchQuery || statusFilter || serviceTypeFilter) && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={clearFilters}
-                      className="flex items-center gap-1"
-                    >
-                      <RefreshCcw className="h-4 w-4" />
-                      Clear
-                    </Button>
-                  )}
-                </div>
+                    <RefreshCcw className="h-4 w-4" />
+                    Clear Filters
+                  </Button>
+                )}
               </div>
               
               <Table>
