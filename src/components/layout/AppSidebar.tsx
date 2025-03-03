@@ -5,11 +5,9 @@ import {
   LayoutDashboard, 
   ShoppingBag, 
   DollarSign, 
-  Truck, 
-  Shirt, 
-  Settings, 
   HelpCircle, 
   UserCircle, 
+  Settings, 
   ChevronLeft, 
   Menu
 } from 'lucide-react';
@@ -61,35 +59,23 @@ const AppSidebar: React.FC = () => {
           <SidebarLink to="/orders" icon={<ShoppingBag className="h-4 w-4" />}>
             Orders
           </SidebarLink>
-          <SidebarLink to="/services" icon={<Shirt className="h-4 w-4" />}>
-            Services
-          </SidebarLink>
-          <SidebarLink to="/drivers" icon={<Truck className="h-4 w-4" />}>
-            Drivers
-          </SidebarLink>
           <SidebarLink to="/revenue" icon={<DollarSign className="h-4 w-4" />}>
             Revenue
           </SidebarLink>
-        </div>
-        
-        <div className="mt-10">
-          <p className="px-3 text-xs font-medium text-muted-foreground">Settings</p>
-          <div className="mt-2 space-y-1">
-            <SidebarLink to="/settings" icon={<Settings className="h-4 w-4" />}>
-              Settings
-            </SidebarLink>
-            <SidebarLink to="/support" icon={<HelpCircle className="h-4 w-4" />}>
-              Support
-            </SidebarLink>
-            <SidebarLink to="/profile" icon={<UserCircle className="h-4 w-4" />}>
-              Profile
-            </SidebarLink>
-          </div>
+          <SidebarLink to="/support" icon={<HelpCircle className="h-4 w-4" />}>
+            Support
+          </SidebarLink>
+          <SidebarLink to="/profile" icon={<UserCircle className="h-4 w-4" />}>
+            Profile
+          </SidebarLink>
+          <SidebarLink to="/settings" icon={<Settings className="h-4 w-4" />}>
+            Settings
+          </SidebarLink>
         </div>
       </SidebarContent>
       <SidebarFooter className="p-4 text-xs text-muted-foreground">
         <div className="flex flex-col space-y-1">
-          <span>© {new Date().getFullYear()} Laundry Lounge</span>
+          <span>© {new Date().getFullYear()} Skawsh Laundry Studio</span>
           <span>v1.0.0</span>
         </div>
       </SidebarFooter>
