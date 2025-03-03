@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -121,7 +122,30 @@ const ordersData = [
     washType: "Wash & Fold",
     serviceType: "Express",
     price: 480,
-    status: "Order collected"
+    status: "Order collected",
+    completed: true // Mark as completed for pending payment
+  },
+  {
+    id: 11,
+    orderId: "ORD-1011",
+    orderDate: "05/02/25",
+    weightQuantity: "3.8Kg",
+    washType: "Wash & Iron",
+    serviceType: "Standard",
+    price: 390,
+    status: "Order collected",
+    completed: true // Mark as completed for pending payment
+  },
+  {
+    id: 12,
+    orderId: "ORD-1012",
+    orderDate: "06/02/25",
+    weightQuantity: "2.5Kg",
+    washType: "Wash & Fold",
+    serviceType: "Quick",
+    price: 275,
+    status: "Order collected",
+    completed: false // Not marked as completed yet
   }
 ];
 
@@ -137,7 +161,8 @@ const orderHistoryData = ordersData.filter(order => order.status === "Order coll
   orderType: ["Regular", "Express", "Premium", "Standard"][Math.floor(Math.random() * 4)],
   orderDate: order.orderDate,
   completionDate: "05/02/25", // Same completion date for all collected orders
-  status: "Order collected"
+  status: "Order collected",
+  completed: order.completed || false // Pass through the completed status
 }));
 
 // Date filter options
@@ -269,6 +294,9 @@ const Orders = () => {
     (searchQuery === "" || 
      order.orderId.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  // Get orders for pending payments - only completed orders should be shown here
+  const pendingPaymentOrders = orderHistoryData.filter(order => order.completed === true);
 
   // Apply date filters to order history
   const applyDateFilter = (historyData) => {
