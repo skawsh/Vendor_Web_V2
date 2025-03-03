@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,43 +19,44 @@ const currentOrders = [
     orderId: "12321",
     customerName: "John Doe",
     serviceType: "Wash & Fold",
-    status: "Received"
+    status: "New order"
   },
   {
     sNo: 2,
     orderId: "SUN15",
     customerName: "Jane Smith",
     serviceType: "Dry Cleaning",
-    status: "Processing"
+    status: "Order received"
   },
   {
     sNo: 3,
     orderId: "MAX22",
     customerName: "David Lee",
     serviceType: "Wash & Iron",
-    status: "Out for Delivery"
+    status: "Order in progress"
   },
   {
     sNo: 4,
     orderId: "LON77",
     customerName: "Emily White",
     serviceType: "Shoe Cleaning",
-    status: "Delivered"
+    status: "Ready for collect"
   },
   {
     sNo: 5,
     orderId: "CLE45",
     customerName: "Kevin Brown",
     serviceType: "Bedding & Linen",
-    status: "Cancelled"
+    status: "Order collected"
   }
 ];
 
 const currentOrderStatuses = [
-  "Received",
-  "Processing",
-  "Out for Delivery",
-  "Delivered",
+  "New order",
+  "Order received",
+  "Order in progress",
+  "Ready for collect",
+  "Order collected",
   "Cancelled"
 ];
 
@@ -240,6 +242,26 @@ const Orders = () => {
     setServiceTypeFilter(null);
   };
 
+  // Function to get status color based on the order status
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "New order":
+        return "bg-blue-100 text-blue-800";
+      case "Order received":
+        return "bg-purple-100 text-purple-800";
+      case "Order in progress":
+        return "bg-yellow-100 text-yellow-800";
+      case "Ready for collect":
+        return "bg-green-100 text-green-800";
+      case "Order collected":
+        return "bg-gray-100 text-gray-800";
+      case "Cancelled":
+        return "bg-red-100 text-red-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-6">
       <h1 className="text-3xl font-bold mb-6">Orders Management</h1>
@@ -333,15 +355,20 @@ const Orders = () => {
                         <TableCell>{order.customerName}</TableCell>
                         <TableCell>{order.serviceType}</TableCell>
                         <TableCell>
-                          <select 
-                            className="px-4 py-2 rounded-md border bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                            defaultValue={order.status}
-                            onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
-                          >
-                            {currentOrderStatuses.map((status) => (
-                              <option key={status} value={status}>{status}</option>
-                            ))}
-                          </select>
+                          <div className="flex flex-col gap-2">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                              {order.status}
+                            </span>
+                            <select 
+                              className="px-4 py-2 rounded-md border bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                              defaultValue={order.status}
+                              onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
+                            >
+                              {currentOrderStatuses.map((status) => (
+                                <option key={status} value={status}>{status}</option>
+                              ))}
+                            </select>
+                          </div>
                         </TableCell>
                         <TableCell>
                           <Button 
