@@ -125,7 +125,7 @@ const ordersData = [
   }
 ];
 
-// Order history data - now we're only showing "Order collected" items
+// Order history data - now using the actual "Order collected" items from ordersData
 const orderHistoryData = ordersData.filter(order => order.status === "Order collected").map((order, index) => ({
   slNo: index + 1,
   orderId: order.orderId,
@@ -133,7 +133,7 @@ const orderHistoryData = ordersData.filter(order => order.status === "Order coll
   serviceType: order.washType,
   washType: order.serviceType,
   weightQuantity: order.weightQuantity,
-  price: order.price.toString(),
+  price: order.price,
   orderType: ["Regular", "Express", "Premium", "Standard"][Math.floor(Math.random() * 4)],
   orderDate: order.orderDate,
   completionDate: "05/02/25", // Same completion date for all collected orders
@@ -508,65 +508,60 @@ const Orders = () => {
         </TabsContent>
         
         <TabsContent value="history">
-          <div className="p-6 border rounded-lg">
-            <div className="flex justify-between items-center mb-4">
-              <Button variant="outline" className="border-2">
-                Export
-              </Button>
+          <div className="rounded-lg overflow-hidden border-2 border-[#0F7EA3] bg-[#0F7EA3]">
+            <div className="flex flex-wrap p-2 bg-[#0F7EA3] rounded-t-lg overflow-x-auto">
+              <h3 className="text-white font-semibold px-4 py-2">Order History - Completed Orders</h3>
             </div>
             
-            <div className="rounded-md border-2 overflow-x-auto">
-              <Table>
-                <TableHeader className="bg-[#0F7EA3] text-white">
-                  <TableRow className="border-[#0F7EA3] hover:bg-[#0F7EA3]">
-                    <TableHead className="text-white font-bold">S.No</TableHead>
-                    <TableHead className="text-white font-bold">Order ID</TableHead>
-                    <TableHead className="text-white font-bold">Customer Name</TableHead>
-                    <TableHead className="text-white font-bold">Service Type</TableHead>
-                    <TableHead className="text-white font-bold">Wash Type</TableHead>
-                    <TableHead className="text-white font-bold">Weight / Quantity</TableHead>
-                    <TableHead className="text-white font-bold">Price (₹)</TableHead>
-                    <TableHead className="text-white font-bold">Order Date</TableHead>
-                    <TableHead className="text-white font-bold">Completion Date</TableHead>
-                    <TableHead className="text-white font-bold">Actions</TableHead>
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#0F7EA3] border-none">
+                  <TableHead className="text-white font-bold">S.No</TableHead>
+                  <TableHead className="text-white font-bold">Order ID</TableHead>
+                  <TableHead className="text-white font-bold">Customer Name</TableHead>
+                  <TableHead className="text-white font-bold">Service Type</TableHead>
+                  <TableHead className="text-white font-bold">Wash Type</TableHead>
+                  <TableHead className="text-white font-bold">Weight / Quantity</TableHead>
+                  <TableHead className="text-white font-bold">Price (₹)</TableHead>
+                  <TableHead className="text-white font-bold">Order Date</TableHead>
+                  <TableHead className="text-white font-bold">Completion Date</TableHead>
+                  <TableHead className="text-white font-bold">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrderHistory.map((order, index) => (
+                  <TableRow key={order.orderId} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                    <TableCell>{order.slNo}</TableCell>
+                    <TableCell className="font-medium">#{order.orderId}</TableCell>
+                    <TableCell>{order.customerName}</TableCell>
+                    <TableCell>{order.serviceType}</TableCell>
+                    <TableCell>{order.washType}</TableCell>
+                    <TableCell>{order.weightQuantity}</TableCell>
+                    <TableCell>₹{order.price}</TableCell>
+                    <TableCell>{order.orderDate}</TableCell>
+                    <TableCell>{order.completionDate}</TableCell>
+                    <TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              className="rounded-full bg-black text-white w-8 h-8 p-0"
+                              onClick={() => viewOrderDetails(order.orderId)}
+                            >
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View order details</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </TableCell>
                   </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredOrderHistory.map((order, index) => (
-                    <TableRow key={order.orderId} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
-                      <TableCell>{order.slNo}</TableCell>
-                      <TableCell className="font-medium">#{order.orderId}</TableCell>
-                      <TableCell>{order.customerName}</TableCell>
-                      <TableCell>{order.serviceType}</TableCell>
-                      <TableCell>{order.washType}</TableCell>
-                      <TableCell>{order.weightQuantity}</TableCell>
-                      <TableCell>₹{order.price}</TableCell>
-                      <TableCell>{order.orderDate}</TableCell>
-                      <TableCell>{order.completionDate}</TableCell>
-                      <TableCell>
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                className="bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
-                                onClick={() => viewOrderDetails(order.orderId)}
-                              >
-                                Details
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>View detailed order information</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                ))}
+              </TableBody>
+            </Table>
           </div>
         </TabsContent>
       </Tabs>
