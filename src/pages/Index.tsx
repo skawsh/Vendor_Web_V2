@@ -74,6 +74,56 @@ const initialCurrentOrders = [
     serviceType: "Standard",
     price: 320,
     status: "Order Received"
+  },
+  {
+    id: 6,
+    orderId: "ORD-1006",
+    orderDate: "03/02/25",
+    weightQuantity: "3Kg",
+    washType: "Wash & Fold",
+    serviceType: "Express",
+    price: 380,
+    status: "Orders In Progress"
+  },
+  {
+    id: 7,
+    orderId: "ORD-1007",
+    orderDate: "03/02/25",
+    weightQuantity: "2Kg",
+    washType: "Wash & Iron",
+    serviceType: "Standard",
+    price: 150,
+    status: "Orders In Progress"
+  },
+  {
+    id: 8,
+    orderId: "ORD-1008",
+    orderDate: "01/02/25",
+    weightQuantity: "3.5Kg",
+    washType: "Dry Clean",
+    serviceType: "Express",
+    price: 550,
+    status: "Orders Ready"
+  },
+  {
+    id: 9,
+    orderId: "ORD-1009",
+    orderDate: "02/02/25",
+    weightQuantity: "2.8Kg",
+    washType: "Wash & Iron",
+    serviceType: "Quick",
+    price: 220,
+    status: "Orders Ready"
+  },
+  {
+    id: 10,
+    orderId: "ORD-1010",
+    orderDate: "01/02/25",
+    weightQuantity: "4.2Kg",
+    washType: "Wash & Fold",
+    serviceType: "Standard",
+    price: 420,
+    status: "Delivered"
   }
 ];
 
@@ -244,119 +294,123 @@ const Index = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden lg:col-span-2">
-          <div className="p-6 border-b">
-            <h2 className="text-xl font-semibold">Current Orders</h2>
-            <p className="text-sm text-muted-foreground">Manage your active laundry orders</p>
-          </div>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader className="bg-slate-800 text-white">
-                <TableRow className="border-slate-700 hover:bg-slate-800">
-                  <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
-                  <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
-                  <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
-                  <TableHead className="text-slate-100 font-medium">Weight / Qty</TableHead>
-                  <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
-                  <TableHead className="text-slate-100 font-medium">Status</TableHead>
-                  <TableHead className="text-slate-100 font-medium">Actions</TableHead>
+      {/* Current Orders Section - Full Width */}
+      <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-6">
+        <div className="p-6 border-b">
+          <h2 className="text-xl font-semibold">Current Orders</h2>
+          <p className="text-sm text-muted-foreground">All orders with their current status</p>
+        </div>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader className="bg-slate-800 text-white">
+              <TableRow className="border-slate-700 hover:bg-slate-800">
+                <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
+                <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
+                <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
+                <TableHead className="text-slate-100 font-medium">Weight / Qty</TableHead>
+                <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
+                <TableHead className="text-slate-100 font-medium">Status</TableHead>
+                <TableHead className="text-slate-100 font-medium">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredOrders.map((order) => (
+                <TableRow key={order.id} className="table-row-hover">
+                  <TableCell className="font-medium">#{order.orderId}</TableCell>
+                  <TableCell>{order.serviceType}</TableCell>
+                  <TableCell>{order.washType}</TableCell>
+                  <TableCell>{order.weightQuantity}</TableCell>
+                  <TableCell>₹{order.price}</TableCell>
+                  <TableCell>
+                    <span className={cn(
+                      "px-2 py-1 rounded-full text-xs",
+                      order.status === "New Orders"
+                        ? "bg-blue-100 text-blue-700"
+                        : order.status === "Order Received"
+                          ? "bg-purple-100 text-purple-700"
+                          : order.status === "Orders In Progress"
+                            ? "bg-amber-100 text-amber-700" 
+                            : order.status === "Orders Ready"
+                              ? "bg-emerald-100 text-emerald-700"
+                              : order.status === "Delivered"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-700"
+                    )}>
+                      {order.status}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <Button 
+                      size="sm" 
+                      onClick={() => handleViewOrderDetails(order.orderId)}
+                      variant="outline"
+                      className="flex items-center gap-1 bg-laundry-50 text-laundry-700 border-laundry-200 hover:bg-laundry-100"
+                    >
+                      <FileText className="h-4 w-4" />
+                      Details
+                    </Button>
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrders.slice(0, 5).map((order) => (
-                  <TableRow key={order.id} className="table-row-hover">
-                    <TableCell className="font-medium">#{order.orderId}</TableCell>
-                    <TableCell>{order.serviceType}</TableCell>
-                    <TableCell>{order.washType}</TableCell>
-                    <TableCell>{order.weightQuantity}</TableCell>
-                    <TableCell>₹{order.price}</TableCell>
-                    <TableCell>
-                      <span className={cn(
-                        "px-2 py-1 rounded-full text-xs",
-                        order.status === "New Orders"
-                          ? "bg-blue-100 text-blue-700"
-                          : order.status === "Order Received"
-                            ? "bg-purple-100 text-purple-700"
-                            : order.status === "Orders In Progress"
-                              ? "bg-amber-100 text-amber-700" 
-                              : "bg-green-100 text-green-700"
-                      )}>
-                        {order.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <Button 
-                        size="sm" 
-                        onClick={() => handleViewOrderDetails(order.orderId)}
-                        variant="outline"
-                        className="flex items-center gap-1 bg-laundry-50 text-laundry-700 border-laundry-200 hover:bg-laundry-100"
-                      >
-                        <FileText className="h-4 w-4" />
-                        Details
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            <div className="p-4 text-center">
-              <Link to="/orders">
-                <Button variant="outline" className="text-blue-600 hover:text-blue-700">
-                  View All Orders
-                </Button>
-              </Link>
-            </div>
+              ))}
+            </TableBody>
+          </Table>
+          <div className="p-4 text-center">
+            <Link to="/orders">
+              <Button variant="outline" className="text-blue-600 hover:text-blue-700">
+                View All Orders
+              </Button>
+            </Link>
           </div>
         </div>
-        
-        <Card className="h-full">
-          <CardHeader>
-            <CardTitle>Today's Schedule</CardTitle>
-            <CardDescription>Upcoming pickups and deliveries</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-blue-100 rounded-md">
-                  <Calendar className="h-4 w-4 text-blue-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Pickup - Sarah Johnson</p>
-                  <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
-                </div>
+      </div>
+      
+      {/* Today's Schedule Section - Moved to the end */}
+      <Card className="mb-6">
+        <CardHeader>
+          <CardTitle>Today's Schedule</CardTitle>
+          <CardDescription>Upcoming pickups and deliveries</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="flex items-start gap-3 pb-3 border-b">
+              <div className="p-2 bg-blue-100 rounded-md">
+                <Calendar className="h-4 w-4 text-blue-500" />
               </div>
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-green-100 rounded-md">
-                  <PackageCheck className="h-4 w-4 text-green-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Delivery - John Smith</p>
-                  <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-purple-100 rounded-md">
-                  <Calendar className="h-4 w-4 text-purple-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Pickup - Robert Williams</p>
-                  <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-amber-100 rounded-md">
-                  <PackageCheck className="h-4 w-4 text-amber-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Delivery - Emma Davis</p>
-                  <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
-                </div>
+              <div>
+                <p className="font-medium">Pickup - Sarah Johnson</p>
+                <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="flex items-start gap-3 pb-3 border-b">
+              <div className="p-2 bg-green-100 rounded-md">
+                <PackageCheck className="h-4 w-4 text-green-500" />
+              </div>
+              <div>
+                <p className="font-medium">Delivery - John Smith</p>
+                <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 pb-3 border-b">
+              <div className="p-2 bg-purple-100 rounded-md">
+                <Calendar className="h-4 w-4 text-purple-500" />
+              </div>
+              <div>
+                <p className="font-medium">Pickup - Robert Williams</p>
+                <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3 pb-3 border-b">
+              <div className="p-2 bg-amber-100 rounded-md">
+                <PackageCheck className="h-4 w-4 text-amber-500" />
+              </div>
+              <div>
+                <p className="font-medium">Delivery - Emma Davis</p>
+                <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
