@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 // Sample data for current orders from the Orders page structure
 const initialCurrentOrders = [
@@ -131,11 +132,26 @@ const Index = () => {
   const [currentOrders, setCurrentOrders] = useState(initialCurrentOrders);
   const [isStudioActive, setIsStudioActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState("all");
 
   const handleViewOrderDetails = (orderId: string) => {
     toast.info(`Viewing details for order ${orderId}`, {
       description: "Opening order details view."
     });
+  };
+
+  const handleMarkReceived = (orderId: string) => {
+    toast.success(`Order ${orderId} marked as received`, {
+      description: "Order status updated successfully."
+    });
+    
+    setCurrentOrders(prevOrders =>
+      prevOrders.map(order =>
+        order.orderId === orderId
+          ? { ...order, status: "Order Received" }
+          : order
+      )
+    );
   };
 
   const handleStudioStatusChange = (newStatus: boolean) => {
@@ -145,13 +161,24 @@ const Index = () => {
     });
   };
 
-  const filteredOrders = currentOrders.filter(order => 
+  const filteredBySearch = currentOrders.filter(order => 
     order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.washType.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.serviceType.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.price.toString().includes(searchQuery)
   );
+
+  const filteredOrders = activeFilter === "all" 
+    ? filteredBySearch 
+    : filteredBySearch.filter(order => {
+        if (activeFilter === "new") return order.status === "New Orders";
+        if (activeFilter === "received") return order.status === "Order Received";
+        if (activeFilter === "progress") return order.status === "Orders In Progress";
+        if (activeFilter === "ready") return order.status === "Orders Ready";
+        if (activeFilter === "collected") return order.status === "Delivered";
+        return true;
+      });
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -294,74 +321,162 @@ const Index = () => {
         </div>
       </div>
 
-      {/* Current Orders Section - Full Width */}
+      {/* Current Orders Section with Tabs and Status Filters */}
       <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-6">
-        <div className="p-6 border-b">
-          <h2 className="text-xl font-semibold">Current Orders</h2>
-          <p className="text-sm text-muted-foreground">All orders with their current status</p>
-        </div>
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader className="bg-slate-800 text-white">
-              <TableRow className="border-slate-700 hover:bg-slate-800">
-                <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
-                <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
-                <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
-                <TableHead className="text-slate-100 font-medium">Weight / Qty</TableHead>
-                <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
-                <TableHead className="text-slate-100 font-medium">Status</TableHead>
-                <TableHead className="text-slate-100 font-medium">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOrders.map((order) => (
-                <TableRow key={order.id} className="table-row-hover">
-                  <TableCell className="font-medium">#{order.orderId}</TableCell>
-                  <TableCell>{order.serviceType}</TableCell>
-                  <TableCell>{order.washType}</TableCell>
-                  <TableCell>{order.weightQuantity}</TableCell>
-                  <TableCell>₹{order.price}</TableCell>
-                  <TableCell>
-                    <span className={cn(
-                      "px-2 py-1 rounded-full text-xs",
-                      order.status === "New Orders"
-                        ? "bg-blue-100 text-blue-700"
-                        : order.status === "Order Received"
-                          ? "bg-purple-100 text-purple-700"
-                          : order.status === "Orders In Progress"
-                            ? "bg-amber-100 text-amber-700" 
-                            : order.status === "Orders Ready"
-                              ? "bg-emerald-100 text-emerald-700"
-                              : order.status === "Delivered"
-                                ? "bg-green-100 text-green-700"
-                                : "bg-gray-100 text-gray-700"
-                    )}>
-                      {order.status}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <Button 
-                      size="sm" 
-                      onClick={() => handleViewOrderDetails(order.orderId)}
-                      variant="outline"
-                      className="flex items-center gap-1 bg-laundry-50 text-laundry-700 border-laundry-200 hover:bg-laundry-100"
-                    >
-                      <FileText className="h-4 w-4" />
-                      Details
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          <div className="p-4 text-center">
-            <Link to="/orders">
-              <Button variant="outline" className="text-blue-600 hover:text-blue-700">
-                View All Orders
-              </Button>
-            </Link>
+        <Tabs defaultValue="current-orders" className="w-full">
+          <div className="flex border-b">
+            <TabsList className="h-auto p-0 bg-transparent">
+              <TabsTrigger 
+                value="current-orders" 
+                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-8 py-4 font-medium text-base"
+              >
+                Current orders
+              </TabsTrigger>
+              <TabsTrigger 
+                value="orders-history" 
+                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-8 py-4 font-medium text-base"
+              >
+                Orders history
+              </TabsTrigger>
+            </TabsList>
           </div>
-        </div>
+          
+          <TabsContent value="current-orders" className="m-0">
+            <div className="p-4 bg-white dark:bg-card">
+              <div className="flex flex-wrap gap-3 mb-4">
+                <Button 
+                  onClick={() => setActiveFilter("all")}
+                  variant={activeFilter === "all" ? "default" : "outline"}
+                  className={activeFilter === "all" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  All Orders
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("new")}
+                  variant={activeFilter === "new" ? "default" : "outline"}
+                  className={activeFilter === "new" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  New Orders
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("received")}
+                  variant={activeFilter === "received" ? "default" : "outline"}
+                  className={activeFilter === "received" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Order Received
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("progress")}
+                  variant={activeFilter === "progress" ? "default" : "outline"}
+                  className={activeFilter === "progress" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Orders In Progress
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("ready")}
+                  variant={activeFilter === "ready" ? "default" : "outline"}
+                  className={activeFilter === "ready" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Ready for collect
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("collected")}
+                  variant={activeFilter === "collected" ? "default" : "outline"}
+                  className={activeFilter === "collected" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Order collected
+                </Button>
+              </div>
+              
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader className="bg-cyan-600 text-white">
+                    <TableRow className="border-none hover:bg-cyan-600">
+                      <TableHead className="text-white font-medium">Sl No</TableHead>
+                      <TableHead className="text-white font-medium">Order ID</TableHead>
+                      <TableHead className="text-white font-medium">Order date</TableHead>
+                      <TableHead className="text-white font-medium">Weight/ Quantity</TableHead>
+                      <TableHead className="text-white font-medium">Wash Type</TableHead>
+                      <TableHead className="text-white font-medium">Service Type</TableHead>
+                      <TableHead className="text-white font-medium">Price</TableHead>
+                      <TableHead className="text-white font-medium">Status</TableHead>
+                      <TableHead className="text-white font-medium">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredOrders.map((order, index) => (
+                      <TableRow key={order.id} className="hover:bg-gray-50 even:bg-gray-50/50">
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell className="font-medium">
+                          {order.orderId}
+                        </TableCell>
+                        <TableCell>{order.orderDate}</TableCell>
+                        <TableCell>{order.weightQuantity}</TableCell>
+                        <TableCell>{order.washType}</TableCell>
+                        <TableCell>{order.serviceType}</TableCell>
+                        <TableCell>₹{order.price}</TableCell>
+                        <TableCell>
+                          <span className={cn(
+                            "px-2 py-1 rounded-full text-xs font-medium",
+                            order.status === "New Orders"
+                              ? "bg-blue-100 text-blue-700"
+                              : order.status === "Order Received"
+                                ? "bg-purple-100 text-purple-700"
+                                : order.status === "Orders In Progress"
+                                  ? "bg-amber-100 text-amber-700" 
+                                  : order.status === "Orders Ready"
+                                    ? "bg-emerald-100 text-emerald-700"
+                                    : order.status === "Delivered"
+                                      ? "bg-green-100 text-green-700"
+                                      : "bg-gray-100 text-gray-700"
+                          )}>
+                            {order.status}
+                          </span>
+                        </TableCell>
+                        <TableCell className="flex items-center gap-2">
+                          {order.status === "New Orders" && (
+                            <Button 
+                              size="sm" 
+                              onClick={() => handleMarkReceived(order.orderId)}
+                              className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200"
+                            >
+                              Mark Received
+                            </Button>
+                          )}
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="rounded-full p-2 w-9 h-9"
+                            onClick={() => handleViewOrderDetails(order.orderId)}
+                          >
+                            <FileText className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+              <div className="p-4 text-center">
+                <Link to="/orders">
+                  <Button variant="outline" className="text-blue-600 hover:text-blue-700">
+                    View All Orders
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="orders-history" className="m-0">
+            <div className="p-12 text-center">
+              <h3 className="text-lg font-medium mb-2">Orders History</h3>
+              <p className="text-muted-foreground">View your past orders and their details here</p>
+              <Button className="mt-4 bg-cyan-600 hover:bg-cyan-700">
+                View Complete History
+              </Button>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
       
       {/* Today's Schedule Section - Moved to the end */}
