@@ -4,7 +4,8 @@ import {
   ShoppingBag, 
   DollarSign, 
   CheckCircle,
-  Calendar
+  Calendar,
+  FileText
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-// Mock data for ongoing orders
 const initialOngoingOrders = [
   {
     sNo: 1,
@@ -57,22 +57,11 @@ const initialOngoingOrders = [
 ];
 
 const Index = () => {
-  // State for ongoing orders
   const [ongoingOrders, setOngoingOrders] = useState(initialOngoingOrders);
 
-  // Handle accepting an order
-  const handleAcceptOrder = (orderId: string) => {
-    setOngoingOrders(prevOrders => 
-      prevOrders.map(order => 
-        order.orderId === orderId 
-          ? { ...order, status: "Accepted" } 
-          : order
-      )
-    );
-    
-    // Show toast notification
-    toast.success(`Order ${orderId} has been accepted`, {
-      description: "The order has been moved to processing."
+  const handleViewOrderDetails = (orderId: string) => {
+    toast.info(`Viewing details for order ${orderId}`, {
+      description: "Opening order details view."
     });
   };
 
@@ -83,7 +72,6 @@ const Index = () => {
         <p className="text-muted-foreground">Welcome to your laundry management system</p>
       </header>
 
-      {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <Card className="card-stats card-stats-blue">
           <CardHeader className="pb-2">
@@ -138,7 +126,6 @@ const Index = () => {
         </Card>
       </div>
 
-      {/* Ongoing Orders Table */}
       <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-8">
         <div className="p-6 border-b">
           <h2 className="text-xl font-semibold">Ongoing Orders</h2>
@@ -175,20 +162,15 @@ const Index = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  {order.status === "Pending" ? (
-                    <Button 
-                      size="sm" 
-                      onClick={() => handleAcceptOrder(order.orderId)}
-                      className="bg-mint-600 hover:bg-mint-700"
-                    >
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Accept
-                    </Button>
-                  ) : (
-                    <Button size="sm" variant="outline" disabled>
-                      Accepted
-                    </Button>
-                  )}
+                  <Button 
+                    size="sm" 
+                    onClick={() => handleViewOrderDetails(order.orderId)}
+                    variant="outline"
+                    className="flex items-center gap-1"
+                  >
+                    <FileText className="h-4 w-4" />
+                    Details
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -196,7 +178,6 @@ const Index = () => {
         </Table>
       </div>
 
-      {/* Schedule Section */}
       <Card>
         <CardHeader>
           <CardTitle>Upcoming Schedule</CardTitle>
