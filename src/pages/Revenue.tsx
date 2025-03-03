@@ -79,58 +79,48 @@ const pendingPaymentsData = [
 const paymentHistoryData = [
   {
     id: 1,
-    paymentId: "PAY-1001",
     orderId: "ORD-1010",
     customerName: "Robert Taylor",
     paymentDate: "05/02/25",
     service: "Wash & Fold",
     washType: "Quick Wash",
-    amount: 480,
-    status: "Completed"
+    amount: 480
   },
   {
     id: 2,
-    paymentId: "PAY-1002",
     orderId: "ORD-1009",
     customerName: "Jennifer Miller",
     paymentDate: "04/02/25",
     service: "Dry clean",
     washType: "Standard Wash",
-    amount: 410,
-    status: "Completed"
+    amount: 410
   },
   {
     id: 3,
-    paymentId: "PAY-1003",
     orderId: "ORD-1008",
     customerName: "William Anderson",
     paymentDate: "03/02/25",
     service: "Wash & Iron",
     washType: "Premium Wash",
-    amount: 215,
-    status: "Completed"
+    amount: 215
   },
   {
     id: 4,
-    paymentId: "PAY-1004",
     orderId: "ORD-1007",
     customerName: "Elizabeth Thomas",
     paymentDate: "02/02/25",
     service: "Wash & Fold",
     washType: "Standard & Quick Wash",
-    amount: 520,
-    status: "Completed"
+    amount: 520
   },
   {
     id: 5,
-    paymentId: "PAY-1005",
     orderId: "ORD-1006",
     customerName: "James Jackson",
     paymentDate: "01/02/25",
     service: "Dry clean",
     washType: "Quick Wash",
-    amount: 275,
-    status: "Completed"
+    amount: 275
   }
 ];
 
@@ -207,7 +197,6 @@ const Revenue = () => {
   const filteredPaymentHistory = applyDateFilter(paymentHistoryData).filter(payment => 
     searchQuery === "" || 
     payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    payment.paymentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     payment.customerName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -445,14 +434,12 @@ const Revenue = () => {
               <TableHeader>
                 <TableRow className="bg-[#0F7EA3] border-none">
                   <TableHead className="text-white font-bold">S.No</TableHead>
-                  <TableHead className="text-white font-bold">Payment ID</TableHead>
                   <TableHead className="text-white font-bold">Order ID</TableHead>
                   <TableHead className="text-white font-bold">Customer Name</TableHead>
                   <TableHead className="text-white font-bold">Payment Date</TableHead>
                   <TableHead className="text-white font-bold">Service</TableHead>
                   <TableHead className="text-white font-bold">Wash Type</TableHead>
                   <TableHead className="text-white font-bold">Amount (₹)</TableHead>
-                  <TableHead className="text-white font-bold">Status</TableHead>
                   <TableHead className="text-white font-bold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -460,18 +447,12 @@ const Revenue = () => {
                 {filteredPaymentHistory.map((payment, index) => (
                   <TableRow key={payment.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
                     <TableCell>{payment.id}</TableCell>
-                    <TableCell>{payment.paymentId}</TableCell>
                     <TableCell className="font-medium">#{payment.orderId}</TableCell>
                     <TableCell>{payment.customerName}</TableCell>
                     <TableCell>{payment.paymentDate}</TableCell>
                     <TableCell>{payment.service}</TableCell>
                     <TableCell>{payment.washType}</TableCell>
                     <TableCell>₹{payment.amount}</TableCell>
-                    <TableCell>
-                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                        {payment.status}
-                      </span>
-                    </TableCell>
                     <TableCell className="flex items-center space-x-2">
                       <TooltipProvider>
                         <Tooltip>
@@ -511,7 +492,7 @@ const Revenue = () => {
                             <Button 
                               variant="outline" 
                               className="rounded-full bg-black text-white w-8 h-8 p-0"
-                              onClick={() => toast.info(`Viewing invoice for payment ${payment.paymentId}`)}
+                              onClick={() => toast.info(`Viewing invoice for order ${payment.orderId}`)}
                             >
                               <FileText className="h-4 w-4" />
                             </Button>
