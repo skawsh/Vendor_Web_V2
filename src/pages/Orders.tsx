@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, CheckCircle, Download, FileText, RefreshCcw, ShieldCheck, Truck, Package } from "lucide-react";
+import { Calendar, CheckCircle, Download, FileText, RefreshCcw, Filter, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
+import { Input } from "@/components/ui/input";
 
 const currentOrders = [
   {
@@ -193,6 +194,9 @@ const orderHistoryData = [
 
 const Orders = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [serviceTypeFilter, setServiceTypeFilter] = useState<string | null>(null);
 
   const handleStatusChange = (orderId: string, newStatus: string) => {
     toast.success(`Order ${orderId} status updated to ${newStatus}`, {
@@ -213,6 +217,29 @@ const Orders = () => {
     // In a real application, this would trigger a CSV download
   };
 
+  // Get unique service types for filter dropdown
+  const uniqueServiceTypes = Array.from(new Set(currentOrders.map(order => order.serviceType)));
+
+  // Filter current orders based on search and filters
+  const filteredCurrentOrders = currentOrders.filter(order => {
+    const matchesSearch = searchQuery === "" || 
+      order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.serviceType.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    const matchesStatus = statusFilter === null || order.status === statusFilter;
+    const matchesServiceType = serviceTypeFilter === null || order.serviceType === serviceTypeFilter;
+    
+    return matchesSearch && matchesStatus && matchesServiceType;
+  });
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchQuery("");
+    setStatusFilter(null);
+    setServiceTypeFilter(null);
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-6">
       <h1 className="text-3xl font-bold mb-6">Orders Management</h1>
@@ -229,6 +256,63 @@ const Orders = () => {
               <CardTitle>Current Orders</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="flex flex-col md:flex-row gap-2 mb-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    type="text"
+                    placeholder="Search by order ID, customer name..."
+                    className="pl-8"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                  {searchQuery && (
+                    <button 
+                      onClick={() => setSearchQuery("")}
+                      className="absolute right-2.5 top-2.5 text-muted-foreground hover:text-foreground"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  )}
+                </div>
+                
+                <div className="flex gap-2">
+                  <select 
+                    className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    value={statusFilter || ""}
+                    onChange={(e) => setStatusFilter(e.target.value || null)}
+                  >
+                    <option value="">All Statuses</option>
+                    {currentOrderStatuses.map(status => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                  
+                  <select 
+                    className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                    value={serviceTypeFilter || ""}
+                    onChange={(e) => setServiceTypeFilter(e.target.value || null)}
+                  >
+                    <option value="">All Service Types</option>
+                    {uniqueServiceTypes.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                  
+                  {(searchQuery || statusFilter || serviceTypeFilter) && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={clearFilters}
+                      className="flex items-center gap-1"
+                    >
+                      <RefreshCcw className="h-4 w-4" />
+                      Clear
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
               <Table>
                 <TableHeader className="bg-slate-800 text-white">
                   <TableRow className="border-slate-700 hover:bg-slate-800">
@@ -241,36 +325,44 @@ const Orders = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {currentOrders.map((order) => (
-                    <TableRow key={order.orderId} className="hover:bg-slate-50">
-                      <TableCell>{order.sNo}</TableCell>
-                      <TableCell className="font-medium">#{order.orderId}</TableCell>
-                      <TableCell>{order.customerName}</TableCell>
-                      <TableCell>{order.serviceType}</TableCell>
-                      <TableCell>
-                        <select 
-                          className="px-4 py-2 rounded-md border bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-                          defaultValue={order.status}
-                          onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
-                        >
-                          {currentOrderStatuses.map((status) => (
-                            <option key={status} value={status}>{status}</option>
-                          ))}
-                        </select>
-                      </TableCell>
-                      <TableCell>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          className="flex items-center gap-1 bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
-                          onClick={() => viewOrderDetails(order.orderId)}
-                        >
-                          <FileText className="h-4 w-4" />
-                          Details
-                        </Button>
+                  {filteredCurrentOrders.length > 0 ? (
+                    filteredCurrentOrders.map((order) => (
+                      <TableRow key={order.orderId} className="hover:bg-slate-50">
+                        <TableCell>{order.sNo}</TableCell>
+                        <TableCell className="font-medium">#{order.orderId}</TableCell>
+                        <TableCell>{order.customerName}</TableCell>
+                        <TableCell>{order.serviceType}</TableCell>
+                        <TableCell>
+                          <select 
+                            className="px-4 py-2 rounded-md border bg-white text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                            defaultValue={order.status}
+                            onChange={(e) => handleStatusChange(order.orderId, e.target.value)}
+                          >
+                            {currentOrderStatuses.map((status) => (
+                              <option key={status} value={status}>{status}</option>
+                            ))}
+                          </select>
+                        </TableCell>
+                        <TableCell>
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            className="flex items-center gap-1 bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                            onClick={() => viewOrderDetails(order.orderId)}
+                          >
+                            <FileText className="h-4 w-4" />
+                            Details
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={6} className="h-24 text-center">
+                        No orders found matching your criteria
                       </TableCell>
                     </TableRow>
-                  ))}
+                  )}
                 </TableBody>
               </Table>
             </CardContent>
@@ -297,7 +389,7 @@ const Orders = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border">
+              <div className="rounded-md border overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-slate-800 text-white">
                     <TableRow className="border-slate-700 hover:bg-slate-800">
@@ -310,7 +402,6 @@ const Orders = () => {
                       <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
                       <TableHead className="text-slate-100 font-medium">Order Date</TableHead>
                       <TableHead className="text-slate-100 font-medium">Completion Date</TableHead>
-                      <TableHead className="text-slate-100 font-medium">Status</TableHead>
                       <TableHead className="text-slate-100 font-medium">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -332,11 +423,6 @@ const Orders = () => {
                           <TableCell>₹{order.price}</TableCell>
                           <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
                           <TableCell>{new Date(order.completionDate).toLocaleDateString()}</TableCell>
-                          <TableCell>
-                            <span className="px-2 py-1 rounded-full text-xs bg-green-100 text-green-700">
-                              {order.status}
-                            </span>
-                          </TableCell>
                           <TableCell>
                             <Button 
                               size="sm" 
