@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -28,56 +27,51 @@ const pendingPaymentsData = [
     id: 1,
     orderId: "ORD-1001",
     customerName: "John Smith",
-    orderDate: "01/02/25",
+    deliveredDate: "01/02/25",
     service: "Wash & Fold",
+    washType: "Quick Wash",
     totalAmount: 395,
-    paidAmount: 0,
-    dueAmount: 395,
-    status: "Unpaid"
+    orderStatus: "In Process"
   },
   {
     id: 2,
     orderId: "ORD-1002",
     customerName: "Emily Johnson",
-    orderDate: "02/02/25",
+    deliveredDate: "02/02/25",
     service: "Dry clean",
+    washType: "Standard Wash",
     totalAmount: 300,
-    paidAmount: 150,
-    dueAmount: 150,
-    status: "Partially Paid"
+    orderStatus: "Delivered"
   },
   {
     id: 3,
     orderId: "ORD-1003",
     customerName: "Michael Brown",
-    orderDate: "03/02/25",
+    deliveredDate: "03/02/25",
     service: "Wash & Iron",
+    washType: "Quick Wash",
     totalAmount: 182,
-    paidAmount: 0,
-    dueAmount: 182,
-    status: "Unpaid"
+    orderStatus: "Ready for Pickup"
   },
   {
     id: 4,
     orderId: "ORD-1004",
     customerName: "Sarah Davis",
-    orderDate: "04/02/25",
+    deliveredDate: "04/02/25",
     service: "Wash & Fold",
+    washType: "Premium Wash",
     totalAmount: 450,
-    paidAmount: 200,
-    dueAmount: 250,
-    status: "Partially Paid"
+    orderStatus: "In Process"
   },
   {
     id: 5,
     orderId: "ORD-1005",
     customerName: "David Wilson",
-    orderDate: "05/02/25",
+    deliveredDate: "05/02/25",
     service: "Wash & Iron",
+    washType: "Standard & Quick Wash",
     totalAmount: 320,
-    paidAmount: 100,
-    dueAmount: 220,
-    status: "Partially Paid"
+    orderStatus: "Delivered"
   }
 ];
 
@@ -90,8 +84,8 @@ const paymentHistoryData = [
     customerName: "Robert Taylor",
     paymentDate: "05/02/25",
     service: "Wash & Fold",
+    washType: "Quick Wash",
     amount: 480,
-    paymentMethod: "Credit Card",
     status: "Completed"
   },
   {
@@ -101,8 +95,8 @@ const paymentHistoryData = [
     customerName: "Jennifer Miller",
     paymentDate: "04/02/25",
     service: "Dry clean",
+    washType: "Standard Wash",
     amount: 410,
-    paymentMethod: "Cash",
     status: "Completed"
   },
   {
@@ -112,8 +106,8 @@ const paymentHistoryData = [
     customerName: "William Anderson",
     paymentDate: "03/02/25",
     service: "Wash & Iron",
+    washType: "Premium Wash",
     amount: 215,
-    paymentMethod: "UPI",
     status: "Completed"
   },
   {
@@ -123,8 +117,8 @@ const paymentHistoryData = [
     customerName: "Elizabeth Thomas",
     paymentDate: "02/02/25",
     service: "Wash & Fold",
+    washType: "Standard & Quick Wash",
     amount: 520,
-    paymentMethod: "Debit Card",
     status: "Completed"
   },
   {
@@ -134,8 +128,8 @@ const paymentHistoryData = [
     customerName: "James Jackson",
     paymentDate: "01/02/25",
     service: "Dry clean",
+    washType: "Quick Wash",
     amount: 275,
-    paymentMethod: "Online Banking",
     status: "Completed"
   }
 ];
@@ -363,12 +357,11 @@ const Revenue = () => {
                   <TableHead className="text-white font-bold">S.No</TableHead>
                   <TableHead className="text-white font-bold">Order ID</TableHead>
                   <TableHead className="text-white font-bold">Customer Name</TableHead>
-                  <TableHead className="text-white font-bold">Order Date</TableHead>
+                  <TableHead className="text-white font-bold">Delivered Date</TableHead>
                   <TableHead className="text-white font-bold">Service</TableHead>
+                  <TableHead className="text-white font-bold">Wash Type</TableHead>
                   <TableHead className="text-white font-bold">Total Amount (₹)</TableHead>
-                  <TableHead className="text-white font-bold">Paid Amount (₹)</TableHead>
-                  <TableHead className="text-white font-bold">Due Amount (₹)</TableHead>
-                  <TableHead className="text-white font-bold">Status</TableHead>
+                  <TableHead className="text-white font-bold">Order Status</TableHead>
                   <TableHead className="text-white font-bold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -378,28 +371,22 @@ const Revenue = () => {
                     <TableCell>{payment.id}</TableCell>
                     <TableCell className="font-medium">#{payment.orderId}</TableCell>
                     <TableCell>{payment.customerName}</TableCell>
-                    <TableCell>{payment.orderDate}</TableCell>
+                    <TableCell>{payment.deliveredDate}</TableCell>
                     <TableCell>{payment.service}</TableCell>
+                    <TableCell>{payment.washType}</TableCell>
                     <TableCell>₹{payment.totalAmount}</TableCell>
-                    <TableCell>₹{payment.paidAmount}</TableCell>
-                    <TableCell>₹{payment.dueAmount}</TableCell>
                     <TableCell>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        payment.status === 'Unpaid' 
-                          ? 'bg-red-100 text-red-800' 
+                        payment.orderStatus === 'Delivered' 
+                          ? 'bg-green-100 text-green-800' 
+                          : payment.orderStatus === 'Ready for Pickup'
+                          ? 'bg-blue-100 text-blue-800'
                           : 'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {payment.status}
+                        {payment.orderStatus}
                       </span>
                     </TableCell>
                     <TableCell className="flex items-center space-x-2">
-                      <Button 
-                        variant="success"
-                        className="bg-[#D1FFCE] text-black font-medium"
-                        onClick={() => handlePayment(payment.orderId)}
-                      >
-                        Process Payment
-                      </Button>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
@@ -463,8 +450,8 @@ const Revenue = () => {
                   <TableHead className="text-white font-bold">Customer Name</TableHead>
                   <TableHead className="text-white font-bold">Payment Date</TableHead>
                   <TableHead className="text-white font-bold">Service</TableHead>
+                  <TableHead className="text-white font-bold">Wash Type</TableHead>
                   <TableHead className="text-white font-bold">Amount (₹)</TableHead>
-                  <TableHead className="text-white font-bold">Payment Method</TableHead>
                   <TableHead className="text-white font-bold">Status</TableHead>
                   <TableHead className="text-white font-bold">Actions</TableHead>
                 </TableRow>
@@ -478,8 +465,8 @@ const Revenue = () => {
                     <TableCell>{payment.customerName}</TableCell>
                     <TableCell>{payment.paymentDate}</TableCell>
                     <TableCell>{payment.service}</TableCell>
+                    <TableCell>{payment.washType}</TableCell>
                     <TableCell>₹{payment.amount}</TableCell>
-                    <TableCell>{payment.paymentMethod}</TableCell>
                     <TableCell>
                       <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
                         {payment.status}
@@ -547,4 +534,3 @@ const Revenue = () => {
 };
 
 export default Revenue;
-
