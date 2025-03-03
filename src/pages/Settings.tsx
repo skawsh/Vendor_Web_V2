@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon, 
-  ChevronLeft, 
   Pencil, 
   Search, 
   Plus,
@@ -13,18 +12,16 @@ import {
   Save,
   X
 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
 
 const Settings = () => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeTab, setActiveTab] = useState('services');
+  const [searchServiceQuery, setSearchServiceQuery] = useState('');
+  const [searchClothingQuery, setSearchClothingQuery] = useState('');
   const [editing, setEditing] = useState<string | null>(null);
   const [expandedSections, setExpandedSections] = useState({
     basic: true,
@@ -50,11 +47,11 @@ const Settings = () => {
   ];
 
   const filteredServices = services.filter(service => 
-    service.name.toLowerCase().includes(searchQuery.toLowerCase())
+    service.name.toLowerCase().includes(searchServiceQuery.toLowerCase())
   );
 
   const filteredClothingItems = clothingItems.filter(item => 
-    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    item.name.toLowerCase().includes(searchClothingQuery.toLowerCase())
   );
 
   const toggleSection = (section) => {
@@ -96,11 +93,11 @@ const Settings = () => {
       {/* Header with Edit Button */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-1 flex items-center gap-2">
-            <SettingsIcon className="h-8 w-8 text-primary" />
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 flex items-center gap-2">
+            <SettingsIcon className="h-6 w-6 md:h-8 md:w-8 text-primary" />
             Saiteja Laundry
           </h1>
-          <p className="text-muted-foreground">ID: STU10001</p>
+          <p className="text-sm text-muted-foreground">ID: STU10001</p>
         </div>
       </div>
 
@@ -111,7 +108,7 @@ const Settings = () => {
           <Collapsible open={expandedSections.basic}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('basic')}>
               <div className="flex justify-between items-center">
-                <CardTitle>Basic Information</CardTitle>
+                <CardTitle className="text-xl md:text-2xl">Basic Information</CardTitle>
                 <div className="flex items-center">
                   {editing !== 'basic' ? (
                     <Button 
@@ -124,7 +121,7 @@ const Settings = () => {
                       }}
                     >
                       <Pencil size={16} />
-                      <span className="ml-1">Edit</span>
+                      <span className="ml-1 hidden sm:inline">Edit</span>
                     </Button>
                   ) : (
                     <>
@@ -138,7 +135,7 @@ const Settings = () => {
                         }}
                       >
                         <Save size={16} />
-                        <span className="ml-1">Save</span>
+                        <span className="ml-1 hidden sm:inline">Save</span>
                       </Button>
                       <Button 
                         variant="outline" 
@@ -150,7 +147,7 @@ const Settings = () => {
                         }}
                       >
                         <X size={16} />
-                        <span className="ml-1">Cancel</span>
+                        <span className="ml-1 hidden sm:inline">Cancel</span>
                       </Button>
                     </>
                   )}
@@ -210,7 +207,7 @@ const Settings = () => {
           <Collapsible open={expandedSections.address}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('address')}>
               <div className="flex justify-between items-center">
-                <CardTitle>Address Details</CardTitle>
+                <CardTitle className="text-xl md:text-2xl">Address Details</CardTitle>
                 <div className="flex items-center">
                   {editing !== 'address' ? (
                     <Button 
@@ -223,7 +220,7 @@ const Settings = () => {
                       }}
                     >
                       <Pencil size={16} />
-                      <span className="ml-1">Edit</span>
+                      <span className="ml-1 hidden sm:inline">Edit</span>
                     </Button>
                   ) : (
                     <>
@@ -237,7 +234,7 @@ const Settings = () => {
                         }}
                       >
                         <Save size={16} />
-                        <span className="ml-1">Save</span>
+                        <span className="ml-1 hidden sm:inline">Save</span>
                       </Button>
                       <Button 
                         variant="outline" 
@@ -249,7 +246,7 @@ const Settings = () => {
                         }}
                       >
                         <X size={16} />
-                        <span className="ml-1">Cancel</span>
+                        <span className="ml-1 hidden sm:inline">Cancel</span>
                       </Button>
                     </>
                   )}
@@ -317,7 +314,7 @@ const Settings = () => {
           <Collapsible open={expandedSections.business}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('business')}>
               <div className="flex justify-between items-center">
-                <CardTitle>Business Details</CardTitle>
+                <CardTitle className="text-xl md:text-2xl">Business Details</CardTitle>
                 <div className="flex items-center">
                   {editing !== 'business' ? (
                     <Button 
@@ -330,7 +327,7 @@ const Settings = () => {
                       }}
                     >
                       <Pencil size={16} />
-                      <span className="ml-1">Edit</span>
+                      <span className="ml-1 hidden sm:inline">Edit</span>
                     </Button>
                   ) : (
                     <>
@@ -344,7 +341,7 @@ const Settings = () => {
                         }}
                       >
                         <Save size={16} />
-                        <span className="ml-1">Save</span>
+                        <span className="ml-1 hidden sm:inline">Save</span>
                       </Button>
                       <Button 
                         variant="outline" 
@@ -356,7 +353,7 @@ const Settings = () => {
                         }}
                       >
                         <X size={16} />
-                        <span className="ml-1">Cancel</span>
+                        <span className="ml-1 hidden sm:inline">Cancel</span>
                       </Button>
                     </>
                   )}
@@ -424,7 +421,7 @@ const Settings = () => {
           <Collapsible open={expandedSections.studio}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('studio')}>
               <div className="flex justify-between items-center">
-                <CardTitle>Studio Setup</CardTitle>
+                <CardTitle className="text-xl md:text-2xl">Studio Setup</CardTitle>
                 <div className="flex items-center">
                   {editing !== 'studio' ? (
                     <Button 
@@ -437,7 +434,7 @@ const Settings = () => {
                       }}
                     >
                       <Pencil size={16} />
-                      <span className="ml-1">Edit</span>
+                      <span className="ml-1 hidden sm:inline">Edit</span>
                     </Button>
                   ) : (
                     <>
@@ -451,7 +448,7 @@ const Settings = () => {
                         }}
                       >
                         <Save size={16} />
-                        <span className="ml-1">Save</span>
+                        <span className="ml-1 hidden sm:inline">Save</span>
                       </Button>
                       <Button 
                         variant="outline" 
@@ -463,7 +460,7 @@ const Settings = () => {
                         }}
                       >
                         <X size={16} />
-                        <span className="ml-1">Cancel</span>
+                        <span className="ml-1 hidden sm:inline">Cancel</span>
                       </Button>
                     </>
                   )}
@@ -533,7 +530,7 @@ const Settings = () => {
           <Collapsible open={expandedSections.payment}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('payment')}>
               <div className="flex justify-between items-center">
-                <CardTitle>Payment Details</CardTitle>
+                <CardTitle className="text-xl md:text-2xl">Payment Details</CardTitle>
                 <div className="flex items-center">
                   {editing !== 'payment' ? (
                     <Button 
@@ -546,7 +543,7 @@ const Settings = () => {
                       }}
                     >
                       <Pencil size={16} />
-                      <span className="ml-1">Edit</span>
+                      <span className="ml-1 hidden sm:inline">Edit</span>
                     </Button>
                   ) : (
                     <>
@@ -560,7 +557,7 @@ const Settings = () => {
                         }}
                       >
                         <Save size={16} />
-                        <span className="ml-1">Save</span>
+                        <span className="ml-1 hidden sm:inline">Save</span>
                       </Button>
                       <Button 
                         variant="outline" 
@@ -572,7 +569,7 @@ const Settings = () => {
                         }}
                       >
                         <X size={16} />
-                        <span className="ml-1">Cancel</span>
+                        <span className="ml-1 hidden sm:inline">Cancel</span>
                       </Button>
                     </>
                   )}
@@ -644,20 +641,20 @@ const Settings = () => {
         </Card>
       </div>
 
-      {/* Services and Items Management */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      {/* Services and Items Management - Updated for better mobile experience */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Services Management */}
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Services Management</CardTitle>
+        <Card className="h-full">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+              <CardTitle className="text-xl md:text-2xl mb-2 sm:mb-0">Services Management</CardTitle>
               <Button 
-                className="flex items-center gap-2" 
+                className="flex items-center gap-2 w-full sm:w-auto" 
                 variant="default"
                 onClick={handleAddService}
               >
                 <Plus size={16} />
-                Add Service
+                <span>Add Service</span>
               </Button>
             </div>
             <CardDescription>Manage your laundry services and subservices</CardDescription>
@@ -668,8 +665,8 @@ const Settings = () => {
               <Input 
                 placeholder="Search services..." 
                 className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchServiceQuery}
+                onChange={(e) => setSearchServiceQuery(e.target.value)}
               />
             </div>
             
@@ -677,14 +674,14 @@ const Settings = () => {
               {filteredServices.map(service => (
                 <div 
                   key={service.id} 
-                  className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+                  className="flex justify-between items-center p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer"
                 >
                   <div className="flex items-center gap-2">
-                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                    <div>{service.name}</div>
+                    <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
+                    <div className="font-medium">{service.name}</div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="text-sm text-muted-foreground bg-gray-200 px-2 py-1 rounded">
+                    <div className="text-xs md:text-sm text-muted-foreground bg-gray-200 px-2 py-1 rounded">
                       {service.subservices} subservices
                     </div>
                     <Button 
@@ -709,17 +706,17 @@ const Settings = () => {
         </Card>
 
         {/* Clothing Items Management */}
-        <Card className="md:col-span-1">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <CardTitle>Clothing Items</CardTitle>
+        <Card className="h-full">
+          <CardHeader className="pb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
+              <CardTitle className="text-xl md:text-2xl mb-2 sm:mb-0">Clothing Items</CardTitle>
               <Button 
-                className="flex items-center gap-2" 
+                className="flex items-center gap-2 w-full sm:w-auto" 
                 variant="default"
                 onClick={handleAddClothingItem}
               >
                 <Plus size={16} />
-                Add Item
+                <span>Add Item</span>
               </Button>
             </div>
             <CardDescription>Manage clothing items and their prices</CardDescription>
@@ -730,50 +727,82 @@ const Settings = () => {
               <Input 
                 placeholder="Search clothing items..." 
                 className="pl-10"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                value={searchClothingQuery}
+                onChange={(e) => setSearchClothingQuery(e.target.value)}
               />
             </div>
 
             <div className="overflow-hidden rounded-lg border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Item Name</TableHead>
-                    <TableHead>Price (₹)</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredClothingItems.map(item => (
-                    <TableRow key={item.id}>
-                      <TableCell className="font-medium flex items-center gap-2">
-                        <Shirt className="h-4 w-4 text-muted-foreground" />
-                        {item.name}
-                      </TableCell>
-                      <TableCell>₹{item.price}</TableCell>
-                      <TableCell className="text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
-                          className="h-8 w-8 p-0"
-                          onClick={() => handleEditItem(item.id, 'clothing')}
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                  
-                  {filteredClothingItems.length === 0 && (
+              {/* Mobile view for clothing items (shown only on small screens) */}
+              <div className="block md:hidden">
+                {filteredClothingItems.map(item => (
+                  <div key={item.id} className="border-b p-3 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <Shirt className="h-4 w-4 text-muted-foreground" />
+                      <span className="font-medium">{item.name}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-sm">₹{item.price}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleEditItem(item.id, 'clothing')}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                
+                {filteredClothingItems.length === 0 && (
+                  <div className="text-center py-6 text-muted-foreground">
+                    No clothing items found. Try a different search or add a new item.
+                  </div>
+                )}
+              </div>
+
+              {/* Desktop view for clothing items (shown only on medium screens and up) */}
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
                     <TableRow>
-                      <TableCell colSpan={3} className="text-center py-6 text-muted-foreground">
-                        No clothing items found. Try a different search or add a new item.
-                      </TableCell>
+                      <TableHead>Item Name</TableHead>
+                      <TableHead>Price (₹)</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
-                  )}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredClothingItems.map(item => (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium flex items-center gap-2">
+                          <Shirt className="h-4 w-4 text-muted-foreground" />
+                          {item.name}
+                        </TableCell>
+                        <TableCell>₹{item.price}</TableCell>
+                        <TableCell className="text-right">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="h-8 w-8 p-0"
+                            onClick={() => handleEditItem(item.id, 'clothing')}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    
+                    {filteredClothingItems.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={3} className="text-center py-6 text-muted-foreground">
+                          No clothing items found. Try a different search or add a new item.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -783,3 +812,4 @@ const Settings = () => {
 };
 
 export default Settings;
+
