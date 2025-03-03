@@ -137,7 +137,7 @@ const orderHistoryData = ordersData.filter(order => order.status === "Order coll
   orderType: ["Regular", "Express", "Premium", "Standard"][Math.floor(Math.random() * 4)],
   orderDate: order.orderDate,
   completionDate: "05/02/25", // Same completion date for all collected orders
-  status: "Completed"
+  status: "Order collected"
 }));
 
 // Date filter options
