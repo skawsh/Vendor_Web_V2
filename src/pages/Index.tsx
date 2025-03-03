@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -5,13 +6,18 @@ import {
   DollarSign, 
   CheckCircle,
   Calendar,
-  FileText
+  FileText,
+  Search,
+  Power
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Toggle } from '@/components/ui/toggle';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Input } from '@/components/ui/input';
 
 const initialOngoingOrders = [
   {
@@ -58,6 +64,8 @@ const initialOngoingOrders = [
 
 const Index = () => {
   const [ongoingOrders, setOngoingOrders] = useState(initialOngoingOrders);
+  const [isStudioActive, setIsStudioActive] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const handleViewOrderDetails = (orderId: string) => {
     toast.info(`Viewing details for order ${orderId}`, {
@@ -65,14 +73,67 @@ const Index = () => {
     });
   };
 
+  const handleStudioStatusChange = (newStatus: boolean) => {
+    setIsStudioActive(newStatus);
+    toast.success(`Studio ${newStatus ? 'activated' : 'deactivated'} successfully`, {
+      description: `Your laundry studio is now ${newStatus ? 'active' : 'inactive'}.`
+    });
+  };
+
+  const filteredOrders = ongoingOrders.filter(order => 
+    order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    order.orderType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    order.price.includes(searchQuery) ||
+    order.weightQuantity.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="container mx-auto p-4 md:p-6">
-      <header className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Skawsh Laundry Studio Dashboard</h1>
-        <p className="text-muted-foreground">Welcome to your laundry management system</p>
+      <header className="mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Skawsh Laundry Studio Dashboard</h1>
+          <p className="text-muted-foreground">Welcome to your laundry management system</p>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className={`text-sm font-medium ${isStudioActive ? 'text-green-600' : 'text-red-600'}`}>
+            Studio {isStudioActive ? 'Active' : 'Inactive'}
+          </span>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant={isStudioActive ? "outline" : "default"} 
+                size="sm"
+                className={isStudioActive ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}
+              >
+                <Power className={`h-4 w-4 mr-2 ${isStudioActive ? "text-green-600" : "text-red-600"}`} />
+                {isStudioActive ? "Deactivate Studio" : "Activate Studio"}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {isStudioActive ? "Deactivate Studio?" : "Activate Studio?"}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  Do you want to {isStudioActive ? "deactivate" : "activate"} studio? 
+                  {isStudioActive ? " This will temporarily stop accepting new orders." : " This will allow new orders to come in."}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={() => handleStudioStatusChange(!isStudioActive)}
+                  className={isStudioActive ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}
+                >
+                  Yes
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <Card className="card-stats card-stats-blue">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Today Orders</CardTitle>
@@ -126,25 +187,40 @@ const Index = () => {
         </Card>
       </div>
 
+      <div className="relative mb-6">
+        <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
+          <div className="pl-4">
+            <Search className="h-5 w-5 text-gray-400" />
+          </div>
+          <Input
+            type="text"
+            placeholder="Search for orders, customers, services..."
+            className="border-0 py-3 px-4 w-full focus-visible:ring-0 focus-visible:ring-offset-0"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+      </div>
+
       <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-8">
         <div className="p-6 border-b">
           <h2 className="text-xl font-semibold">Ongoing Orders</h2>
           <p className="text-sm text-muted-foreground">Manage your current laundry orders</p>
         </div>
         <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>S.No</TableHead>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Weight / Quantity</TableHead>
-              <TableHead>Price (₹)</TableHead>
-              <TableHead>Order Type</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Actions</TableHead>
+          <TableHeader className="bg-slate-800 text-white">
+            <TableRow className="border-slate-700 hover:bg-slate-800">
+              <TableHead className="text-slate-100 font-medium">S.No</TableHead>
+              <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
+              <TableHead className="text-slate-100 font-medium">Weight / Quantity</TableHead>
+              <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
+              <TableHead className="text-slate-100 font-medium">Order Type</TableHead>
+              <TableHead className="text-slate-100 font-medium">Status</TableHead>
+              <TableHead className="text-slate-100 font-medium">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {ongoingOrders.map((order) => (
+            {filteredOrders.map((order) => (
               <TableRow key={order.sNo} className="table-row-hover">
                 <TableCell>{order.sNo}</TableCell>
                 <TableCell className="font-medium">#{order.orderId}</TableCell>
@@ -166,7 +242,7 @@ const Index = () => {
                     size="sm" 
                     onClick={() => handleViewOrderDetails(order.orderId)}
                     variant="outline"
-                    className="flex items-center gap-1"
+                    className="flex items-center gap-1 bg-laundry-50 text-laundry-700 border-laundry-200 hover:bg-laundry-100"
                   >
                     <FileText className="h-4 w-4" />
                     Details

@@ -1,28 +1,41 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye, Search, Filter, Check, ArrowRight } from "lucide-react";
+import { Eye, Search, Filter, Check, ArrowRight, FileDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const ordersData = [
-  { id: "101", customer: "John Doe", details: "5kg laundry", status: "Order Received", date: "2023-06-15" },
-  { id: "102", customer: "Jane Smith", details: "3kg laundry", status: "New Orders", date: "2023-06-16" },
-  { id: "103", customer: "Alice Brown", details: "2kg laundry", status: "Orders In Progress", date: "2023-06-14" },
-  { id: "104", customer: "Bob Johnson", details: "4kg laundry", status: "Ready for Collect", date: "2023-06-13" },
-  { id: "105", customer: "Sara Davis", details: "6kg laundry", status: "Order Collected", date: "2023-06-10" },
-  { id: "106", customer: "Michael Wilson", details: "7kg laundry", status: "Order Received", date: "2023-06-12" },
-  { id: "107", customer: "Emily Taylor", details: "4kg laundry", status: "New Orders", date: "2023-06-11" },
-  { id: "108", customer: "David Moore", details: "3kg laundry", status: "Orders In Progress", date: "2023-06-09" },
-  { id: "109", customer: "Sophia Lee", details: "5kg laundry", status: "Ready for Collect", date: "2023-06-08" },
-  { id: "110", customer: "James Anderson", details: "2kg laundry", status: "Order Collected", date: "2023-06-05" },
-  { id: "111", customer: "Olivia White", details: "6kg laundry", status: "Order Received", date: "2023-06-07" },
-  { id: "112", customer: "William Clark", details: "4kg laundry", status: "New Orders", date: "2023-06-06" },
-  { id: "113", customer: "Ava Lewis", details: "3kg laundry", status: "Orders In Progress", date: "2023-06-04" },
-  { id: "114", customer: "Joseph Hall", details: "5kg laundry", status: "Ready for Collect", date: "2023-06-03" },
-  { id: "115", customer: "Isabella Young", details: "7kg laundry", status: "Order Collected", date: "2023-06-01" },
+  { id: "101", customer: "John Doe", details: "5kg laundry", status: "Order Received", date: "2023-06-15", serviceType: "Wash & Fold", washType: "Standard Wash" },
+  { id: "102", customer: "Jane Smith", details: "3kg laundry", status: "New Orders", date: "2023-06-16", serviceType: "Dry Cleaning", washType: "Quick Wash" },
+  { id: "103", customer: "Alice Brown", details: "2kg laundry", status: "Orders In Progress", date: "2023-06-14", serviceType: "Wash & Iron", washType: "Standard Wash" },
+  { id: "104", customer: "Bob Johnson", details: "4kg laundry", status: "Ready for Collect", date: "2023-06-13", serviceType: "Shoe Cleaning", washType: "Premium Wash" },
+  { id: "105", customer: "Sara Davis", details: "6kg laundry", status: "Order Collected", date: "2023-06-10", serviceType: "Wash & Fold", washType: "Standard Wash" },
+  { id: "106", customer: "Michael Wilson", details: "7kg laundry", status: "Order Received", date: "2023-06-12", serviceType: "Wash & Iron", washType: "Quick Wash" },
+  { id: "107", customer: "Emily Taylor", details: "4kg laundry", status: "New Orders", date: "2023-06-11", serviceType: "Dry Cleaning", washType: "Standard Wash" },
+  { id: "108", customer: "David Moore", details: "3kg laundry", status: "Orders In Progress", date: "2023-06-09", serviceType: "Wash & Fold", washType: "Quick Wash" },
+  { id: "109", customer: "Sophia Lee", details: "5kg laundry", status: "Ready for Collect", date: "2023-06-08", serviceType: "Wash & Fold", washType: "Standard Wash" },
+  { id: "110", customer: "James Anderson", details: "2kg laundry", status: "Order Collected", date: "2023-06-05", serviceType: "Dry Cleaning", washType: "Premium Wash" },
+  { id: "111", customer: "Olivia White", details: "6kg laundry", status: "Order Received", date: "2023-06-07", serviceType: "Shoe Cleaning", washType: "Standard Wash" },
+  { id: "112", customer: "William Clark", details: "4kg laundry", status: "New Orders", date: "2023-06-06", serviceType: "Wash & Iron", washType: "Quick Wash" },
+  { id: "113", customer: "Ava Lewis", details: "3kg laundry", status: "Orders In Progress", date: "2023-06-04", serviceType: "Wash & Fold", washType: "Standard Wash" },
+  { id: "114", customer: "Joseph Hall", details: "5kg laundry", status: "Ready for Collect", date: "2023-06-03", serviceType: "Dry Cleaning", washType: "Quick Wash" },
+  { id: "115", customer: "Isabella Young", details: "7kg laundry", status: "Order Collected", date: "2023-06-01", serviceType: "Wash & Fold", washType: "Standard Wash" },
+];
+
+// History orders
+const historyOrdersData = [
+  { id: "H101", customer: "Robert Johnson", details: "4kg laundry", status: "Order Collected", date: "2023-05-28", serviceType: "Wash & Fold", washType: "Standard Wash" },
+  { id: "H102", customer: "Maria Garcia", details: "2kg laundry", status: "Order Collected", date: "2023-05-25", serviceType: "Dry Cleaning", washType: "Premium Wash" },
+  { id: "H103", customer: "Thomas Wilson", details: "6kg laundry", status: "Order Collected", date: "2023-05-22", serviceType: "Wash & Iron", washType: "Quick Wash" },
+  { id: "H104", customer: "Jessica Lee", details: "3kg laundry", status: "Order Collected", date: "2023-05-20", serviceType: "Shoe Cleaning", washType: "Standard Wash" },
+  { id: "H105", customer: "Daniel Brown", details: "5kg laundry", status: "Order Collected", date: "2023-05-18", serviceType: "Wash & Fold", washType: "Quick Wash" },
+  { id: "H106", customer: "Emma Davis", details: "4kg laundry", status: "Order Collected", date: "2023-05-15", serviceType: "Dry Cleaning", washType: "Standard Wash" },
+  { id: "H107", customer: "Matthew Smith", details: "3kg laundry", status: "Order Collected", date: "2023-05-12", serviceType: "Wash & Iron", washType: "Premium Wash" }
 ];
 
 const orderStatuses = [
@@ -55,12 +68,14 @@ const Orders = () => {
     }
   }, [segment, selectedStatus]);
 
-  const filteredOrders = ordersData.filter((order) => {
+  const filteredOrders = (segment === "current" ? ordersData : historyOrdersData).filter((order) => {
     const matchesStatus = order.status === selectedStatus;
     const matchesSearch = searchQuery === "" || 
       order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.details.toLowerCase().includes(searchQuery.toLowerCase());
+      order.details.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.serviceType.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.washType.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesDate = filterDate === "" || order.date.includes(filterDate);
     return matchesStatus && matchesSearch && matchesDate;
   });
@@ -75,6 +90,22 @@ const Orders = () => {
       title: "Order Updated",
       description: `Order #${orderId} has been moved to ${newStatus}`,
     });
+  };
+
+  const handleExportOrders = () => {
+    console.log("Exporting orders history");
+    toast({
+      title: "Export Started",
+      description: "Orders history export has started. File will be downloaded shortly.",
+    });
+    
+    // In a real application, this would trigger a file download
+    setTimeout(() => {
+      toast({
+        title: "Export Complete",
+        description: "Orders history has been exported successfully.",
+      });
+    }, 1500);
   };
 
   const getNextStatus = (currentStatus: string) => {
@@ -166,6 +197,17 @@ const Orders = () => {
                 <Filter className="h-4 w-4 mr-2" />
                 {filterDate ? "Clear Filter" : "Advanced Filters"}
               </Button>
+              {segment === "history" && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleExportOrders}
+                  className="border-slate-300 hover:bg-slate-100 bg-blue-50 text-blue-700"
+                >
+                  <FileDown className="h-4 w-4 mr-2" />
+                  Export Orders
+                </Button>
+              )}
             </div>
           </div>
 
@@ -194,20 +236,34 @@ const Orders = () => {
                         <Table>
                           <TableHeader className="bg-slate-800 text-white">
                             <TableRow className="border-slate-700 hover:bg-slate-800">
+                              <TableHead className="text-slate-100 font-medium">S.No</TableHead>
                               <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
                               <TableHead className="text-slate-100 font-medium">Customer</TableHead>
                               <TableHead className="text-slate-100 font-medium">Weight/Pieces</TableHead>
+                              <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
+                              <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
                               <TableHead className="text-slate-100 font-medium">Status</TableHead>
                               <TableHead className="text-slate-100 font-medium">Date</TableHead>
                               <TableHead className="text-slate-100 font-medium">Actions</TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {filteredOrders.map((order) => (
+                            {filteredOrders.map((order, index) => (
                               <TableRow key={order.id} className="table-row-hover">
+                                <TableCell>{index + 1}</TableCell>
                                 <TableCell className="font-medium">{order.id}</TableCell>
                                 <TableCell>{order.customer}</TableCell>
                                 <TableCell>{order.details}</TableCell>
+                                <TableCell>
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
+                                    {order.serviceType}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                    {order.washType}
+                                  </span>
+                                </TableCell>
                                 <TableCell>
                                   <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                     {order.status}
@@ -224,7 +280,7 @@ const Orders = () => {
                                     <Eye className="h-4 w-4 mr-2" />
                                     Order Details
                                   </Button>
-                                  {renderStatusUpdateButton(order)}
+                                  {segment === "current" && renderStatusUpdateButton(order)}
                                 </TableCell>
                               </TableRow>
                             ))}
