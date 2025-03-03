@@ -108,8 +108,8 @@ const Settings = () => {
       <div className="grid grid-cols-1 gap-6 mb-8">
         {/* Basic Information */}
         <Card>
-          <CollapsibleTrigger asChild onClick={() => toggleSection('basic')}>
-            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors">
+          <Collapsible open={expandedSections.basic}>
+            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('basic')}>
               <div className="flex justify-between items-center">
                 <CardTitle>Basic Information</CardTitle>
                 <div className="flex items-center">
@@ -158,8 +158,6 @@ const Settings = () => {
                 </div>
               </div>
             </CardHeader>
-          </CollapsibleTrigger>
-          <Collapsible open={expandedSections.basic}>
             <CollapsibleContent>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
@@ -209,8 +207,8 @@ const Settings = () => {
 
         {/* Address Details */}
         <Card>
-          <CollapsibleTrigger asChild onClick={() => toggleSection('address')}>
-            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors">
+          <Collapsible open={expandedSections.address}>
+            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('address')}>
               <div className="flex justify-between items-center">
                 <CardTitle>Address Details</CardTitle>
                 <div className="flex items-center">
@@ -259,8 +257,6 @@ const Settings = () => {
                 </div>
               </div>
             </CardHeader>
-          </CollapsibleTrigger>
-          <Collapsible open={expandedSections.address}>
             <CollapsibleContent>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
@@ -318,8 +314,8 @@ const Settings = () => {
 
         {/* Business Details */}
         <Card>
-          <CollapsibleTrigger asChild onClick={() => toggleSection('business')}>
-            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors">
+          <Collapsible open={expandedSections.business}>
+            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('business')}>
               <div className="flex justify-between items-center">
                 <CardTitle>Business Details</CardTitle>
                 <div className="flex items-center">
@@ -368,8 +364,6 @@ const Settings = () => {
                 </div>
               </div>
             </CardHeader>
-          </CollapsibleTrigger>
-          <Collapsible open={expandedSections.business}>
             <CollapsibleContent>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
@@ -427,8 +421,8 @@ const Settings = () => {
 
         {/* Studio Setup */}
         <Card>
-          <CollapsibleTrigger asChild onClick={() => toggleSection('studio')}>
-            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors">
+          <Collapsible open={expandedSections.studio}>
+            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('studio')}>
               <div className="flex justify-between items-center">
                 <CardTitle>Studio Setup</CardTitle>
                 <div className="flex items-center">
@@ -477,8 +471,6 @@ const Settings = () => {
                 </div>
               </div>
             </CardHeader>
-          </CollapsibleTrigger>
-          <Collapsible open={expandedSections.studio}>
             <CollapsibleContent>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
@@ -538,8 +530,8 @@ const Settings = () => {
 
         {/* Payment Details */}
         <Card>
-          <CollapsibleTrigger asChild onClick={() => toggleSection('payment')}>
-            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors">
+          <Collapsible open={expandedSections.payment}>
+            <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('payment')}>
               <div className="flex justify-between items-center">
                 <CardTitle>Payment Details</CardTitle>
                 <div className="flex items-center">
@@ -588,8 +580,6 @@ const Settings = () => {
                 </div>
               </div>
             </CardHeader>
-          </CollapsibleTrigger>
-          <Collapsible open={expandedSections.payment}>
             <CollapsibleContent>
               <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">
                 <div>
