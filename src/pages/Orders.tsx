@@ -525,6 +525,7 @@ const Orders = () => {
                   <TableHead className="text-white font-bold">Price (₹)</TableHead>
                   <TableHead className="text-white font-bold">Order Date</TableHead>
                   <TableHead className="text-white font-bold">Completion Date</TableHead>
+                  <TableHead className="text-white font-bold">Status</TableHead>
                   <TableHead className="text-white font-bold">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -540,6 +541,11 @@ const Orders = () => {
                     <TableCell>₹{order.price}</TableCell>
                     <TableCell>{order.orderDate}</TableCell>
                     <TableCell>{order.completionDate}</TableCell>
+                    <TableCell>
+                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                        {order.status}
+                      </span>
+                    </TableCell>
                     <TableCell>
                       <TooltipProvider>
                         <Tooltip>
