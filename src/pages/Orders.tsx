@@ -33,7 +33,7 @@ const orderStatuses = [
   "Order Collected",
 ];
 
-const currentOrderStatuses = ["New Orders", "Order Received", "Orders In Progress", "Ready for Collect"];
+const currentOrderStatuses = ["New Orders", "Order Received", "Orders In Progress", "Ready for Collect", "Order Collected"];
 const historyOrderStatuses = ["Order Collected"];
 
 const Orders = () => {
