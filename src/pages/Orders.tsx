@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Eye } from "lucide-react";
+import { Eye, Search, Filter } from "lucide-react";
 
 // Sample order data
 const ordersData = [
@@ -36,9 +37,21 @@ const orderStatuses = [
 const Orders = () => {
   // State to track the selected status tab (default to "New Orders")
   const [selectedStatus, setSelectedStatus] = useState(orderStatuses[0]);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Filter orders based on the selected status
-  const filteredOrders = ordersData.filter((order) => order.status === selectedStatus);
+  // Filter orders based on the selected status and search query
+  const filteredOrders = ordersData.filter((order) => {
+    // First filter by status
+    const matchesStatus = order.status === selectedStatus;
+    
+    // Then filter by search query if one exists
+    const matchesSearch = searchQuery === "" || 
+      order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.details.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    return matchesStatus && matchesSearch;
+  });
 
   // Handle viewing order details (placeholder for now)
   const handleViewDetails = (orderId: string) => {
@@ -53,6 +66,24 @@ const Orders = () => {
           <CardTitle className="text-2xl font-bold">Orders Management</CardTitle>
         </CardHeader>
         <CardContent>
+          {/* Search and filter section */}
+          <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+            <div className="relative w-full md:w-64">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Search orders..."
+                className="w-full pl-10 pr-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Button variant="outline" size="sm" className="w-full md:w-auto">
+              <Filter className="h-4 w-4 mr-2" />
+              Advanced Filters
+            </Button>
+          </div>
+
           {/* Status filter tabs */}
           <Tabs defaultValue={selectedStatus} onValueChange={setSelectedStatus} className="w-full">
             <TabsList className="grid grid-cols-5 mb-6">
@@ -78,7 +109,7 @@ const Orders = () => {
                             <TableRow>
                               <TableHead>Order ID</TableHead>
                               <TableHead>Customer</TableHead>
-                              <TableHead>Details</TableHead>
+                              <TableHead>Weight/Pieces</TableHead>
                               <TableHead>Status</TableHead>
                               <TableHead>Actions</TableHead>
                             </TableRow>
