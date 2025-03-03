@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -15,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { Toggle } from '@/components/ui/toggle';
+import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 
@@ -94,20 +93,19 @@ const Index = () => {
           <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Skawsh Laundry Studio Dashboard</h1>
           <p className="text-muted-foreground">Welcome to your laundry management system</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <span className={`text-sm font-medium ${isStudioActive ? 'text-green-600' : 'text-red-600'}`}>
             Studio {isStudioActive ? 'Active' : 'Inactive'}
           </span>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button 
-                variant={isStudioActive ? "outline" : "default"} 
-                size="sm"
-                className={isStudioActive ? "bg-green-50 text-green-700 border-green-200" : "bg-red-50 text-red-700 border-red-200"}
-              >
-                <Power className={`h-4 w-4 mr-2 ${isStudioActive ? "text-green-600" : "text-red-600"}`} />
-                {isStudioActive ? "Deactivate Studio" : "Activate Studio"}
-              </Button>
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-muted-foreground">{isStudioActive ? "On" : "Off"}</span>
+                <Switch 
+                  checked={isStudioActive} 
+                  className={isStudioActive ? "bg-green-500" : "bg-red-500"}
+                />
+              </div>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
