@@ -7,6 +7,19 @@ import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 // Sample orders data based on the mockup design
 const ordersData = [
@@ -112,138 +125,29 @@ const ordersData = [
   }
 ];
 
-// Order history data
-const orderHistoryData = [
-  {
-    slNo: 1,
-    orderId: "ORD7821",
-    customerName: "Emma Wilson",
-    serviceType: "Wash & Fold",
-    washType: "Standard Wash",
-    weightQuantity: "3kgs",
-    price: "450",
-    orderType: "Regular",
-    orderDate: "2023-12-15",
-    completionDate: "2023-12-17",
-    status: "Completed"
-  },
-  {
-    slNo: 2,
-    orderId: "ORD9432",
-    customerName: "Michael Brown",
-    serviceType: "Dry Cleaning",
-    washType: "Premium",
-    weightQuantity: "2kgs",
-    price: "650",
-    orderType: "Express",
-    orderDate: "2023-12-18",
-    completionDate: "2023-12-19",
-    status: "Completed"
-  },
-  {
-    slNo: 3,
-    orderId: "ORD6518",
-    customerName: "Sophia Garcia",
-    serviceType: "Wash & Iron",
-    washType: "Quick Wash",
-    weightQuantity: "4kgs",
-    price: "580",
-    orderType: "Standard",
-    orderDate: "2023-12-20",
-    completionDate: "2023-12-22",
-    status: "Completed"
-  },
-  {
-    slNo: 4,
-    orderId: "ORD3275",
-    customerName: "James Johnson",
-    serviceType: "Shoe Cleaning",
-    washType: "Deep Clean",
-    weightQuantity: "1kg",
-    price: "350",
-    orderType: "Premium",
-    orderDate: "2023-12-22",
-    completionDate: "2023-12-24",
-    status: "Completed"
-  },
-  {
-    slNo: 5,
-    orderId: "ORD8943",
-    customerName: "Olivia Martinez",
-    serviceType: "Bedding & Linen",
-    washType: "Standard Wash",
-    weightQuantity: "5kgs",
-    price: "750",
-    orderType: "Regular",
-    orderDate: "2023-12-25",
-    completionDate: "2023-12-28",
-    status: "Completed"
-  },
-  {
-    slNo: 6,
-    orderId: "ORD4127",
-    customerName: "William Thompson",
-    serviceType: "Wash & Fold",
-    washType: "Quick Wash",
-    weightQuantity: "3.5kgs",
-    price: "520",
-    orderType: "Express",
-    orderDate: "2024-01-02",
-    completionDate: "2024-01-03",
-    status: "Completed"
-  },
-  {
-    slNo: 7,
-    orderId: "ORD5689",
-    customerName: "Ava Rodriguez",
-    serviceType: "Dry Cleaning",
-    washType: "Premium",
-    weightQuantity: "2.5kgs",
-    price: "700",
-    orderType: "Premium",
-    orderDate: "2024-01-05",
-    completionDate: "2024-01-08",
-    status: "Completed"
-  },
-  {
-    slNo: 8,
-    orderId: "ORD2347",
-    customerName: "Lucas Harris",
-    serviceType: "Curtains & Drapes",
-    washType: "Standard Wash",
-    weightQuantity: "6kgs",
-    price: "950",
-    orderType: "Regular",
-    orderDate: "2024-01-10",
-    completionDate: "2024-01-14",
-    status: "Completed"
-  },
-  {
-    slNo: 9,
-    orderId: "ORD9016",
-    customerName: "Isabella Clark",
-    serviceType: "Wash & Iron",
-    washType: "Quick Wash",
-    weightQuantity: "4.5kgs",
-    price: "620",
-    orderType: "Express",
-    orderDate: "2024-01-15",
-    completionDate: "2024-01-16",
-    status: "Completed"
-  },
-  {
-    slNo: 10,
-    orderId: "ORD7403",
-    customerName: "Noah Lewis",
-    serviceType: "Shoe Cleaning",
-    washType: "Deep Clean",
-    weightQuantity: "1.5kgs",
-    price: "380",
-    orderType: "Standard",
-    orderDate: "2024-01-20",
-    completionDate: "2024-01-22",
-    status: "Completed"
-  }
+// Order history data - now we're only showing "Order collected" items
+const orderHistoryData = ordersData.filter(order => order.status === "Order collected").map((order, index) => ({
+  slNo: index + 1,
+  orderId: order.orderId,
+  customerName: `Customer ${index + 1}`,
+  serviceType: order.washType,
+  washType: order.serviceType,
+  weightQuantity: order.weightQuantity,
+  price: order.price.toString(),
+  orderType: ["Regular", "Express", "Premium", "Standard"][Math.floor(Math.random() * 4)],
+  orderDate: order.orderDate,
+  completionDate: "05/02/25", // Same completion date for all collected orders
+  status: "Completed"
+}));
+
+// Date filter options
+const dateFilterOptions = [
+  { id: "all", label: "All Dates" },
+  { id: "today", label: "Today" },
+  { id: "yesterday", label: "Yesterday" },
+  { id: "thisWeek", label: "This Week" },
+  { id: "thisMonth", label: "This Month" },
+  { id: "customRange", label: "Custom Range" },
 ];
 
 const Orders = () => {
@@ -252,6 +156,8 @@ const Orders = () => {
   const [activeTab, setActiveTab] = useState("current");
   const [statusFilter, setStatusFilter] = useState<string>("New Orders");
   const [orders, setOrders] = useState(ordersData);
+  const [dateFilter, setDateFilter] = useState("all");
+  const [datePopoverOpen, setDatePopoverOpen] = useState(false);
   
   // All possible order statuses
   const statusOptions = ["New Orders", "Order Received", "Orders In Progress", "Ready for collect", "Order collected"];
@@ -276,43 +182,79 @@ const Orders = () => {
     switch(order.status) {
       case "New Orders":
         return (
-          <Button 
-            variant="success"
-            className="bg-[#D1FFCE] text-black font-medium"
-            onClick={() => updateOrderStatus(order.orderId, "Order Received")}
-          >
-            Mark Received
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="success"
+                  className="bg-[#D1FFCE] text-black font-medium"
+                  onClick={() => updateOrderStatus(order.orderId, "Order Received")}
+                >
+                  Mark Received
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as received</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         );
       case "Order Received":
         return (
-          <Button 
-            variant="success"
-            className="bg-[#D1FFCE] text-black font-medium"
-            onClick={() => updateOrderStatus(order.orderId, "Orders In Progress")}
-          >
-            Mark InProgress
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="success"
+                  className="bg-[#D1FFCE] text-black font-medium"
+                  onClick={() => updateOrderStatus(order.orderId, "Orders In Progress")}
+                >
+                  Mark InProgress
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as in progress</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         );
       case "Orders In Progress":
         return (
-          <Button 
-            variant="success"
-            className="bg-[#D1FFCE] text-black font-medium"
-            onClick={() => updateOrderStatus(order.orderId, "Ready for collect")}
-          >
-            Ready For Collect
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="success"
+                  className="bg-[#D1FFCE] text-black font-medium"
+                  onClick={() => updateOrderStatus(order.orderId, "Ready for collect")}
+                >
+                  Ready For Collect
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as ready for collection</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         );
       case "Ready for collect":
         return (
-          <Button 
-            variant="success"
-            className="bg-[#D1FFCE] text-black font-medium"
-            onClick={() => updateOrderStatus(order.orderId, "Order collected")}
-          >
-            Order collected
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="success"
+                  className="bg-[#D1FFCE] text-black font-medium"
+                  onClick={() => updateOrderStatus(order.orderId, "Order collected")}
+                >
+                  Order collected
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as collected</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         );
       case "Order collected":
         return null;
@@ -328,12 +270,69 @@ const Orders = () => {
      order.orderId.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Filter order history based on date range
-  const filteredOrderHistory = orderHistoryData.filter(order => {
-    if (!dateRange?.from || !dateRange?.to) return true;
-    const orderDate = new Date(order.orderDate);
-    return orderDate >= dateRange.from && orderDate <= dateRange.to;
-  });
+  // Apply date filters to order history
+  const applyDateFilter = (historyData) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    
+    const thisWeekStart = new Date(today);
+    thisWeekStart.setDate(today.getDate() - today.getDay());
+    
+    const thisMonthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    
+    switch (dateFilter) {
+      case 'today':
+        return historyData.filter(order => {
+          const orderDate = new Date(order.orderDate);
+          return orderDate.toDateString() === today.toDateString();
+        });
+      case 'yesterday':
+        return historyData.filter(order => {
+          const orderDate = new Date(order.orderDate);
+          return orderDate.toDateString() === yesterday.toDateString();
+        });
+      case 'thisWeek':
+        return historyData.filter(order => {
+          const orderDate = new Date(order.orderDate);
+          return orderDate >= thisWeekStart && orderDate <= today;
+        });
+      case 'thisMonth':
+        return historyData.filter(order => {
+          const orderDate = new Date(order.orderDate);
+          return orderDate >= thisMonthStart && orderDate <= today;
+        });
+      case 'customRange':
+        if (!dateRange?.from || !dateRange?.to) return historyData;
+        return historyData.filter(order => {
+          const orderDate = new Date(order.orderDate);
+          return orderDate >= dateRange.from && orderDate <= dateRange.to;
+        });
+      default:
+        return historyData;
+    }
+  };
+
+  // Apply both date filter and search query
+  const filteredOrderHistory = applyDateFilter(orderHistoryData).filter(order => 
+    searchQuery === "" || 
+    order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    order.customerName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Reset date filters
+  const resetDateFilters = () => {
+    setDateFilter('all');
+    setDateRange(undefined);
+    setDatePopoverOpen(false);
+  };
+
+  // Apply custom date range
+  const applyDateFilters = () => {
+    setDatePopoverOpen(false);
+  };
 
   // View order details
   const viewOrderDetails = (orderId: string) => {
@@ -372,10 +371,49 @@ const Orders = () => {
 
         <div className="flex items-center gap-2">
           <span className="font-medium">Filter</span>
-          <Button variant="outline" className="flex items-center gap-2 h-12 px-4 py-2 border-2">
-            <span>All dates</span>
-            <Calendar className="h-5 w-5" />
-          </Button>
+          <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2 h-12 px-4 py-2 border-2">
+                <span>{dateFilterOptions.find(option => option.id === dateFilter)?.label || "All dates"}</span>
+                <Calendar className="h-5 w-5" />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-80">
+              <div className="space-y-4">
+                <h4 className="font-medium text-lg">Filter by Date</h4>
+                <RadioGroup value={dateFilter} onValueChange={setDateFilter}>
+                  {dateFilterOptions.map((option) => (
+                    <div className="flex items-center space-x-2" key={option.id}>
+                      <RadioGroupItem value={option.id} id={option.id} />
+                      <Label htmlFor={option.id}>{option.label}</Label>
+                    </div>
+                  ))}
+                </RadioGroup>
+                
+                {dateFilter === 'customRange' && (
+                  <div className="pt-2">
+                    <DateRangePicker
+                      date={dateRange}
+                      onDateChange={setDateRange}
+                      className="w-full"
+                    />
+                  </div>
+                )}
+                
+                <div className="flex justify-between pt-4">
+                  <Button variant="outline" onClick={resetDateFilters}>
+                    Reset
+                  </Button>
+                  <Button 
+                    className="bg-[#0F3E92] text-white"
+                    onClick={applyDateFilters}
+                  >
+                    Apply
+                  </Button>
+                </div>
+              </div>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       
@@ -445,13 +483,22 @@ const Orders = () => {
                     <TableCell>{order.status}</TableCell>
                     <TableCell className="flex items-center space-x-2">
                       {getActionButton(order)}
-                      <Button 
-                        variant="outline" 
-                        className="rounded-full bg-black text-white w-8 h-8 p-0"
-                        onClick={() => viewOrderDetails(order.orderId)}
-                      >
-                        <Info className="h-4 w-4" />
-                      </Button>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              className="rounded-full bg-black text-white w-8 h-8 p-0"
+                              onClick={() => viewOrderDetails(order.orderId)}
+                            >
+                              <Info className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View order details</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -463,11 +510,6 @@ const Orders = () => {
         <TabsContent value="history">
           <div className="p-6 border rounded-lg">
             <div className="flex justify-between items-center mb-4">
-              <DateRangePicker 
-                date={dateRange}
-                onDateChange={setDateRange}
-                className="border-2"
-              />
               <Button variant="outline" className="border-2">
                 Export
               </Button>
@@ -475,23 +517,23 @@ const Orders = () => {
             
             <div className="rounded-md border-2 overflow-x-auto">
               <Table>
-                <TableHeader className="bg-slate-800 text-white">
-                  <TableRow className="border-slate-700 hover:bg-slate-800">
-                    <TableHead className="text-slate-100 font-medium">S.No</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Customer Name</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Weight / Quantity</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Order Date</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Completion Date</TableHead>
-                    <TableHead className="text-slate-100 font-medium">Actions</TableHead>
+                <TableHeader className="bg-[#0F7EA3] text-white">
+                  <TableRow className="border-[#0F7EA3] hover:bg-[#0F7EA3]">
+                    <TableHead className="text-white font-bold">S.No</TableHead>
+                    <TableHead className="text-white font-bold">Order ID</TableHead>
+                    <TableHead className="text-white font-bold">Customer Name</TableHead>
+                    <TableHead className="text-white font-bold">Service Type</TableHead>
+                    <TableHead className="text-white font-bold">Wash Type</TableHead>
+                    <TableHead className="text-white font-bold">Weight / Quantity</TableHead>
+                    <TableHead className="text-white font-bold">Price (₹)</TableHead>
+                    <TableHead className="text-white font-bold">Order Date</TableHead>
+                    <TableHead className="text-white font-bold">Completion Date</TableHead>
+                    <TableHead className="text-white font-bold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredOrderHistory.map((order) => (
-                    <TableRow key={order.orderId} className="hover:bg-slate-50">
+                  {filteredOrderHistory.map((order, index) => (
+                    <TableRow key={order.orderId} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
                       <TableCell>{order.slNo}</TableCell>
                       <TableCell className="font-medium">#{order.orderId}</TableCell>
                       <TableCell>{order.customerName}</TableCell>
@@ -499,17 +541,26 @@ const Orders = () => {
                       <TableCell>{order.washType}</TableCell>
                       <TableCell>{order.weightQuantity}</TableCell>
                       <TableCell>₹{order.price}</TableCell>
-                      <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
-                      <TableCell>{new Date(order.completionDate).toLocaleDateString()}</TableCell>
+                      <TableCell>{order.orderDate}</TableCell>
+                      <TableCell>{order.completionDate}</TableCell>
                       <TableCell>
-                        <Button 
-                          size="sm" 
-                          variant="outline"
-                          className="bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
-                          onClick={() => viewOrderDetails(order.orderId)}
-                        >
-                          Details
-                        </Button>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                                onClick={() => viewOrderDetails(order.orderId)}
+                              >
+                                Details
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>View detailed order information</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </TableCell>
                     </TableRow>
                   ))}
