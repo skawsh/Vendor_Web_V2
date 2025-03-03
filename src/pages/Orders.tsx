@@ -27,15 +27,15 @@ const ordersData = [
 
 // Define the order status options
 const orderStatuses = [
-  "Order Received",
   "New Orders",
+  "Order Received",
   "Orders In Progress",
   "Ready for Collect",
   "Order Collected",
 ];
 
 const Orders = () => {
-  // State to track the selected status tab (default to "Order Received")
+  // State to track the selected status tab (default to "New Orders")
   const [selectedStatus, setSelectedStatus] = useState(orderStatuses[0]);
 
   // Filter orders based on the selected status
