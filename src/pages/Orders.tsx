@@ -1,18 +1,48 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, CheckCircle, Download, FileText, RefreshCcw, Filter, Search, X } from "lucide-react";
+import { Calendar, Info, Search, X } from "lucide-react";
 import { toast } from "sonner";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
-import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 
-// Order history demo data
+// Sample orders data based on the mockup design
+const ordersData = [
+  {
+    id: 1,
+    orderId: "ORD-1001",
+    orderDate: "01/02/25",
+    weightQuantity: "5Kg",
+    washType: "Wash & Fold",
+    serviceType: "Standard",
+    price: 395,
+    status: "New Orders" // Initial status
+  },
+  {
+    id: 2,
+    orderId: "ORD-1002",
+    orderDate: "01/02/25",
+    weightQuantity: "2 pcs",
+    washType: "Dry clean",
+    serviceType: "Quick",
+    price: 300,
+    status: "New Orders"
+  },
+  {
+    id: 3,
+    orderId: "ORD-1003",
+    orderDate: "01/02/25",
+    weightQuantity: "2.3Kg",
+    washType: "Wash & Iron",
+    serviceType: "Both",
+    price: 182,
+    status: "New Orders"
+  }
+];
+
+// Order history data
 const orderHistoryData = [
   {
     slNo: 1,
@@ -146,60 +176,99 @@ const orderHistoryData = [
   }
 ];
 
-// Sample orders data based on the mockup
-const ordersData = [
-  {
-    id: 1,
-    orderId: "ORD-1001",
-    weightQuantity: "5Kg",
-    washType: "Wash & Fold",
-    serviceType: "Standard",
-    price: 395,
-    status: "Received"
-  },
-  {
-    id: 2,
-    orderId: "ORD-1002",
-    weightQuantity: "2 pcs",
-    washType: "Dry clean",
-    serviceType: "Quick",
-    price: 300,
-    status: "Received"
-  },
-  {
-    id: 3,
-    orderId: "ORD-1003",
-    weightQuantity: "2.3Kg",
-    washType: "Wash & Iron",
-    serviceType: "Quick",
-    price: 182,
-    status: "Received"
-  }
-];
-
 const Orders = () => {
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("current");
-  const [statusFilter, setStatusFilter] = useState<string>("Order Received");
+  const [statusFilter, setStatusFilter] = useState<string>("New Orders");
+  const [orders, setOrders] = useState(ordersData);
   
+  // All possible order statuses
   const statusOptions = ["New Orders", "Order Received", "Orders In Progress", "Ready for collect", "Order collected"];
 
-  const markInProgress = (orderId: string) => {
-    toast.success(`Order ${orderId} marked as In Progress`, {
+  // Function to update order status
+  const updateOrderStatus = (orderId: string, newStatus: string) => {
+    setOrders(prevOrders => 
+      prevOrders.map(order => 
+        order.orderId === orderId 
+          ? { ...order, status: newStatus } 
+          : order
+      )
+    );
+    
+    toast.success(`Order ${orderId} marked as ${newStatus}`, {
       description: "The order status has been updated."
     });
   };
 
+  // Get appropriate action button based on current status
+  const getActionButton = (order: any) => {
+    switch(order.status) {
+      case "New Orders":
+        return (
+          <Button 
+            variant="success"
+            className="bg-[#D1FFCE] text-black font-medium"
+            onClick={() => updateOrderStatus(order.orderId, "Order Received")}
+          >
+            Mark Received
+          </Button>
+        );
+      case "Order Received":
+        return (
+          <Button 
+            variant="success"
+            className="bg-[#D1FFCE] text-black font-medium"
+            onClick={() => updateOrderStatus(order.orderId, "Orders In Progress")}
+          >
+            Mark InProgress
+          </Button>
+        );
+      case "Orders In Progress":
+        return (
+          <Button 
+            variant="success"
+            className="bg-[#D1FFCE] text-black font-medium"
+            onClick={() => updateOrderStatus(order.orderId, "Ready for collect")}
+          >
+            Ready For Collect
+          </Button>
+        );
+      case "Ready for collect":
+        return (
+          <Button 
+            variant="success"
+            className="bg-[#D1FFCE] text-black font-medium"
+            onClick={() => updateOrderStatus(order.orderId, "Order collected")}
+          >
+            Order collected
+          </Button>
+        );
+      case "Order collected":
+        return null;
+      default:
+        return null;
+    }
+  };
+
+  // Filter orders based on the selected status
+  const filteredOrders = orders.filter(order => 
+    order.status === statusFilter && 
+    (searchQuery === "" || 
+     order.orderId.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
+
+  // Filter order history based on date range
+  const filteredOrderHistory = orderHistoryData.filter(order => {
+    if (!dateRange?.from || !dateRange?.to) return true;
+    const orderDate = new Date(order.orderDate);
+    return orderDate >= dateRange.from && orderDate <= dateRange.to;
+  });
+
+  // View order details
   const viewOrderDetails = (orderId: string) => {
     toast.info(`Viewing details for order ${orderId}`, {
       description: "Opening order details view."
-    });
-  };
-
-  const exportOrderHistory = () => {
-    toast.success("Exporting order history", {
-      description: "Your order history is being exported to CSV."
     });
   };
 
@@ -217,7 +286,7 @@ const Orders = () => {
           <Input
             type="text"
             placeholder="Search Order ID, Cust..."
-            className="pl-10 pr-10 py-2 h-12 rounded-md w-full"
+            className="pl-10 pr-10 py-2 h-12 rounded-md w-full border-2"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -233,40 +302,43 @@ const Orders = () => {
 
         <div className="flex items-center gap-2">
           <span className="font-medium">Filter</span>
-          <Button variant="outline" className="flex items-center gap-2 h-12 px-4 py-2">
+          <Button variant="outline" className="flex items-center gap-2 h-12 px-4 py-2 border-2">
             <span>All dates</span>
             <Calendar className="h-5 w-5" />
           </Button>
         </div>
       </div>
       
-      <div className="mb-4">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-2 max-w-[380px]">
-            <TabsTrigger 
-              value="current" 
-              className={`rounded-md ${activeTab === 'current' ? 'bg-[#0F7EA3] text-white' : 'bg-white'}`}
-            >
-              Current orders
-            </TabsTrigger>
-            <TabsTrigger 
-              value="history"
-              className={`rounded-md ${activeTab === 'history' ? 'bg-[#0F7EA3] text-white' : 'bg-white'}`}
-            >
-              Orders history
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="current" className="mt-6">
-            {/* Status Filter Buttons */}
-            <div className="flex flex-wrap gap-2 mb-6">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mb-4">
+        <TabsList className="flex w-full max-w-md mb-4">
+          <TabsTrigger 
+            value="current" 
+            className={`flex-1 py-3 rounded-md ${activeTab === 'current' ? 'bg-[#0F7EA3] text-white shadow-md' : 'bg-white border-2'}`}
+            style={{ boxShadow: activeTab === 'current' ? '0 4px 6px rgba(0, 0, 0, 0.2)' : 'none' }}
+          >
+            Current orders
+          </TabsTrigger>
+          <TabsTrigger 
+            value="history"
+            className={`flex-1 py-3 rounded-md ${activeTab === 'history' ? 'bg-[#0F7EA3] text-white shadow-md' : 'bg-white border-2'}`}
+            style={{ boxShadow: activeTab === 'history' ? '0 4px 6px rgba(0, 0, 0, 0.2)' : 'none' }}
+          >
+            Orders history
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="current">
+          <div className="rounded-lg overflow-hidden border-2 border-[#0F7EA3] bg-[#0F7EA3]">
+            {/* Status Filter Buttons at the top of the table */}
+            <div className="flex flex-wrap p-2 bg-[#0F7EA3] rounded-t-lg overflow-x-auto">
               {statusOptions.map((status) => (
                 <Button 
                   key={status}
-                  variant={statusFilter === status ? "default" : "outline"}
                   className={`
-                    ${statusFilter === status ? 'bg-[#0F7EA3] text-white' : 'bg-white text-black'} 
-                    rounded-md px-4 py-2 hover:bg-[#0F7EA3] hover:text-white transition-colors
+                    ${statusFilter === status 
+                      ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                      : 'bg-white text-black border-2 border-white'} 
+                    rounded-md px-4 py-2 m-1
                   `}
                   onClick={() => setStatusFilter(status)}
                 >
@@ -276,41 +348,97 @@ const Orders = () => {
             </div>
             
             {/* Orders Table */}
-            <div className="rounded-lg overflow-hidden border bg-[#0F7EA3]">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-[#0F7EA3] border-none">
+                  <TableHead className="text-white font-bold">Sl No</TableHead>
+                  <TableHead className="text-white font-bold">Order ID</TableHead>
+                  <TableHead className="text-white font-bold">Order date</TableHead>
+                  <TableHead className="text-white font-bold">Weight/ Quantity</TableHead>
+                  <TableHead className="text-white font-bold">Wash Type</TableHead>
+                  <TableHead className="text-white font-bold">Service Type</TableHead>
+                  <TableHead className="text-white font-bold">Price</TableHead>
+                  <TableHead className="text-white font-bold">Status</TableHead>
+                  <TableHead className="text-white font-bold">Action</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrders.map((order, index) => (
+                  <TableRow key={order.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                    <TableCell>{order.id}</TableCell>
+                    <TableCell>{order.orderId}</TableCell>
+                    <TableCell>{order.orderDate}</TableCell>
+                    <TableCell>{order.weightQuantity}</TableCell>
+                    <TableCell>{order.washType}</TableCell>
+                    <TableCell>{order.serviceType}</TableCell>
+                    <TableCell>{order.price}</TableCell>
+                    <TableCell>{order.status}</TableCell>
+                    <TableCell className="flex items-center space-x-2">
+                      {getActionButton(order)}
+                      <Button 
+                        variant="outline" 
+                        className="rounded-full bg-black text-white w-8 h-8 p-0"
+                        onClick={() => viewOrderDetails(order.orderId)}
+                      >
+                        <Info className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="history">
+          <div className="p-6 border rounded-lg">
+            <div className="flex justify-between items-center mb-4">
+              <DateRangePicker 
+                date={dateRange}
+                onDateChange={setDateRange}
+                className="border-2"
+              />
+              <Button variant="outline" className="border-2">
+                Export
+              </Button>
+            </div>
+            
+            <div className="rounded-md border-2 overflow-x-auto">
               <Table>
-                <TableHeader>
-                  <TableRow className="border-b-0">
-                    <TableHead className="font-semibold text-white">Sl No</TableHead>
-                    <TableHead className="font-semibold text-white">Order ID</TableHead>
-                    <TableHead className="font-semibold text-white">Weight/ Quantity</TableHead>
-                    <TableHead className="font-semibold text-white">Wash Type</TableHead>
-                    <TableHead className="font-semibold text-white">Service Type</TableHead>
-                    <TableHead className="font-semibold text-white">Price</TableHead>
-                    <TableHead className="font-semibold text-white">Status</TableHead>
-                    <TableHead className="font-semibold text-white">Action</TableHead>
+                <TableHeader className="bg-slate-800 text-white">
+                  <TableRow className="border-slate-700 hover:bg-slate-800">
+                    <TableHead className="text-slate-100 font-medium">S.No</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Customer Name</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Weight / Quantity</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Order Date</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Completion Date</TableHead>
+                    <TableHead className="text-slate-100 font-medium">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {ordersData.map((order) => (
-                    <TableRow key={order.id} className={order.id % 2 === 0 ? 'bg-[#E5EDF0]' : 'bg-[#F8FBFC]'}>
-                      <TableCell>{order.id}</TableCell>
-                      <TableCell className="font-medium">{order.orderId}</TableCell>
-                      <TableCell>{order.weightQuantity}</TableCell>
-                      <TableCell>{order.washType}</TableCell>
+                  {filteredOrderHistory.map((order) => (
+                    <TableRow key={order.orderId} className="hover:bg-slate-50">
+                      <TableCell>{order.slNo}</TableCell>
+                      <TableCell className="font-medium">#{order.orderId}</TableCell>
+                      <TableCell>{order.customerName}</TableCell>
                       <TableCell>{order.serviceType}</TableCell>
-                      <TableCell>{order.price}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center">
-                          <span className="font-medium">{order.status}</span>
-                          <span className="ml-2">&#9660;</span>
-                        </div>
-                      </TableCell>
+                      <TableCell>{order.washType}</TableCell>
+                      <TableCell>{order.weightQuantity}</TableCell>
+                      <TableCell>₹{order.price}</TableCell>
+                      <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
+                      <TableCell>{new Date(order.completionDate).toLocaleDateString()}</TableCell>
                       <TableCell>
                         <Button 
-                          className="bg-[#D1FFCE] hover:bg-[#B9EAB6] text-[#007E12] font-medium"
-                          onClick={() => markInProgress(order.orderId)}
+                          size="sm" 
+                          variant="outline"
+                          className="bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
+                          onClick={() => viewOrderDetails(order.orderId)}
                         >
-                          Mark InProgress
+                          Details
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -318,78 +446,9 @@ const Orders = () => {
                 </TableBody>
               </Table>
             </div>
-          </TabsContent>
-          
-          <TabsContent value="history">
-            <Card>
-              <CardContent className="p-6">
-                <div className="flex justify-between items-center mb-4">
-                  <DateRangePicker 
-                    date={dateRange}
-                    onDateChange={setDateRange}
-                  />
-                  <Button 
-                    variant="outline" 
-                    onClick={exportOrderHistory}
-                  >
-                    Export
-                  </Button>
-                </div>
-                
-                <div className="rounded-md border overflow-x-auto">
-                  <Table>
-                    <TableHeader className="bg-slate-800 text-white">
-                      <TableRow className="border-slate-700 hover:bg-slate-800">
-                        <TableHead className="text-slate-100 font-medium">S.No</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Order ID</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Customer Name</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Service Type</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Wash Type</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Weight / Quantity</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Price (₹)</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Order Date</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Completion Date</TableHead>
-                        <TableHead className="text-slate-100 font-medium">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {orderHistoryData
-                        .filter(order => {
-                          if (!dateRange?.from || !dateRange?.to) return true;
-                          const orderDate = new Date(order.orderDate);
-                          return orderDate >= dateRange.from && orderDate <= dateRange.to;
-                        })
-                        .map((order) => (
-                          <TableRow key={order.orderId} className="hover:bg-slate-50">
-                            <TableCell>{order.slNo}</TableCell>
-                            <TableCell className="font-medium">#{order.orderId}</TableCell>
-                            <TableCell>{order.customerName}</TableCell>
-                            <TableCell>{order.serviceType}</TableCell>
-                            <TableCell>{order.washType}</TableCell>
-                            <TableCell>{order.weightQuantity}</TableCell>
-                            <TableCell>₹{order.price}</TableCell>
-                            <TableCell>{new Date(order.orderDate).toLocaleDateString()}</TableCell>
-                            <TableCell>{new Date(order.completionDate).toLocaleDateString()}</TableCell>
-                            <TableCell>
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                className="bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100"
-                                onClick={() => viewOrderDetails(order.orderId)}
-                              >
-                                Details
-                              </Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
-      </div>
+          </div>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
