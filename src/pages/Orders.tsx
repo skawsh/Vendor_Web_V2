@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,17 +24,17 @@ const ordersData = [
   { id: "115", customer: "Isabella Young", details: "7kg laundry", status: "Order Collected" },
 ];
 
-// Define the order status options - Interchanged "Order Received" and "New Orders"
+// Define the order status options - Swapped "Order Received" and "New Orders"
 const orderStatuses = [
-  "Order Received",
   "New Orders",
+  "Order Received",
   "Orders In Progress",
   "Ready for Collect",
   "Order Collected",
 ];
 
 const Orders = () => {
-  // State to track the selected status tab (default to "Order Received")
+  // State to track the selected status tab (default to "New Orders")
   const [selectedStatus, setSelectedStatus] = useState(orderStatuses[0]);
 
   // Filter orders based on the selected status
