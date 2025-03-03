@@ -25,17 +25,17 @@ const ordersData = [
   { id: "115", customer: "Isabella Young", details: "7kg laundry", status: "Order Collected" },
 ];
 
-// Define the order status options
+// Define the order status options - Interchanged "Order Received" and "New Orders"
 const orderStatuses = [
-  "New Orders",
   "Order Received",
+  "New Orders",
   "Orders In Progress",
   "Ready for Collect",
   "Order Collected",
 ];
 
 const Orders = () => {
-  // State to track the selected status tab (default to "New Orders")
+  // State to track the selected status tab (default to "Order Received")
   const [selectedStatus, setSelectedStatus] = useState(orderStatuses[0]);
 
   // Filter orders based on the selected status
