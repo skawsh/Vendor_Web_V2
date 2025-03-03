@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -339,6 +340,44 @@ const Index = () => {
           
           <TabsContent value="current-orders" className="m-0">
             <div className="p-4 bg-white dark:bg-card">
+              <div className="flex flex-wrap gap-3 mb-4">
+                <Button 
+                  onClick={() => setActiveFilter("new")}
+                  variant={activeFilter === "new" ? "default" : "outline"}
+                  className={activeFilter === "new" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  New order
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("received")}
+                  variant={activeFilter === "received" ? "default" : "outline"}
+                  className={activeFilter === "received" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Order received
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("progress")}
+                  variant={activeFilter === "progress" ? "default" : "outline"}
+                  className={activeFilter === "progress" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Order in progress
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("ready")}
+                  variant={activeFilter === "ready" ? "default" : "outline"}
+                  className={activeFilter === "ready" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Ready for collect
+                </Button>
+                <Button 
+                  onClick={() => setActiveFilter("collected")}
+                  variant={activeFilter === "collected" ? "default" : "outline"}
+                  className={activeFilter === "collected" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                >
+                  Order collected
+                </Button>
+              </div>
+              
               <div className="overflow-x-auto">
                 <Table>
                   <TableHeader className="bg-cyan-600 text-white">
