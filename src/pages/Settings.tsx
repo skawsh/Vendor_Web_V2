@@ -10,7 +10,8 @@ import {
   ChevronUp,
   Save,
   X,
-  Shirt
+  Shirt,
+  Zap
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -18,6 +19,49 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
+
+// Mock data for clothing items within subservices
+const mockClothingItems = {
+  101: [ // Wash & Fold
+    { id: 1, name: 'Shirt', standardPrice: 10, expressPrice: 15 },
+    { id: 2, name: 'Pant', standardPrice: 20, expressPrice: 30 },
+    { id: 3, name: 'Shorts', standardPrice: 30, expressPrice: 45 },
+    { id: 4, name: 'T-shirt', standardPrice: 15, expressPrice: 25 },
+    { id: 5, name: 'Jeans', standardPrice: 25, expressPrice: 40 },
+  ],
+  102: [ // Wash & Iron
+    { id: 6, name: 'Shirt', standardPrice: 15, expressPrice: 25 },
+    { id: 7, name: 'Pant', standardPrice: 25, expressPrice: 40 },
+    { id: 8, name: 'Dress', standardPrice: 35, expressPrice: 55 },
+  ],
+  103: [ // Steam Press
+    { id: 9, name: 'Shirt', standardPrice: 8, expressPrice: 12 },
+    { id: 10, name: 'Pant', standardPrice: 10, expressPrice: 15 },
+    { id: 11, name: 'Suit', standardPrice: 50, expressPrice: 75 },
+  ],
+  201: [ // Upper Wear
+    { id: 12, name: 'Shirt', standardPrice: 30, expressPrice: 45 },
+    { id: 13, name: 'T-shirt', standardPrice: 25, expressPrice: 40 },
+    { id: 14, name: 'Blazer', standardPrice: 70, expressPrice: 100 },
+    { id: 15, name: 'Sweater', standardPrice: 40, expressPrice: 60 },
+  ],
+  202: [ // Lower Wear
+    { id: 16, name: 'Pant', standardPrice: 35, expressPrice: 50 },
+    { id: 17, name: 'Jeans', standardPrice: 40, expressPrice: 60 },
+    { id: 18, name: 'Shorts', standardPrice: 30, expressPrice: 45 },
+  ],
+  203: [ // Formal Wear
+    { id: 19, name: 'Suit', standardPrice: 150, expressPrice: 230 },
+    { id: 20, name: 'Tuxedo', standardPrice: 180, expressPrice: 270 },
+    { id: 21, name: 'Dress Shirt', standardPrice: 40, expressPrice: 60 },
+  ],
+  301: [ // Sport Shoes
+    { id: 22, name: 'Sneakers', standardPrice: 100, expressPrice: 150 },
+  ],
+  302: [ // Leather Shoes
+    { id: 23, name: 'Leather Shoes', standardPrice: 120, expressPrice: 180 },
+  ],
+};
 
 const Settings = () => {
   const [searchServiceQuery, setSearchServiceQuery] = useState('');
@@ -33,6 +77,9 @@ const Settings = () => {
   
   // Track which services are expanded
   const [expandedServices, setExpandedServices] = useState<Record<number, boolean>>({});
+  
+  // Track which subservices are expanded
+  const [expandedSubservices, setExpandedSubservices] = useState<Record<number, boolean>>({});
 
   // Mock data with subservices
   const services = [
@@ -76,6 +123,13 @@ const Settings = () => {
     setExpandedServices(prev => ({
       ...prev,
       [serviceId]: !prev[serviceId]
+    }));
+  };
+
+  const toggleSubserviceExpand = (subserviceId: number) => {
+    setExpandedSubservices(prev => ({
+      ...prev,
+      [subserviceId]: !prev[subserviceId]
     }));
   };
 
@@ -717,7 +771,7 @@ const Settings = () => {
                         <div className="flex items-center gap-2">
                           {expandedServices[service.id] ? 
                             <ChevronDown className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" /> : 
-                            <ChevronDown className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
+                            <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
                           }
                           <div className="font-medium">{service.name}</div>
                         </div>
@@ -740,29 +794,82 @@ const Settings = () => {
                       </div>
                     </CollapsibleTrigger>
                     <CollapsibleContent className="bg-white border-x border-b rounded-b-lg">
-                      <div className="px-4 py-2 space-y-3 border-l-2 border-gray-200 ml-4">
+                      <div className="space-y-3 px-4 py-2">
                         {service.subservices.map(subservice => (
-                          <div key={subservice.id} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-md">
-                            <div className="flex items-center gap-2">
-                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                              <span className="font-medium">{subservice.name}</span>
-                              {subservice.price && (
-                                <span className="text-sm text-muted-foreground">({subservice.price})</span>
-                              )}
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <div className="text-xs bg-gray-100 px-2 py-1 rounded-full">
-                                {subservice.items} items
-                              </div>
-                              <Button 
-                                variant="ghost" 
-                                size="sm" 
-                                className="p-1 h-6 w-6"
-                                onClick={() => handleEditItem(subservice.id, 'subservice')}
+                          <div key={subservice.id} className="border-l-2 border-gray-200 pl-2">
+                            <Collapsible open={expandedSubservices[subservice.id]}>
+                              <CollapsibleTrigger 
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toggleSubserviceExpand(subservice.id);
+                                }}
+                                className="w-full"
                               >
-                                <Pencil className="h-3 w-3" />
-                              </Button>
-                            </div>
+                                <div className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-md">
+                                  <div className="flex items-center gap-2">
+                                    {expandedSubservices[subservice.id] ? 
+                                      <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
+                                      <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                                    }
+                                    <span className="font-medium">{subservice.name}</span>
+                                    {subservice.price && (
+                                      <span className="text-sm text-muted-foreground">({subservice.price})</span>
+                                    )}
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <div className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                                      {subservice.items} items
+                                    </div>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm" 
+                                      className="p-1 h-6 w-6"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleEditItem(subservice.id, 'subservice');
+                                      }}
+                                    >
+                                      <Pencil className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              </CollapsibleTrigger>
+                              <CollapsibleContent className="pl-6 pr-2 py-1">
+                                <div className="space-y-2">
+                                  {mockClothingItems[subservice.id]?.map((item) => (
+                                    <div key={item.id} className="border border-gray-100 rounded-lg shadow-sm p-3">
+                                      <div className="flex justify-between items-center mb-2">
+                                        <div className="flex items-center gap-2">
+                                          <Shirt className="h-4 w-4 text-muted-foreground" />
+                                          <span className="font-medium">{item.name}</span>
+                                        </div>
+                                        <Button 
+                                          variant="ghost" 
+                                          size="sm" 
+                                          className="p-1 h-6 w-6"
+                                          onClick={() => handleEditItem(item.id, 'clothing')}
+                                        >
+                                          <Pencil className="h-3 w-3" />
+                                        </Button>
+                                      </div>
+                                      <div className="flex flex-col gap-1">
+                                        <div className="flex justify-between text-sm">
+                                          <span className="text-muted-foreground">Standard:</span>
+                                          <span className="font-medium">₹{item.standardPrice}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                          <div className="flex items-center gap-1 text-amber-600">
+                                            <span>Express:</span>
+                                            <Zap className="h-3 w-3" />
+                                          </div>
+                                          <span className="font-medium text-amber-600">₹{item.expressPrice}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </CollapsibleContent>
+                            </Collapsible>
                           </div>
                         ))}
                       </div>
