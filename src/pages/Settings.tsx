@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon,
@@ -18,6 +19,9 @@ import {
   Store,
   CreditCard,
   ChevronUp,
+  Shirt,
+  Umbrella,
+  ShoppingBag,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -45,13 +49,28 @@ const Settings = () => {
 
   const [serviceStatus, setServiceStatus] = useState<Record<number, boolean>>({
     1: true,
-    2: true
+    2: true,
+    3: true,
+    4: false,
+    5: true
   });
 
   const [subserviceStatus, setSubserviceStatus] = useState<Record<number, boolean>>({
     101: true,
     102: true,
-    103: true
+    103: true,
+    104: false,
+    105: true,
+    201: true,
+    202: false,
+    203: true,
+    301: true,
+    302: true,
+    303: false,
+    401: false,
+    402: false,
+    501: true,
+    502: true
   });
 
   const [expandedInfoSections, setExpandedInfoSections] = useState<Record<string, boolean>>({
@@ -65,7 +84,8 @@ const Settings = () => {
   const services = [
     { 
       id: 1, 
-      name: 'Core Laundry Services',
+      name: 'Regular Laundry',
+      icon: <Shirt className="h-5 w-5 text-blue-500" />,
       subserviceCount: 3,
       subservices: [
         { 
@@ -73,38 +93,118 @@ const Settings = () => {
           name: 'Wash & Fold', 
           price: '₹59', 
           unit: 'per Kg',
-          itemCount: 5,
-          items: [
-            { id: 1, name: 'Shirt', standardPrice: '₹10', expressPrice: '₹15' },
-            { id: 2, name: 'Pant', standardPrice: '₹20', expressPrice: '₹30' },
-            { id: 3, name: 'Shorts', standardPrice: '₹30', expressPrice: '₹45' },
-            { id: 4, name: 'T-Shirt', standardPrice: '₹15', expressPrice: '₹25' },
-            { id: 5, name: 'Jeans', standardPrice: '₹35', expressPrice: '₹50' }
-          ]
         },
         { 
           id: 102, 
-          name: 'Dry Cleaning', 
-          price: '₹99',
-          unit: 'per piece',
-          itemCount: 3,
-          items: []
+          name: 'Wash & Iron', 
+          price: '₹79',
+          unit: 'per Kg',
         },
         { 
           id: 103, 
-          name: 'Ironing', 
-          price: '₹10',
-          unit: 'per piece',
-          itemCount: 2,
-          items: []
+          name: 'Express Laundry (24hr)', 
+          price: '₹99',
+          unit: 'per Kg',
+        },
+        { 
+          id: 104, 
+          name: 'Eco-Friendly Wash', 
+          price: '₹89',
+          unit: 'per Kg',
         }
       ]
     },
     { 
       id: 2, 
-      name: 'Premium Laundry Services',
+      name: 'Dry Cleaning',
+      icon: <Umbrella className="h-5 w-5 text-blue-500" />,
+      subserviceCount: 3,
+      subservices: [
+        { 
+          id: 201, 
+          name: 'Regular Dry Cleaning', 
+          price: '₹199',
+          unit: 'per piece',
+        },
+        { 
+          id: 202, 
+          name: 'Premium Dry Cleaning', 
+          price: '₹299',
+          unit: 'per piece',
+        },
+        { 
+          id: 203, 
+          name: 'Express Dry Cleaning', 
+          price: '₹349',
+          unit: 'per piece',
+        }
+      ]
+    },
+    { 
+      id: 3, 
+      name: 'Specialty Garments',
+      icon: <ShoppingBag className="h-5 w-5 text-blue-500" />,
+      subserviceCount: 3,
+      subservices: [
+        { 
+          id: 301, 
+          name: 'Wedding Attire', 
+          price: '₹599',
+          unit: 'per piece',
+        },
+        { 
+          id: 302, 
+          name: 'Silk & Delicates', 
+          price: '₹399',
+          unit: 'per piece',
+        },
+        { 
+          id: 303, 
+          name: 'Curtains & Drapes', 
+          price: '₹199',
+          unit: 'per square meter',
+        }
+      ]
+    },
+    { 
+      id: 4, 
+      name: 'Shoe & Accessory Care',
+      icon: <ShoppingBag className="h-5 w-5 text-blue-500" />,
       subserviceCount: 2,
-      subservices: []
+      subservices: [
+        { 
+          id: 401, 
+          name: 'Shoe Cleaning', 
+          price: '₹249',
+          unit: 'per pair',
+        },
+        { 
+          id: 402, 
+          name: 'Bag Cleaning', 
+          price: '₹349',
+          unit: 'per piece',
+        }
+      ]
+    },
+    { 
+      id: 5, 
+      name: 'Home Textiles',
+      icon: <ShoppingBag className="h-5 w-5 text-blue-500" />,
+      subserviceCount: 2,
+      subservices: [
+        { 
+          id: 501, 
+          name: 'Bedding & Linens', 
+          price: '₹149',
+          unit: 'per Kg',
+        },
+        { 
+          id: 502, 
+          name: 'Carpet Cleaning', 
+          price: '₹75',
+          unit: 'per square foot',
+        }
+      ]
     }
   ];
 
@@ -497,118 +597,123 @@ const Settings = () => {
 
         <div className="space-y-3">
           {services.map(service => (
-            <div key={service.id}>
-              <div className="w-full bg-blue-50 rounded-md overflow-hidden">
+            <div key={service.id} className="w-full">
+              <div className={`w-full bg-blue-50 rounded-md overflow-hidden ${!serviceStatus[service.id] ? 'opacity-70' : ''}`}>
                 <div className="flex items-center justify-between px-4 py-4 w-full">
-                  <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleServiceExpand(service.id)}>
-                    {expandedServices[service.id] ? (
-                      <ChevronDown className="h-5 w-5 text-gray-500" />
-                    ) : (
-                      <ChevronRight className="h-5 w-5 text-gray-500" />
-                    )}
+                  <div className="flex items-center gap-3 cursor-pointer flex-1" onClick={() => toggleServiceExpand(service.id)}>
+                    <div className="bg-blue-100 rounded-full p-2">
+                      {service.icon}
+                    </div>
                     <div>
                       <h3 className="font-semibold text-lg">{service.name}</h3>
-                      <p className="text-sm text-gray-500">Sub services {service.subserviceCount}</p>
+                      <p className="text-sm text-gray-500">Sub services {service.subservices.length}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium">
-                      {serviceStatus[service.id] ? 'Active' : 'Inactive'}
-                    </span>
-                    <Switch 
-                      checked={serviceStatus[service.id]} 
-                      onCheckedChange={(checked) => {
-                        setServiceStatus(prev => ({
-                          ...prev,
-                          [service.id]: checked
-                        }));
-                        toast.success(`Service ${checked ? 'enabled' : 'disabled'}`);
-                      }}
-                    />
-                    <Button 
-                      variant="serviceIcon" 
-                      size="icon"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toast.info(`Editing ${service.name}`);
-                      }}
-                    >
-                      <Pencil className="h-5 w-5" />
-                    </Button>
-                    <Button 
-                      variant="serviceIcon" 
-                      size="icon"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toast.error(`This would delete service: ${service.name}`);
-                      }}
-                    >
-                      <Trash2 className="h-5 w-5 text-red-500" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium">
+                        {serviceStatus[service.id] ? 'Active' : 'Inactive'}
+                      </span>
+                      <Switch 
+                        checked={serviceStatus[service.id]} 
+                        onCheckedChange={(checked) => {
+                          setServiceStatus(prev => ({
+                            ...prev,
+                            [service.id]: checked
+                          }));
+                          toast.success(`${service.name} ${checked ? 'enabled' : 'disabled'}`);
+                        }}
+                      />
+                    </div>
+                    <div className="flex">
+                      <Button 
+                        variant="editIcon"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toast.info(`Editing ${service.name}`);
+                        }}
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button 
+                        variant="deleteIcon" 
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toast.error(`This would delete service: ${service.name}`);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    {expandedServices[service.id] ? 
+                      <ChevronUp className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => toggleServiceExpand(service.id)}/> : 
+                      <ChevronDown className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => toggleServiceExpand(service.id)}/>
+                    }
                   </div>
                 </div>
               </div>
 
               {expandedServices[service.id] && (
-                <div className="space-y-2 mt-2">
+                <div className="space-y-2 mt-2 pl-10">
                   {service.subservices.map(subservice => (
-                    <div key={subservice.id} className="pl-8 pr-4">
-                      <div className="w-full bg-blue-50 rounded-md">
-                        <div className="flex items-center justify-between px-4 py-4 w-full">
-                          <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleSubserviceExpand(subservice.id)}>
-                            {expandedSubservices[subservice.id] ? (
-                              <ChevronDown className="h-4 w-4 text-gray-500" />
-                            ) : (
-                              <ChevronRight className="h-4 w-4 text-gray-500" />
-                            )}
+                    <div key={subservice.id} className="w-full">
+                      <div className={`w-full bg-blue-50/50 border border-blue-100 rounded-md ${!subserviceStatus[subservice.id] ? 'opacity-70' : ''}`}>
+                        <div className="flex items-center justify-between px-4 py-3 w-full">
+                          <div className="flex-1">
                             <div>
-                              <h4 className="font-semibold text-base">{subservice.name}</h4>
+                              <h4 className="font-medium text-base">{subservice.name}</h4>
                               <p className="text-sm text-gray-500">
-                                {subservice.price} {subservice.unit} • {subservice.itemCount} items
+                                {subservice.price} {subservice.unit}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-medium">
-                              {subserviceStatus[subservice.id] ? 'Active' : 'Inactive'}
-                            </span>
-                            <Switch 
-                              checked={subserviceStatus[subservice.id]} 
-                              onCheckedChange={(checked) => {
-                                setSubserviceStatus(prev => ({
-                                  ...prev,
-                                  [subservice.id]: checked
-                                }));
-                                toast.success(`Subservice ${checked ? 'enabled' : 'disabled'}`);
-                              }}
-                            />
-                            <Button 
-                              variant="serviceIcon" 
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toast.info(`Editing ${subservice.name}`);
-                              }}
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                            <Button 
-                              variant="serviceIcon" 
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                toast.error(`This would delete subservice: ${subservice.name}`);
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4 text-red-500" />
-                            </Button>
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium">
+                                {subserviceStatus[subservice.id] ? 'Active' : 'Inactive'}
+                              </span>
+                              <Switch 
+                                checked={subserviceStatus[subservice.id]} 
+                                onCheckedChange={(checked) => {
+                                  setSubserviceStatus(prev => ({
+                                    ...prev,
+                                    [subservice.id]: checked
+                                  }));
+                                  toast.success(`${subservice.name} ${checked ? 'enabled' : 'disabled'}`);
+                                }}
+                              />
+                            </div>
+                            <div className="flex">
+                              <Button 
+                                variant="editIcon" 
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toast.info(`Editing ${subservice.name}`);
+                                }}
+                              >
+                                <Pencil className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="deleteIcon" 
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  toast.error(`This would delete subservice: ${subservice.name}`);
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   ))}
                   
-                  <div className="pl-8 pr-4 mt-2">
+                  <div className="mt-2">
                     <Button 
                       variant="addSubService"
                       className="w-full py-2"
