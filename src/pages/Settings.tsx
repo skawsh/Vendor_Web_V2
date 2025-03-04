@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon,
@@ -81,6 +80,8 @@ const Settings = () => {
     'payment': false
   });
 
+  const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
+
   const services = [
     { 
       id: 1, 
@@ -93,24 +94,47 @@ const Settings = () => {
           name: 'Wash & Fold', 
           price: '₹59', 
           unit: 'per Kg',
+          items: [
+            { id: 1001, name: 'T-shirt', price: '₹30', unit: 'per piece' },
+            { id: 1002, name: 'Shirt', price: '₹35', unit: 'per piece' },
+            { id: 1003, name: 'Pants', price: '₹40', unit: 'per piece' },
+            { id: 1004, name: 'Jeans', price: '₹45', unit: 'per piece' },
+            { id: 1005, name: 'Shorts', price: '₹25', unit: 'per piece' }
+          ]
         },
         { 
           id: 102, 
           name: 'Wash & Iron', 
           price: '₹79',
           unit: 'per Kg',
+          items: [
+            { id: 1006, name: 'T-shirt', price: '₹40', unit: 'per piece' },
+            { id: 1007, name: 'Shirt', price: '₹45', unit: 'per piece' },
+            { id: 1008, name: 'Pants', price: '₹50', unit: 'per piece' },
+            { id: 1009, name: 'Jeans', price: '₹55', unit: 'per piece' }
+          ]
         },
         { 
           id: 103, 
           name: 'Express Laundry (24hr)', 
           price: '₹99',
           unit: 'per Kg',
+          items: [
+            { id: 1010, name: 'T-shirt', price: '₹50', unit: 'per piece' },
+            { id: 1011, name: 'Shirt', price: '₹55', unit: 'per piece' },
+            { id: 1012, name: 'Pants', price: '₹60', unit: 'per piece' }
+          ]
         },
         { 
           id: 104, 
           name: 'Eco-Friendly Wash', 
           price: '₹89',
           unit: 'per Kg',
+          items: [
+            { id: 1013, name: 'T-shirt', price: '₹45', unit: 'per piece' },
+            { id: 1014, name: 'Shirt', price: '₹50', unit: 'per piece' },
+            { id: 1015, name: 'Pants', price: '₹55', unit: 'per piece' }
+          ]
         }
       ]
     },
@@ -125,18 +149,34 @@ const Settings = () => {
           name: 'Regular Dry Cleaning', 
           price: '₹199',
           unit: 'per piece',
+          items: [
+            { id: 2001, name: 'Suit', price: '₹399', unit: 'per piece' },
+            { id: 2002, name: 'Blazer', price: '₹299', unit: 'per piece' },
+            { id: 2003, name: 'Formal Shirt', price: '₹149', unit: 'per piece' },
+            { id: 2004, name: 'Evening Gown', price: '₹499', unit: 'per piece' }
+          ]
         },
         { 
           id: 202, 
           name: 'Premium Dry Cleaning', 
           price: '₹299',
           unit: 'per piece',
+          items: [
+            { id: 2005, name: 'Designer Suit', price: '₹599', unit: 'per piece' },
+            { id: 2006, name: 'Silk Saree', price: '₹399', unit: 'per piece' },
+            { id: 2007, name: 'Cashmere Sweater', price: '₹349', unit: 'per piece' }
+          ]
         },
         { 
           id: 203, 
           name: 'Express Dry Cleaning', 
           price: '₹349',
           unit: 'per piece',
+          items: [
+            { id: 2008, name: 'Suit', price: '₹499', unit: 'per piece' },
+            { id: 2009, name: 'Dress', price: '₹399', unit: 'per piece' },
+            { id: 2010, name: 'Formal Pants', price: '₹199', unit: 'per piece' }
+          ]
         }
       ]
     },
@@ -151,18 +191,33 @@ const Settings = () => {
           name: 'Wedding Attire', 
           price: '₹599',
           unit: 'per piece',
+          items: [
+            { id: 3001, name: 'Wedding Gown', price: '₹1499', unit: 'per piece' },
+            { id: 3002, name: 'Sherwani', price: '₹999', unit: 'per piece' },
+            { id: 3003, name: 'Lehenga', price: '₹1299', unit: 'per piece' }
+          ]
         },
         { 
           id: 302, 
           name: 'Silk & Delicates', 
           price: '₹399',
           unit: 'per piece',
+          items: [
+            { id: 3004, name: 'Silk Saree', price: '₹499', unit: 'per piece' },
+            { id: 3005, name: 'Pashmina Shawl', price: '₹399', unit: 'per piece' },
+            { id: 3006, name: 'Silk Tie', price: '₹199', unit: 'per piece' }
+          ]
         },
         { 
           id: 303, 
           name: 'Curtains & Drapes', 
           price: '₹199',
           unit: 'per square meter',
+          items: [
+            { id: 3007, name: 'Sheer Curtains', price: '₹149', unit: 'per sq meter' },
+            { id: 3008, name: 'Heavy Drapes', price: '₹249', unit: 'per sq meter' },
+            { id: 3009, name: 'Blackout Curtains', price: '₹299', unit: 'per sq meter' }
+          ]
         }
       ]
     },
@@ -177,12 +232,22 @@ const Settings = () => {
           name: 'Shoe Cleaning', 
           price: '₹249',
           unit: 'per pair',
+          items: [
+            { id: 4001, name: 'Leather Shoes', price: '₹299', unit: 'per pair' },
+            { id: 4002, name: 'Sneakers', price: '₹249', unit: 'per pair' },
+            { id: 4003, name: 'Suede Boots', price: '₹349', unit: 'per pair' }
+          ]
         },
         { 
           id: 402, 
           name: 'Bag Cleaning', 
           price: '₹349',
           unit: 'per piece',
+          items: [
+            { id: 4004, name: 'Leather Handbag', price: '₹449', unit: 'per piece' },
+            { id: 4005, name: 'Backpack', price: '₹299', unit: 'per piece' },
+            { id: 4006, name: 'Designer Purse', price: '₹549', unit: 'per piece' }
+          ]
         }
       ]
     },
@@ -197,12 +262,23 @@ const Settings = () => {
           name: 'Bedding & Linens', 
           price: '₹149',
           unit: 'per Kg',
+          items: [
+            { id: 5001, name: 'Bed Sheet (Single)', price: '₹99', unit: 'per piece' },
+            { id: 5002, name: 'Bed Sheet (Double)', price: '₹149', unit: 'per piece' },
+            { id: 5003, name: 'Duvet Cover', price: '₹199', unit: 'per piece' },
+            { id: 5004, name: 'Pillow Case', price: '₹49', unit: 'per piece' }
+          ]
         },
         { 
           id: 502, 
           name: 'Carpet Cleaning', 
           price: '₹75',
           unit: 'per square foot',
+          items: [
+            { id: 5005, name: 'Small Rug (up to 4x6)', price: '₹599', unit: 'per piece' },
+            { id: 5006, name: 'Medium Carpet (6x9)', price: '₹999', unit: 'per piece' },
+            { id: 5007, name: 'Large Area Rug (9x12)', price: '₹1499', unit: 'per piece' }
+          ]
         }
       ]
     }
@@ -216,6 +292,13 @@ const Settings = () => {
   };
 
   const toggleSubserviceExpand = (subserviceId: number) => {
+    setExpandedSubservices(prev => ({
+      ...prev,
+      [subserviceId]: !prev[subserviceId]
+    }));
+  };
+
+  const toggleItemsExpand = (subserviceId: number) => {
     setExpandedSubservices(prev => ({
       ...prev,
       [subserviceId]: !prev[subserviceId]
@@ -661,11 +744,11 @@ const Settings = () => {
                     <div key={subservice.id} className="w-full">
                       <div className={`w-full bg-blue-50/50 border border-blue-100 rounded-md ${!subserviceStatus[subservice.id] ? 'opacity-70' : ''}`}>
                         <div className="flex items-center justify-between px-4 py-3 w-full">
-                          <div className="flex-1">
+                          <div className="flex-1 cursor-pointer" onClick={() => toggleItemsExpand(subservice.id)}>
                             <div>
                               <h4 className="font-medium text-base">{subservice.name}</h4>
                               <p className="text-sm text-gray-500">
-                                {subservice.price} {subservice.unit}
+                                {subservice.price} {subservice.unit} • {subservice.items?.length || 0} items
                               </p>
                             </div>
                           </div>
@@ -707,8 +790,60 @@ const Settings = () => {
                                 <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
+                            {expandedSubservices[subservice.id] ? 
+                              <ChevronUp className="h-5 w-5 text-gray-500 cursor-pointer" /> : 
+                              <ChevronDown className="h-5 w-5 text-gray-500 cursor-pointer" />
+                            }
                           </div>
                         </div>
+                        
+                        {expandedSubservices[subservice.id] && subservice.items && (
+                          <div className="border-t border-blue-100 p-3">
+                            <div className="bg-white rounded-md overflow-hidden">
+                              <div className="grid grid-cols-12 px-4 py-2 bg-gray-50 text-xs font-medium text-gray-600">
+                                <div className="col-span-6">Item Name</div>
+                                <div className="col-span-3 text-center">Price</div>
+                                <div className="col-span-3 text-center">Actions</div>
+                              </div>
+                              
+                              {subservice.items.map(item => (
+                                <div key={item.id} className="grid grid-cols-12 border-t border-gray-100 px-4 py-3 items-center">
+                                  <div className="col-span-6 font-medium">{item.name}</div>
+                                  <div className="col-span-3 text-center">{item.price} <span className="text-xs text-gray-500">{item.unit}</span></div>
+                                  <div className="col-span-3 flex justify-center gap-2">
+                                    <Button 
+                                      variant="editIcon" 
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => toast.info(`Editing ${item.name}`)}
+                                    >
+                                      <Pencil className="h-3 w-3" />
+                                    </Button>
+                                    <Button 
+                                      variant="deleteIcon" 
+                                      size="icon"
+                                      className="h-7 w-7"
+                                      onClick={() => toast.error(`This would delete item: ${item.name}`)}
+                                    >
+                                      <Trash2 className="h-3 w-3" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              ))}
+                              
+                              <div className="p-3 border-t border-gray-100">
+                                <Button 
+                                  variant="addSubService"
+                                  className="text-xs w-full py-1"
+                                  onClick={() => toast.info(`Add new item to ${subservice.name}`)}
+                                >
+                                  <Plus className="h-3 w-3" />
+                                  Add New Item
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   ))}
