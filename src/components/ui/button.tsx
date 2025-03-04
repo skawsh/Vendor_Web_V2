@@ -31,6 +31,10 @@ const buttonVariants = cva(
         serviceIcon: "h-8 w-8 p-1.5 text-blue-500",
         quickWash: "bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100 rounded-md px-3 py-1 text-xs",
         standardWash: "bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 rounded-md px-3 py-1 text-xs",
+        contactIcon: "h-10 w-10 p-2 rounded-full",
+        phoneButton: "bg-blue-500 text-white hover:bg-blue-600",
+        emailButton: "bg-green-500 text-white hover:bg-green-600",
+        contactSendButton: "bg-primary text-white hover:bg-primary/90",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -84,14 +84,18 @@ TableHead.displayName = "TableHead"
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement> & {
-    highlight?: boolean
+    highlight?: boolean;
+    quickWash?: boolean;
+    standardWash?: boolean;
   }
->(({ className, highlight, ...props }, ref) => (
+>(({ className, highlight, quickWash, standardWash, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
       "p-4 align-middle [&:has([role=checkbox])]:pr-0", 
       highlight && "bg-blue-50/50",
+      quickWash && "bg-amber-50/50",
+      standardWash && "bg-blue-50/50",
       className
     )}
     {...props}
