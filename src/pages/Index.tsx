@@ -12,7 +12,9 @@ import {
   Users,
   TrendingUp,
   RotateCw,
-  PackageCheck
+  PackageCheck,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -23,6 +25,7 @@ import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 const initialCurrentOrders = [
   {
@@ -132,6 +135,8 @@ const Index = () => {
   const [isStudioActive, setIsStudioActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
+  const [isStatCardsCollapsed, setIsStatCardsCollapsed] = useState(false);
+  const [isScheduleCollapsed, setIsScheduleCollapsed] = useState(false);
 
   const handleViewOrderDetails = (orderId: string) => {
     toast.info(`Viewing details for order ${orderId}`, {
@@ -180,10 +185,10 @@ const Index = () => {
       });
 
   return (
-    <div className="container mx-auto p-4 md:p-6">
-      <header className="mb-6 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-2">Skawsh Laundry Studio Dashboard</h1>
+    <div className="container mx-auto p-3 md:p-6">
+      <header className="mb-6 flex flex-col md:flex-row justify-between md:items-center">
+        <div className="mb-4 md:mb-0">
+          <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Skawsh Laundry Studio Dashboard</h1>
           <p className="text-muted-foreground">Welcome to your laundry management system</p>
         </div>
         <div className="flex items-center gap-3">
@@ -200,7 +205,7 @@ const Index = () => {
                 />
               </div>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className="max-w-[90vw] w-[450px]">
               <AlertDialogHeader>
                 <AlertDialogTitle>
                   {isStudioActive ? "Deactivate Studio?" : "Activate Studio?"}
@@ -210,8 +215,8 @@ const Index = () => {
                   {isStudioActive ? " This will temporarily stop accepting new orders." : " This will allow new orders to come in."}
                 </AlertDialogDescription>
               </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+                <AlertDialogCancel className="mt-0">Cancel</AlertDialogCancel>
                 <AlertDialogAction 
                   onClick={() => handleStudioStatusChange(!isStudioActive)}
                   className={isStudioActive ? "bg-red-600 hover:bg-red-700" : "bg-green-600 hover:bg-green-700"}
@@ -224,85 +229,101 @@ const Index = () => {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-        <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">New Orders</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground mt-1">+12% from yesterday</p>
-            <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-blue-500">
-              <ShoppingBag size={20} />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="card-stats bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Completed Orders</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">18</div>
-            <p className="text-xs text-muted-foreground mt-1">+8% from yesterday</p>
-            <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
-              <CheckCircle size={20} />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="card-stats bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">7</div>
-            <p className="text-xs text-muted-foreground mt-1">+2 since morning</p>
-            <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-purple-500">
-              <RotateCw size={20} />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="card-stats bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Today's Revenue</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">₹20,340</div>
-            <p className="text-xs text-muted-foreground mt-1">+15% from yesterday</p>
-            <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-amber-500">
-              <DollarSign size={20} />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="card-stats bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Active Customers</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">142</div>
-            <p className="text-xs text-muted-foreground mt-1">+3 new today</p>
-            <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-rose-500">
-              <Users size={20} />
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="card-stats bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Growth</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">+24%</div>
-            <p className="text-xs text-muted-foreground mt-1">Compared to last month</p>
-            <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-cyan-500">
-              <TrendingUp size={20} />
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Collapsible 
+        open={!isStatCardsCollapsed}
+        onOpenChange={(open) => setIsStatCardsCollapsed(!open)}
+        className="mb-6"
+      >
+        <CollapsibleTrigger className="flex w-full justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
+          <h2 className="text-lg font-medium">Dashboard Stats</h2>
+          {isStatCardsCollapsed ? (
+            <ChevronDown className="h-5 w-5" />
+          ) : (
+            <ChevronUp className="h-5 w-5" />
+          )}
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">New Orders</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">24</div>
+                <p className="text-xs text-muted-foreground mt-1">+12% from yesterday</p>
+                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-blue-500">
+                  <ShoppingBag size={20} />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="card-stats bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Completed Orders</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">18</div>
+                <p className="text-xs text-muted-foreground mt-1">+8% from yesterday</p>
+                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
+                  <CheckCircle size={20} />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="card-stats bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">7</div>
+                <p className="text-xs text-muted-foreground mt-1">+2 since morning</p>
+                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-purple-500">
+                  <RotateCw size={20} />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="card-stats bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Today's Revenue</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">₹20,340</div>
+                <p className="text-xs text-muted-foreground mt-1">+15% from yesterday</p>
+                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-amber-500">
+                  <DollarSign size={20} />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="card-stats bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Customers</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">142</div>
+                <p className="text-xs text-muted-foreground mt-1">+3 new today</p>
+                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-rose-500">
+                  <Users size={20} />
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="card-stats bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Growth</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">+24%</div>
+                <p className="text-xs text-muted-foreground mt-1">Compared to last month</p>
+                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-cyan-500">
+                  <TrendingUp size={20} />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
 
       <div className="relative mb-6">
         <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
@@ -321,17 +342,17 @@ const Index = () => {
 
       <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-6">
         <Tabs defaultValue="current-orders" className="w-full">
-          <div className="flex border-b">
+          <div className="flex border-b overflow-x-auto">
             <TabsList className="h-auto p-0 bg-transparent">
               <TabsTrigger 
                 value="current-orders" 
-                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-8 py-4 font-medium text-base"
+                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-4 sm:px-8 py-4 font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Current orders
               </TabsTrigger>
               <TabsTrigger 
                 value="orders-history" 
-                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-8 py-4 font-medium text-base"
+                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-4 sm:px-8 py-4 font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Orders history
               </TabsTrigger>
@@ -339,113 +360,136 @@ const Index = () => {
           </div>
           
           <TabsContent value="current-orders" className="m-0">
-            <div className="p-4 bg-white dark:bg-card">
-              <div className="flex flex-wrap gap-3 mb-4">
+            <div className="p-2 sm:p-4 bg-white dark:bg-card">
+              <div className="flex flex-wrap gap-2 mb-4 overflow-x-auto">
+                <Button 
+                  onClick={() => setActiveFilter("all")}
+                  variant={activeFilter === "all" ? "default" : "outline"}
+                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "all" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
+                  size="sm"
+                >
+                  All
+                </Button>
                 <Button 
                   onClick={() => setActiveFilter("new")}
                   variant={activeFilter === "new" ? "default" : "outline"}
-                  className={activeFilter === "new" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "new" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
+                  size="sm"
                 >
                   New order
                 </Button>
                 <Button 
                   onClick={() => setActiveFilter("received")}
                   variant={activeFilter === "received" ? "default" : "outline"}
-                  className={activeFilter === "received" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "received" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
+                  size="sm"
                 >
                   Order received
                 </Button>
                 <Button 
                   onClick={() => setActiveFilter("progress")}
                   variant={activeFilter === "progress" ? "default" : "outline"}
-                  className={activeFilter === "progress" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "progress" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
+                  size="sm"
                 >
                   Order in progress
                 </Button>
                 <Button 
                   onClick={() => setActiveFilter("ready")}
                   variant={activeFilter === "ready" ? "default" : "outline"}
-                  className={activeFilter === "ready" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "ready" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
+                  size="sm"
                 >
                   Ready for collect
                 </Button>
                 <Button 
                   onClick={() => setActiveFilter("collected")}
                   variant={activeFilter === "collected" ? "default" : "outline"}
-                  className={activeFilter === "collected" ? "bg-cyan-600 hover:bg-cyan-700" : ""}
+                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "collected" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
+                  size="sm"
                 >
                   Order collected
                 </Button>
               </div>
               
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader className="bg-cyan-600 text-white">
-                    <TableRow className="border-none hover:bg-cyan-600">
-                      <TableHead className="text-white font-medium">Sl No</TableHead>
-                      <TableHead className="text-white font-medium">Order ID</TableHead>
-                      <TableHead className="text-white font-medium">Order date</TableHead>
-                      <TableHead className="text-white font-medium">Weight/ Quantity</TableHead>
-                      <TableHead className="text-white font-medium">Wash Type</TableHead>
-                      <TableHead className="text-white font-medium">Service Type</TableHead>
-                      <TableHead className="text-white font-medium">Price</TableHead>
-                      <TableHead className="text-white font-medium">Status</TableHead>
-                      <TableHead className="text-white font-medium">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredOrders.map((order, index) => (
-                      <TableRow key={order.id} className="hover:bg-gray-50 even:bg-gray-50/50">
-                        <TableCell>{index + 1}</TableCell>
-                        <TableCell className="font-medium">
-                          {order.orderId}
-                        </TableCell>
-                        <TableCell>{order.orderDate}</TableCell>
-                        <TableCell>{order.weightQuantity}</TableCell>
-                        <TableCell>{order.washType}</TableCell>
-                        <TableCell>{order.serviceType}</TableCell>
-                        <TableCell>₹{order.price}</TableCell>
-                        <TableCell>
-                          <span className={cn(
-                            "px-2 py-1 rounded-full text-xs font-medium",
-                            order.status === "New Orders"
-                              ? "bg-blue-100 text-blue-700"
-                              : order.status === "Order Received"
-                                ? "bg-purple-100 text-purple-700"
-                                : order.status === "Orders In Progress"
-                                  ? "bg-amber-100 text-amber-700" 
-                                  : order.status === "Orders Ready"
-                                    ? "bg-emerald-100 text-emerald-700"
-                                    : order.status === "Delivered"
-                                      ? "bg-green-100 text-green-700"
-                                      : "bg-gray-100 text-gray-700"
-                          )}>
-                            {order.status}
-                          </span>
-                        </TableCell>
-                        <TableCell className="flex items-center gap-2">
-                          {order.status === "New Orders" && (
-                            <Button 
-                              size="sm" 
-                              onClick={() => handleMarkReceived(order.orderId)}
-                              className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200"
-                            >
-                              Mark Received
-                            </Button>
-                          )}
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            className="rounded-full p-2 w-9 h-9"
-                            onClick={() => handleViewOrderDetails(order.orderId)}
-                          >
-                            <FileText className="h-4 w-4" />
-                          </Button>
-                        </TableCell>
+              <div className="overflow-x-auto -mx-2 sm:mx-0">
+                <div className="min-w-[800px] px-2 sm:px-0">
+                  <Table>
+                    <TableHeader className="bg-cyan-600 text-white">
+                      <TableRow className="border-none hover:bg-cyan-600">
+                        <TableHead className="text-white font-medium">Sl No</TableHead>
+                        <TableHead className="text-white font-medium">Order ID</TableHead>
+                        <TableHead className="text-white font-medium">Order date</TableHead>
+                        <TableHead className="text-white font-medium">Weight/ Quantity</TableHead>
+                        <TableHead className="text-white font-medium">Wash Type</TableHead>
+                        <TableHead className="text-white font-medium">Service Type</TableHead>
+                        <TableHead className="text-white font-medium">Price</TableHead>
+                        <TableHead className="text-white font-medium">Status</TableHead>
+                        <TableHead className="text-white font-medium">Action</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {filteredOrders.length > 0 ? (
+                        filteredOrders.map((order, index) => (
+                          <TableRow key={order.id} className="hover:bg-gray-50 even:bg-gray-50/50">
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell className="font-medium">
+                              {order.orderId}
+                            </TableCell>
+                            <TableCell>{order.orderDate}</TableCell>
+                            <TableCell>{order.weightQuantity}</TableCell>
+                            <TableCell>{order.washType}</TableCell>
+                            <TableCell>{order.serviceType}</TableCell>
+                            <TableCell>₹{order.price}</TableCell>
+                            <TableCell>
+                              <span className={cn(
+                                "px-2 py-1 rounded-full text-xs font-medium",
+                                order.status === "New Orders"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : order.status === "Order Received"
+                                    ? "bg-purple-100 text-purple-700"
+                                    : order.status === "Orders In Progress"
+                                      ? "bg-amber-100 text-amber-700" 
+                                      : order.status === "Orders Ready"
+                                        ? "bg-emerald-100 text-emerald-700"
+                                        : order.status === "Delivered"
+                                          ? "bg-green-100 text-green-700"
+                                          : "bg-gray-100 text-gray-700"
+                              )}>
+                                {order.status}
+                              </span>
+                            </TableCell>
+                            <TableCell className="flex items-center gap-2">
+                              {order.status === "New Orders" && (
+                                <Button 
+                                  size="sm" 
+                                  onClick={() => handleMarkReceived(order.orderId)}
+                                  className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200 text-xs whitespace-nowrap px-2"
+                                >
+                                  Mark Received
+                                </Button>
+                              )}
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                className="rounded-full p-1 w-7 h-7 sm:p-2 sm:w-9 sm:h-9"
+                                onClick={() => handleViewOrderDetails(order.orderId)}
+                              >
+                                <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
+                              </Button>
+                            </TableCell>
+                          </TableRow>
+                        ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={9} className="text-center py-4">
+                            No orders found matching your criteria
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
               </div>
               <div className="p-4 text-center">
                 <Link to="/orders">
@@ -469,52 +513,68 @@ const Index = () => {
         </Tabs>
       </div>
       
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Today's Schedule</CardTitle>
-          <CardDescription>Upcoming pickups and deliveries</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-start gap-3 pb-3 border-b">
-              <div className="p-2 bg-blue-100 rounded-md">
-                <Calendar className="h-4 w-4 text-blue-500" />
+      <Collapsible
+        open={!isScheduleCollapsed}
+        onOpenChange={(open) => setIsScheduleCollapsed(!open)}
+        className="mb-6"
+      >
+        <CollapsibleTrigger className="flex w-full justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
+          <h2 className="text-lg font-medium">Today's Schedule</h2>
+          {isScheduleCollapsed ? (
+            <ChevronDown className="h-5 w-5" />
+          ) : (
+            <ChevronUp className="h-5 w-5" />
+          )}
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <Card>
+            <CardHeader>
+              <CardTitle>Today's Schedule</CardTitle>
+              <CardDescription>Upcoming pickups and deliveries</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-start gap-3 pb-3 border-b">
+                  <div className="p-2 bg-blue-100 rounded-md">
+                    <Calendar className="h-4 w-4 text-blue-500" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Pickup - Sarah Johnson</p>
+                    <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 pb-3 border-b">
+                  <div className="p-2 bg-green-100 rounded-md">
+                    <PackageCheck className="h-4 w-4 text-green-500" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Delivery - John Smith</p>
+                    <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 pb-3 border-b">
+                  <div className="p-2 bg-purple-100 rounded-md">
+                    <Calendar className="h-4 w-4 text-purple-500" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Pickup - Robert Williams</p>
+                    <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3 pb-3 border-b">
+                  <div className="p-2 bg-amber-100 rounded-md">
+                    <PackageCheck className="h-4 w-4 text-amber-500" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Delivery - Emma Davis</p>
+                    <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="font-medium">Pickup - Sarah Johnson</p>
-                <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 pb-3 border-b">
-              <div className="p-2 bg-green-100 rounded-md">
-                <PackageCheck className="h-4 w-4 text-green-500" />
-              </div>
-              <div>
-                <p className="font-medium">Delivery - John Smith</p>
-                <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 pb-3 border-b">
-              <div className="p-2 bg-purple-100 rounded-md">
-                <Calendar className="h-4 w-4 text-purple-500" />
-              </div>
-              <div>
-                <p className="font-medium">Pickup - Robert Williams</p>
-                <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3 pb-3 border-b">
-              <div className="p-2 bg-amber-100 rounded-md">
-                <PackageCheck className="h-4 w-4 text-amber-500" />
-              </div>
-              <div>
-                <p className="font-medium">Delivery - Emma Davis</p>
-                <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </CollapsibleContent>
+      </Collapsible>
     </div>
   );
 };

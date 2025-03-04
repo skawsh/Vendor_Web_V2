@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Info, Search, X } from "lucide-react";
+import { Calendar, Info, Search, X, ChevronDown, ChevronUp, Filter } from "lucide-react";
 import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 // Sample orders data based on the mockup design
 const ordersData = [
@@ -31,7 +33,7 @@ const ordersData = [
     washType: "Wash & Fold",
     serviceType: "Standard",
     price: 395,
-    status: "New Orders" // Initial status
+    status: "New Orders"
   },
   {
     id: 2,
@@ -136,7 +138,7 @@ const orderHistoryData = ordersData.filter(order => order.status === "Order coll
   price: order.price,
   orderType: ["Regular", "Express", "Premium", "Standard"][Math.floor(Math.random() * 4)],
   orderDate: order.orderDate,
-  completionDate: "05/02/25", // Same completion date for all collected orders
+  completionDate: "05/02/25",
   status: "Order collected"
 }));
 
@@ -158,6 +160,7 @@ const Orders = () => {
   const [orders, setOrders] = useState(ordersData);
   const [dateFilter, setDateFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
+  const [isFilterSectionOpen, setIsFilterSectionOpen] = useState(false);
   
   // All possible order statuses
   const statusOptions = ["New Orders", "Order Received", "Orders In Progress", "Ready for collect", "Order collected"];
@@ -187,7 +190,7 @@ const Orders = () => {
               <TooltipTrigger asChild>
                 <Button 
                   variant="success"
-                  className="bg-[#D1FFCE] text-black font-medium"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto"
                   onClick={() => updateOrderStatus(order.orderId, "Order Received")}
                 >
                   Mark Received
@@ -206,7 +209,7 @@ const Orders = () => {
               <TooltipTrigger asChild>
                 <Button 
                   variant="success"
-                  className="bg-[#D1FFCE] text-black font-medium"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto"
                   onClick={() => updateOrderStatus(order.orderId, "Orders In Progress")}
                 >
                   Mark InProgress
@@ -225,7 +228,7 @@ const Orders = () => {
               <TooltipTrigger asChild>
                 <Button 
                   variant="success"
-                  className="bg-[#D1FFCE] text-black font-medium"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto"
                   onClick={() => updateOrderStatus(order.orderId, "Ready for collect")}
                 >
                   Ready For Collect
@@ -244,7 +247,7 @@ const Orders = () => {
               <TooltipTrigger asChild>
                 <Button 
                   variant="success"
-                  className="bg-[#D1FFCE] text-black font-medium"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto"
                   onClick={() => updateOrderStatus(order.orderId, "Order collected")}
                 >
                   Order collected
@@ -341,16 +344,135 @@ const Orders = () => {
     });
   };
 
+  // Mobile order card component for responsive design
+  const OrderCard = ({ order, index }) => (
+    <Card className="mb-3">
+      <CardHeader className="pb-2 pt-3 px-3">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="font-semibold">{order.orderId}</div>
+            <div className="text-sm text-gray-500">{order.orderDate}</div>
+          </div>
+          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+            {order.status}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 pb-3 px-3">
+        <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+          <div>
+            <div className="text-gray-500">Weight/Qty</div>
+            <div>{order.weightQuantity}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Wash Type</div>
+            <div>{order.washType}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Service Type</div>
+            <div>{order.serviceType}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Price</div>
+            <div>₹{order.price}</div>
+          </div>
+        </div>
+        <div className="flex items-center space-x-2 mt-2">
+          {getActionButton(order)}
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full bg-black text-white w-8 h-8 p-0"
+                  onClick={() => viewOrderDetails(order.orderId)}
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>View order details</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  // History order card component
+  const HistoryOrderCard = ({ order }) => (
+    <Card className="mb-3">
+      <CardHeader className="pb-2 pt-3 px-3">
+        <div className="flex justify-between items-start">
+          <div>
+            <div className="font-semibold">#{order.orderId}</div>
+            <div className="text-sm text-gray-500">{order.customerName}</div>
+          </div>
+          <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+            {order.status}
+          </span>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 pb-3 px-3">
+        <div className="grid grid-cols-2 gap-2 text-sm mb-3">
+          <div>
+            <div className="text-gray-500">Service Type</div>
+            <div>{order.serviceType}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Wash Type</div>
+            <div>{order.washType}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Weight/Qty</div>
+            <div>{order.weightQuantity}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Price</div>
+            <div>₹{order.price}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Order Date</div>
+            <div>{order.orderDate}</div>
+          </div>
+          <div>
+            <div className="text-gray-500">Completion Date</div>
+            <div>{order.completionDate}</div>
+          </div>
+        </div>
+        <div className="flex justify-end">
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline" 
+                  className="rounded-full bg-black text-white w-8 h-8 p-0"
+                  onClick={() => viewOrderDetails(order.orderId)}
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>View order details</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
   return (
-    <div className="container mx-auto p-4 md:p-6">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold">Order management</h1>
+    <div className="container mx-auto p-3 md:p-6">
+      <div className="mb-6">
+        <h1 className="text-2xl md:text-3xl font-bold">Order management</h1>
         <p className="text-gray-600">Manage all your studio order in one place</p>
       </div>
       
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <div className="flex flex-col space-y-4 mb-6">
         {/* Search Bar */}
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1 max-w-full">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
             type="text"
@@ -369,7 +491,7 @@ const Orders = () => {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-between">
           <span className="font-medium">Filter</span>
           <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
             <PopoverTrigger asChild>
@@ -378,7 +500,7 @@ const Orders = () => {
                 <Calendar className="h-5 w-5" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80">
+            <PopoverContent className="w-[280px] sm:w-80">
               <div className="space-y-4">
                 <h4 className="font-medium text-lg">Filter by Date</h4>
                 <RadioGroup value={dateFilter} onValueChange={setDateFilter}>
@@ -438,7 +560,43 @@ const Orders = () => {
         <TabsContent value="current">
           <div className="rounded-lg overflow-hidden border-2 border-[#0F7EA3] bg-[#0F7EA3]">
             {/* Status Filter Buttons at the top of the table */}
-            <div className="flex flex-wrap p-2 bg-[#0F7EA3] rounded-t-lg overflow-x-auto">
+            <Collapsible 
+              open={isFilterSectionOpen} 
+              onOpenChange={setIsFilterSectionOpen}
+              className="md:hidden mb-4 rounded-t-lg overflow-hidden"
+            >
+              <CollapsibleTrigger className="flex w-full justify-between items-center p-3 bg-[#0F7EA3] text-white">
+                <div className="flex items-center gap-2">
+                  <Filter className="h-4 w-4" />
+                  <span>Filter by Status</span>
+                </div>
+                {isFilterSectionOpen ? (
+                  <ChevronUp className="h-4 w-4" />
+                ) : (
+                  <ChevronDown className="h-4 w-4" />
+                )}
+              </CollapsibleTrigger>
+              <CollapsibleContent className="bg-[#0F7EA3] p-2">
+                <div className="space-y-2">
+                  {statusOptions.map((status) => (
+                    <Button 
+                      key={status}
+                      className={`
+                        w-full ${statusFilter === status 
+                          ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                          : 'bg-white text-black border-2 border-white'} 
+                        rounded-md px-4 py-2
+                      `}
+                      onClick={() => setStatusFilter(status)}
+                    >
+                      {status}
+                    </Button>
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+            
+            <div className="hidden md:flex flex-wrap p-2 bg-[#0F7EA3] rounded-t-lg overflow-x-auto">
               {statusOptions.map((status) => (
                 <Button 
                   key={status}
@@ -455,55 +613,80 @@ const Orders = () => {
               ))}
             </div>
             
-            {/* Orders Table */}
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-[#0F7EA3] border-none">
-                  <TableHead className="text-white font-bold">Sl No</TableHead>
-                  <TableHead className="text-white font-bold">Order ID</TableHead>
-                  <TableHead className="text-white font-bold">Order date</TableHead>
-                  <TableHead className="text-white font-bold">Weight/ Quantity</TableHead>
-                  <TableHead className="text-white font-bold">Wash Type</TableHead>
-                  <TableHead className="text-white font-bold">Service Type</TableHead>
-                  <TableHead className="text-white font-bold">Price</TableHead>
-                  <TableHead className="text-white font-bold">Status</TableHead>
-                  <TableHead className="text-white font-bold">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrders.map((order, index) => (
-                  <TableRow key={order.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
-                    <TableCell>{order.id}</TableCell>
-                    <TableCell>{order.orderId}</TableCell>
-                    <TableCell>{order.orderDate}</TableCell>
-                    <TableCell>{order.weightQuantity}</TableCell>
-                    <TableCell>{order.washType}</TableCell>
-                    <TableCell>{order.serviceType}</TableCell>
-                    <TableCell>{order.price}</TableCell>
-                    <TableCell>{order.status}</TableCell>
-                    <TableCell className="flex items-center space-x-2">
-                      {getActionButton(order)}
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              className="rounded-full bg-black text-white w-8 h-8 p-0"
-                              onClick={() => viewOrderDetails(order.orderId)}
-                            >
-                              <Info className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>View order details</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            {/* Mobile view - Cards */}
+            <div className="md:hidden bg-white p-3">
+              {filteredOrders.length > 0 ? (
+                filteredOrders.map((order, index) => (
+                  <OrderCard key={order.id} order={order} index={index} />
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No orders found</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Desktop view - Table */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto bg-white">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-[#0F7EA3] border-none">
+                      <TableHead className="text-white font-bold">Sl No</TableHead>
+                      <TableHead className="text-white font-bold">Order ID</TableHead>
+                      <TableHead className="text-white font-bold">Order date</TableHead>
+                      <TableHead className="text-white font-bold">Weight/ Quantity</TableHead>
+                      <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Service Type</TableHead>
+                      <TableHead className="text-white font-bold">Price</TableHead>
+                      <TableHead className="text-white font-bold">Status</TableHead>
+                      <TableHead className="text-white font-bold">Action</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredOrders.length > 0 ? (
+                      filteredOrders.map((order, index) => (
+                        <TableRow key={order.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                          <TableCell>{order.id}</TableCell>
+                          <TableCell>{order.orderId}</TableCell>
+                          <TableCell>{order.orderDate}</TableCell>
+                          <TableCell>{order.weightQuantity}</TableCell>
+                          <TableCell>{order.washType}</TableCell>
+                          <TableCell>{order.serviceType}</TableCell>
+                          <TableCell>{order.price}</TableCell>
+                          <TableCell>{order.status}</TableCell>
+                          <TableCell className="flex items-center space-x-2">
+                            {getActionButton(order)}
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    className="rounded-full bg-black text-white w-8 h-8 p-0"
+                                    onClick={() => viewOrderDetails(order.orderId)}
+                                  >
+                                    <Info className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>View order details</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={9} className="text-center py-8">
+                          <p className="text-gray-500">No orders found</p>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </div>
         </TabsContent>
         
@@ -513,61 +696,87 @@ const Orders = () => {
               <h3 className="text-white font-semibold px-4 py-2">Order History - Completed Orders</h3>
             </div>
             
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-[#0F7EA3] border-none">
-                  <TableHead className="text-white font-bold">S.No</TableHead>
-                  <TableHead className="text-white font-bold">Order ID</TableHead>
-                  <TableHead className="text-white font-bold">Customer Name</TableHead>
-                  <TableHead className="text-white font-bold">Service Type</TableHead>
-                  <TableHead className="text-white font-bold">Wash Type</TableHead>
-                  <TableHead className="text-white font-bold">Weight / Quantity</TableHead>
-                  <TableHead className="text-white font-bold">Price (₹)</TableHead>
-                  <TableHead className="text-white font-bold">Order Date</TableHead>
-                  <TableHead className="text-white font-bold">Completion Date</TableHead>
-                  <TableHead className="text-white font-bold">Status</TableHead>
-                  <TableHead className="text-white font-bold">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrderHistory.map((order, index) => (
-                  <TableRow key={order.orderId} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
-                    <TableCell>{order.slNo}</TableCell>
-                    <TableCell className="font-medium">#{order.orderId}</TableCell>
-                    <TableCell>{order.customerName}</TableCell>
-                    <TableCell>{order.serviceType}</TableCell>
-                    <TableCell>{order.washType}</TableCell>
-                    <TableCell>{order.weightQuantity}</TableCell>
-                    <TableCell>₹{order.price}</TableCell>
-                    <TableCell>{order.orderDate}</TableCell>
-                    <TableCell>{order.completionDate}</TableCell>
-                    <TableCell>
-                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
-                        {order.status}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              className="rounded-full bg-black text-white w-8 h-8 p-0"
-                              onClick={() => viewOrderDetails(order.orderId)}
-                            >
-                              <Info className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>View order details</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+            {/* Mobile view - History Cards */}
+            <div className="md:hidden bg-white p-3">
+              {filteredOrderHistory.length > 0 ? (
+                filteredOrderHistory.map((order) => (
+                  <HistoryOrderCard key={order.orderId} order={order} />
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-500">No orders in history</p>
+                </div>
+              )}
+            </div>
+            
+            {/* Desktop view - History Table */}
+            <div className="hidden md:block">
+              <div className="overflow-x-auto bg-white">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-[#0F7EA3] border-none">
+                      <TableHead className="text-white font-bold">S.No</TableHead>
+                      <TableHead className="text-white font-bold">Order ID</TableHead>
+                      <TableHead className="text-white font-bold">Customer Name</TableHead>
+                      <TableHead className="text-white font-bold">Service Type</TableHead>
+                      <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Weight / Quantity</TableHead>
+                      <TableHead className="text-white font-bold">Price (₹)</TableHead>
+                      <TableHead className="text-white font-bold">Order Date</TableHead>
+                      <TableHead className="text-white font-bold">Completion Date</TableHead>
+                      <TableHead className="text-white font-bold">Status</TableHead>
+                      <TableHead className="text-white font-bold">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredOrderHistory.length > 0 ? (
+                      filteredOrderHistory.map((order, index) => (
+                        <TableRow key={order.orderId} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                          <TableCell>{order.slNo}</TableCell>
+                          <TableCell className="font-medium">#{order.orderId}</TableCell>
+                          <TableCell>{order.customerName}</TableCell>
+                          <TableCell>{order.serviceType}</TableCell>
+                          <TableCell>{order.washType}</TableCell>
+                          <TableCell>{order.weightQuantity}</TableCell>
+                          <TableCell>₹{order.price}</TableCell>
+                          <TableCell>{order.orderDate}</TableCell>
+                          <TableCell>{order.completionDate}</TableCell>
+                          <TableCell>
+                            <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                              {order.status}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button 
+                                    variant="outline" 
+                                    className="rounded-full bg-black text-white w-8 h-8 p-0"
+                                    onClick={() => viewOrderDetails(order.orderId)}
+                                  >
+                                    <Info className="h-4 w-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>View order details</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={11} className="text-center py-8">
+                          <p className="text-gray-500">No orders in history</p>
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            </div>
           </div>
         </TabsContent>
       </Tabs>
