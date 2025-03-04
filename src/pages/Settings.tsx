@@ -6,17 +6,17 @@ import {
   Search, 
   Plus,
   ChevronRight,
-  Shirt,
   ChevronDown,
   ChevronUp,
   Save,
-  X
+  X,
+  Shirt
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
 
 const Settings = () => {
@@ -30,12 +30,38 @@ const Settings = () => {
     studio: false,
     payment: false
   });
+  
+  // Track which services are expanded
+  const [expandedServices, setExpandedServices] = useState<Record<number, boolean>>({});
 
-  // Mock data
+  // Mock data with subservices
   const services = [
-    { id: 1, name: 'Core Laundry Services', subservices: 3 },
-    { id: 2, name: 'Dry Cleaning', subservices: 3 },
-    { id: 3, name: 'Shoe Laundry', subservices: 2 },
+    { 
+      id: 1, 
+      name: 'Core Laundry Services', 
+      subservices: [
+        { id: 101, name: 'Wash & Fold', price: '₹59 per Kg', items: 5 },
+        { id: 102, name: 'Wash & Iron', price: '₹79 per Kg', items: 3 },
+        { id: 103, name: 'Steam Press', price: '₹39 per Item', items: 3 }
+      ]
+    },
+    { 
+      id: 2, 
+      name: 'Dry Cleaning', 
+      subservices: [
+        { id: 201, name: 'Upper Wear', price: '', items: 4 },
+        { id: 202, name: 'Lower Wear', price: '', items: 3 },
+        { id: 203, name: 'Formal Wear', price: '', items: 3 }
+      ]
+    },
+    { 
+      id: 3, 
+      name: 'Shoe Laundry', 
+      subservices: [
+        { id: 301, name: 'Sport Shoes', price: '₹199 per Pair', items: 1 },
+        { id: 302, name: 'Leather Shoes', price: '₹249 per Pair', items: 1 }
+      ]
+    },
   ];
 
   const clothingItems = [
@@ -45,6 +71,13 @@ const Settings = () => {
     { id: 4, name: 'Jeans', price: 45 },
     { id: 5, name: 'Suit', price: 250 },
   ];
+
+  const toggleServiceExpand = (serviceId: number) => {
+    setExpandedServices(prev => ({
+      ...prev,
+      [serviceId]: !prev[serviceId]
+    }));
+  };
 
   const filteredServices = services.filter(service => 
     service.name.toLowerCase().includes(searchServiceQuery.toLowerCase())
@@ -641,7 +674,7 @@ const Settings = () => {
         </Card>
       </div>
 
-      {/* Services and Items Management - Updated for better mobile experience */}
+      {/* Services and Items Management */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Services Management */}
         <Card className="h-full">
@@ -672,27 +705,69 @@ const Settings = () => {
             
             <div className="space-y-3">
               {filteredServices.map(service => (
-                <div 
-                  key={service.id} 
-                  className="flex justify-between items-center p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer"
-                >
-                  <div className="flex items-center gap-2">
-                    <ChevronRight className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
-                    <div className="font-medium">{service.name}</div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="text-xs md:text-sm text-muted-foreground bg-gray-200 px-2 py-1 rounded">
-                      {service.subservices} subservices
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="p-1 h-auto"
-                      onClick={() => handleEditItem(service.id, 'service')}
+                <div key={service.id} className="rounded-lg overflow-hidden">
+                  <Collapsible open={expandedServices[service.id]}>
+                    <CollapsibleTrigger 
+                      onClick={() => toggleServiceExpand(service.id)}
+                      className="w-full"
                     >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                  </div>
+                      <div 
+                        className="flex justify-between items-center p-3 md:p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition cursor-pointer"
+                      >
+                        <div className="flex items-center gap-2">
+                          {expandedServices[service.id] ? 
+                            <ChevronDown className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" /> : 
+                            <ChevronDown className="h-4 w-4 md:h-5 md:w-5 text-muted-foreground" />
+                          }
+                          <div className="font-medium">{service.name}</div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <div className="text-xs md:text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                            {service.subservices.length} subservices
+                          </div>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="p-1 h-auto"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleEditItem(service.id, 'service');
+                            }}
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="bg-white border-x border-b rounded-b-lg">
+                      <div className="px-4 py-2 space-y-3 border-l-2 border-gray-200 ml-4">
+                        {service.subservices.map(subservice => (
+                          <div key={subservice.id} className="flex justify-between items-center p-2 hover:bg-gray-50 rounded-md">
+                            <div className="flex items-center gap-2">
+                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                              <span className="font-medium">{subservice.name}</span>
+                              {subservice.price && (
+                                <span className="text-sm text-muted-foreground">({subservice.price})</span>
+                              )}
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <div className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                                {subservice.items} items
+                              </div>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="p-1 h-6 w-6"
+                                onClick={() => handleEditItem(subservice.id, 'subservice')}
+                              >
+                                <Pencil className="h-3 w-3" />
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
                 </div>
               ))}
               
@@ -812,4 +887,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
