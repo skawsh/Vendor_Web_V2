@@ -17,6 +17,7 @@ import {
   Building2,
   Store,
   CreditCard,
+  ChevronUp,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -494,174 +495,123 @@ const Settings = () => {
           </Button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {services.map(service => (
-            <Card key={service.id} className="border shadow-sm overflow-hidden">
-              <Collapsible open={expandedServices[service.id]}>
-                <CollapsibleTrigger 
-                  onClick={() => toggleServiceExpand(service.id)}
-                  className="w-full focus:outline-none"
-                >
-                  <div className="flex justify-between items-center p-4 bg-blue-50 rounded-md transition">
-                    <div className="flex items-center gap-3">
-                      <ChevronRight 
-                        className={`h-6 w-6 text-gray-500 transition-transform ${expandedServices[service.id] ? 'rotate-90' : ''}`} 
-                      />
-                      <div className="text-left">
-                        <h3 className="font-bold text-lg">{service.name}</h3>
-                        <p className="text-sm text-gray-500">Sub services {service.subserviceCount}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium mr-1">
-                          {serviceStatus[service.id] ? 'Active' : 'Inactive'}
-                        </span>
-                        <Switch 
-                          checked={serviceStatus[service.id]} 
-                          onCheckedChange={(checked) => {
-                            setServiceStatus(prev => ({
-                              ...prev,
-                              [service.id]: checked
-                            }));
-                            toast.success(`Service ${checked ? 'enabled' : 'disabled'}`);
-                          }}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </div>
-                      <Button 
-                        variant="editIcon" 
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleEditItem(service.id, 'service');
-                        }}
-                      >
-                        <Pencil className="h-5 w-5" />
-                      </Button>
-                      <Button 
-                        variant="deleteIcon" 
-                        size="icon"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          toast.error(`This would delete service: ${service.name}`);
-                        }}
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </Button>
+            <div key={service.id}>
+              <div className="w-full bg-blue-50 rounded-md overflow-hidden">
+                <div className="flex items-center justify-between px-4 py-4 w-full">
+                  <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleServiceExpand(service.id)}>
+                    {expandedServices[service.id] ? (
+                      <ChevronDown className="h-5 w-5 text-gray-500" />
+                    ) : (
+                      <ChevronRight className="h-5 w-5 text-gray-500" />
+                    )}
+                    <div>
+                      <h3 className="font-semibold text-lg">{service.name}</h3>
+                      <p className="text-sm text-gray-500">Sub services {service.subserviceCount}</p>
                     </div>
                   </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="bg-white">
-                  <div className="p-4 space-y-3">
-                    {service.subservices.map(subservice => (
-                      <Card key={subservice.id} className="border shadow-sm">
-                        <Collapsible open={expandedSubservices[subservice.id]}>
-                          <CollapsibleTrigger 
-                            onClick={() => toggleSubserviceExpand(subservice.id)}
-                            className="w-full focus:outline-none"
-                          >
-                            <div className="flex justify-between items-center p-4 bg-blue-50 rounded-md transition">
-                              <div className="flex items-center gap-3">
-                                <ChevronRight 
-                                  className={`h-5 w-5 text-gray-500 transition-transform ${expandedSubservices[subservice.id] ? 'rotate-90' : ''}`} 
-                                />
-                                <div className="text-left">
-                                  <h4 className="font-semibold">{subservice.name}</h4>
-                                  <p className="text-sm text-gray-500">
-                                    {subservice.price} {subservice.unit} • {subservice.itemCount} items
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm font-medium mr-1">
-                                    {subserviceStatus[subservice.id] ? 'Active' : 'Inactive'}
-                                  </span>
-                                  <Switch 
-                                    checked={subserviceStatus[subservice.id]} 
-                                    onCheckedChange={(checked) => {
-                                      setSubserviceStatus(prev => ({
-                                        ...prev,
-                                        [subservice.id]: checked
-                                      }));
-                                      toast.success(`Subservice ${checked ? 'enabled' : 'disabled'}`);
-                                    }}
-                                    onClick={(e) => e.stopPropagation()}
-                                  />
-                                </div>
-                                <Button 
-                                  variant="editIcon" 
-                                  size="icon"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleEditItem(subservice.id, 'subservice');
-                                  }}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button 
-                                  variant="deleteIcon" 
-                                  size="icon"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toast.error(`This would delete subservice: ${subservice.name}`);
-                                  }}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium">
+                      {serviceStatus[service.id] ? 'Active' : 'Inactive'}
+                    </span>
+                    <Switch 
+                      checked={serviceStatus[service.id]} 
+                      onCheckedChange={(checked) => {
+                        setServiceStatus(prev => ({
+                          ...prev,
+                          [service.id]: checked
+                        }));
+                        toast.success(`Service ${checked ? 'enabled' : 'disabled'}`);
+                      }}
+                    />
+                    <Button 
+                      variant="serviceIcon" 
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast.info(`Editing ${service.name}`);
+                      }}
+                    >
+                      <Pencil className="h-5 w-5" />
+                    </Button>
+                    <Button 
+                      variant="serviceIcon" 
+                      size="icon"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toast.error(`This would delete service: ${service.name}`);
+                      }}
+                    >
+                      <Trash2 className="h-5 w-5 text-red-500" />
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {expandedServices[service.id] && (
+                <div className="space-y-2 mt-2">
+                  {service.subservices.map(subservice => (
+                    <div key={subservice.id} className="pl-8 pr-4">
+                      <div className="w-full bg-blue-50 rounded-md">
+                        <div className="flex items-center justify-between px-4 py-4 w-full">
+                          <div className="flex items-center gap-3 cursor-pointer" onClick={() => toggleSubserviceExpand(subservice.id)}>
+                            {expandedSubservices[subservice.id] ? (
+                              <ChevronDown className="h-4 w-4 text-gray-500" />
+                            ) : (
+                              <ChevronRight className="h-4 w-4 text-gray-500" />
+                            )}
+                            <div>
+                              <h4 className="font-semibold text-base">{subservice.name}</h4>
+                              <p className="text-sm text-gray-500">
+                                {subservice.price} {subservice.unit} • {subservice.itemCount} items
+                              </p>
                             </div>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="border-t">
-                            <div className="p-4">
-                              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-                                {subservice.items.map(item => (
-                                  <Card key={item.id} className="border p-4 bg-white">
-                                    <div className="flex justify-between items-start mb-4">
-                                      <h5 className="font-medium">{item.name}</h5>
-                                      <Button 
-                                        variant="ghost" 
-                                        size="icon"
-                                        className="h-8 w-8"
-                                        onClick={() => handleEditItem(item.id, 'item')}
-                                      >
-                                        <Pencil className="h-4 w-4" />
-                                      </Button>
-                                    </div>
-                                    <div className="space-y-3">
-                                      <div className="flex justify-between">
-                                        <span className="text-sm text-muted-foreground">Standard</span>
-                                        <span className="font-medium">{item.standardPrice}</span>
-                                      </div>
-                                      <div className="flex justify-between">
-                                        <span className="text-sm text-muted-foreground">Express</span>
-                                        <span className="font-medium">{item.expressPrice}</span>
-                                      </div>
-                                    </div>
-                                  </Card>
-                                ))}
-                              </div>
-                              {subservice.items.length > 0 && (
-                                <Button 
-                                  variant="outline"
-                                  className="mt-4 gap-1"
-                                  onClick={() => {
-                                    toast.info(`Add new item to ${subservice.name}`);
-                                  }}
-                                >
-                                  <Plus className="h-4 w-4" />
-                                  Add New Item
-                                </Button>
-                              )}
-                            </div>
-                          </CollapsibleContent>
-                        </Collapsible>
-                      </Card>
-                    ))}
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-medium">
+                              {subserviceStatus[subservice.id] ? 'Active' : 'Inactive'}
+                            </span>
+                            <Switch 
+                              checked={subserviceStatus[subservice.id]} 
+                              onCheckedChange={(checked) => {
+                                setSubserviceStatus(prev => ({
+                                  ...prev,
+                                  [subservice.id]: checked
+                                }));
+                                toast.success(`Subservice ${checked ? 'enabled' : 'disabled'}`);
+                              }}
+                            />
+                            <Button 
+                              variant="serviceIcon" 
+                              size="icon"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toast.info(`Editing ${subservice.name}`);
+                              }}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="serviceIcon" 
+                              size="icon"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toast.error(`This would delete subservice: ${subservice.name}`);
+                              }}
+                            >
+                              <Trash2 className="h-4 w-4 text-red-500" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  <div className="pl-8 pr-4 mt-2">
                     <Button 
                       variant="addSubService"
-                      className="w-full gap-1 py-3"
+                      className="w-full py-2"
                       onClick={() => {
                         toast.info(`Add new subservice to ${service.name}`);
                       }}
@@ -670,9 +620,9 @@ const Settings = () => {
                       Add New Subservice
                     </Button>
                   </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </Card>
+                </div>
+              )}
+            </div>
           ))}
         </div>
       </div>
