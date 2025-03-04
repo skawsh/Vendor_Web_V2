@@ -29,6 +29,8 @@ const buttonVariants = cva(
         deleteIcon: "p-2 rounded-full bg-transparent hover:bg-red-50 text-red-500",
         editIcon: "p-2 rounded-full bg-transparent hover:bg-blue-50 text-blue-500",
         serviceIcon: "h-8 w-8 p-1.5 text-blue-500",
+        quickWash: "bg-amber-50 text-amber-600 border border-amber-100 hover:bg-amber-100 rounded-md px-3 py-1 text-xs",
+        standardWash: "bg-blue-50 text-blue-600 border border-blue-100 hover:bg-blue-100 rounded-md px-3 py-1 text-xs",
       },
       size: {
         default: "h-10 px-4 py-2",

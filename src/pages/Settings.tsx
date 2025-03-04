@@ -21,6 +21,8 @@ import {
   Shirt,
   Umbrella,
   ShoppingBag,
+  Zap,
+  Clock,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -30,6 +32,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const Settings = () => {
   const [searchServiceQuery, setSearchServiceQuery] = useState('');
@@ -95,11 +98,41 @@ const Settings = () => {
           price: '₹59', 
           unit: 'per Kg',
           items: [
-            { id: 1001, name: 'T-shirt', price: '₹30', unit: 'per piece' },
-            { id: 1002, name: 'Shirt', price: '₹35', unit: 'per piece' },
-            { id: 1003, name: 'Pants', price: '₹40', unit: 'per piece' },
-            { id: 1004, name: 'Jeans', price: '₹45', unit: 'per piece' },
-            { id: 1005, name: 'Shorts', price: '₹25', unit: 'per piece' }
+            { 
+              id: 1001, 
+              name: 'T-shirt', 
+              quickWashPrice: '₹40', 
+              standardWashPrice: '₹30', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1002, 
+              name: 'Shirt', 
+              quickWashPrice: '₹45', 
+              standardWashPrice: '₹35', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1003, 
+              name: 'Pants', 
+              quickWashPrice: '₹50', 
+              standardWashPrice: '₹40', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1004, 
+              name: 'Jeans', 
+              quickWashPrice: '₹55', 
+              standardWashPrice: '₹45', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1005, 
+              name: 'Shorts', 
+              quickWashPrice: '₹35', 
+              standardWashPrice: '₹25', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -108,10 +141,34 @@ const Settings = () => {
           price: '₹79',
           unit: 'per Kg',
           items: [
-            { id: 1006, name: 'T-shirt', price: '₹40', unit: 'per piece' },
-            { id: 1007, name: 'Shirt', price: '₹45', unit: 'per piece' },
-            { id: 1008, name: 'Pants', price: '₹50', unit: 'per piece' },
-            { id: 1009, name: 'Jeans', price: '₹55', unit: 'per piece' }
+            { 
+              id: 1006, 
+              name: 'T-shirt', 
+              quickWashPrice: '₹50', 
+              standardWashPrice: '₹40', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1007, 
+              name: 'Shirt', 
+              quickWashPrice: '₹55', 
+              standardWashPrice: '₹45', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1008, 
+              name: 'Pants', 
+              quickWashPrice: '₹60', 
+              standardWashPrice: '₹50', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1009, 
+              name: 'Jeans', 
+              quickWashPrice: '₹65', 
+              standardWashPrice: '₹55', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -120,9 +177,27 @@ const Settings = () => {
           price: '₹99',
           unit: 'per Kg',
           items: [
-            { id: 1010, name: 'T-shirt', price: '₹50', unit: 'per piece' },
-            { id: 1011, name: 'Shirt', price: '₹55', unit: 'per piece' },
-            { id: 1012, name: 'Pants', price: '₹60', unit: 'per piece' }
+            { 
+              id: 1010, 
+              name: 'T-shirt', 
+              quickWashPrice: '₹60', 
+              standardWashPrice: '₹50', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1011, 
+              name: 'Shirt', 
+              quickWashPrice: '₹65', 
+              standardWashPrice: '₹55', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1012, 
+              name: 'Pants', 
+              quickWashPrice: '₹70', 
+              standardWashPrice: '₹60', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -131,9 +206,27 @@ const Settings = () => {
           price: '₹89',
           unit: 'per Kg',
           items: [
-            { id: 1013, name: 'T-shirt', price: '₹45', unit: 'per piece' },
-            { id: 1014, name: 'Shirt', price: '₹50', unit: 'per piece' },
-            { id: 1015, name: 'Pants', price: '₹55', unit: 'per piece' }
+            { 
+              id: 1013, 
+              name: 'T-shirt', 
+              quickWashPrice: '₹55', 
+              standardWashPrice: '₹45', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1014, 
+              name: 'Shirt', 
+              quickWashPrice: '₹60', 
+              standardWashPrice: '₹50', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 1015, 
+              name: 'Pants', 
+              quickWashPrice: '₹65', 
+              standardWashPrice: '₹55', 
+              unit: 'per piece' 
+            }
           ]
         }
       ]
@@ -150,10 +243,34 @@ const Settings = () => {
           price: '₹199',
           unit: 'per piece',
           items: [
-            { id: 2001, name: 'Suit', price: '₹399', unit: 'per piece' },
-            { id: 2002, name: 'Blazer', price: '₹299', unit: 'per piece' },
-            { id: 2003, name: 'Formal Shirt', price: '₹149', unit: 'per piece' },
-            { id: 2004, name: 'Evening Gown', price: '₹499', unit: 'per piece' }
+            { 
+              id: 2001, 
+              name: 'Suit', 
+              quickWashPrice: '₹499', 
+              standardWashPrice: '₹399', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2002, 
+              name: 'Blazer', 
+              quickWashPrice: '₹399', 
+              standardWashPrice: '₹299', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2003, 
+              name: 'Formal Shirt', 
+              quickWashPrice: '₹249', 
+              standardWashPrice: '₹149', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2004, 
+              name: 'Evening Gown', 
+              quickWashPrice: '₹599', 
+              standardWashPrice: '₹499', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -162,9 +279,27 @@ const Settings = () => {
           price: '₹299',
           unit: 'per piece',
           items: [
-            { id: 2005, name: 'Designer Suit', price: '₹599', unit: 'per piece' },
-            { id: 2006, name: 'Silk Saree', price: '₹399', unit: 'per piece' },
-            { id: 2007, name: 'Cashmere Sweater', price: '₹349', unit: 'per piece' }
+            { 
+              id: 2005, 
+              name: 'Designer Suit', 
+              quickWashPrice: '₹699', 
+              standardWashPrice: '₹599', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2006, 
+              name: 'Silk Saree', 
+              quickWashPrice: '₹499', 
+              standardWashPrice: '₹399', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2007, 
+              name: 'Cashmere Sweater', 
+              quickWashPrice: '₹449', 
+              standardWashPrice: '₹349', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -173,9 +308,27 @@ const Settings = () => {
           price: '₹349',
           unit: 'per piece',
           items: [
-            { id: 2008, name: 'Suit', price: '₹499', unit: 'per piece' },
-            { id: 2009, name: 'Dress', price: '₹399', unit: 'per piece' },
-            { id: 2010, name: 'Formal Pants', price: '₹199', unit: 'per piece' }
+            { 
+              id: 2008, 
+              name: 'Suit', 
+              quickWashPrice: '₹599', 
+              standardWashPrice: '₹499', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2009, 
+              name: 'Dress', 
+              quickWashPrice: '₹499', 
+              standardWashPrice: '₹399', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 2010, 
+              name: 'Formal Pants', 
+              quickWashPrice: '₹299', 
+              standardWashPrice: '₹199', 
+              unit: 'per piece' 
+            }
           ]
         }
       ]
@@ -192,9 +345,27 @@ const Settings = () => {
           price: '₹599',
           unit: 'per piece',
           items: [
-            { id: 3001, name: 'Wedding Gown', price: '₹1499', unit: 'per piece' },
-            { id: 3002, name: 'Sherwani', price: '₹999', unit: 'per piece' },
-            { id: 3003, name: 'Lehenga', price: '₹1299', unit: 'per piece' }
+            { 
+              id: 3001, 
+              name: 'Wedding Gown', 
+              quickWashPrice: '₹1699', 
+              standardWashPrice: '₹1499', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 3002, 
+              name: 'Sherwani', 
+              quickWashPrice: '₹1199', 
+              standardWashPrice: '₹999', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 3003, 
+              name: 'Lehenga', 
+              quickWashPrice: '₹1499', 
+              standardWashPrice: '₹1299', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -203,9 +374,27 @@ const Settings = () => {
           price: '₹399',
           unit: 'per piece',
           items: [
-            { id: 3004, name: 'Silk Saree', price: '₹499', unit: 'per piece' },
-            { id: 3005, name: 'Pashmina Shawl', price: '₹399', unit: 'per piece' },
-            { id: 3006, name: 'Silk Tie', price: '₹199', unit: 'per piece' }
+            { 
+              id: 3004, 
+              name: 'Silk Saree', 
+              quickWashPrice: '₹599', 
+              standardWashPrice: '₹499', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 3005, 
+              name: 'Pashmina Shawl', 
+              quickWashPrice: '₹499', 
+              standardWashPrice: '₹399', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 3006, 
+              name: 'Silk Tie', 
+              quickWashPrice: '₹249', 
+              standardWashPrice: '₹199', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -214,9 +403,27 @@ const Settings = () => {
           price: '₹199',
           unit: 'per square meter',
           items: [
-            { id: 3007, name: 'Sheer Curtains', price: '₹149', unit: 'per sq meter' },
-            { id: 3008, name: 'Heavy Drapes', price: '₹249', unit: 'per sq meter' },
-            { id: 3009, name: 'Blackout Curtains', price: '₹299', unit: 'per sq meter' }
+            { 
+              id: 3007, 
+              name: 'Sheer Curtains', 
+              quickWashPrice: '₹199', 
+              standardWashPrice: '₹149', 
+              unit: 'per sq meter' 
+            },
+            { 
+              id: 3008, 
+              name: 'Heavy Drapes', 
+              quickWashPrice: '₹299', 
+              standardWashPrice: '₹249', 
+              unit: 'per sq meter' 
+            },
+            { 
+              id: 3009, 
+              name: 'Blackout Curtains', 
+              quickWashPrice: '₹349', 
+              standardWashPrice: '₹299', 
+              unit: 'per sq meter' 
+            }
           ]
         }
       ]
@@ -233,9 +440,27 @@ const Settings = () => {
           price: '₹249',
           unit: 'per pair',
           items: [
-            { id: 4001, name: 'Leather Shoes', price: '₹299', unit: 'per pair' },
-            { id: 4002, name: 'Sneakers', price: '₹249', unit: 'per pair' },
-            { id: 4003, name: 'Suede Boots', price: '₹349', unit: 'per pair' }
+            { 
+              id: 4001, 
+              name: 'Leather Shoes', 
+              quickWashPrice: '₹349', 
+              standardWashPrice: '₹299', 
+              unit: 'per pair' 
+            },
+            { 
+              id: 4002, 
+              name: 'Sneakers', 
+              quickWashPrice: '₹299', 
+              standardWashPrice: '₹249', 
+              unit: 'per pair' 
+            },
+            { 
+              id: 4003, 
+              name: 'Suede Boots', 
+              quickWashPrice: '₹399', 
+              standardWashPrice: '₹349', 
+              unit: 'per pair' 
+            }
           ]
         },
         { 
@@ -244,9 +469,27 @@ const Settings = () => {
           price: '₹349',
           unit: 'per piece',
           items: [
-            { id: 4004, name: 'Leather Handbag', price: '₹449', unit: 'per piece' },
-            { id: 4005, name: 'Backpack', price: '₹299', unit: 'per piece' },
-            { id: 4006, name: 'Designer Purse', price: '₹549', unit: 'per piece' }
+            { 
+              id: 4004, 
+              name: 'Leather Handbag', 
+              quickWashPrice: '₹549', 
+              standardWashPrice: '₹449', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 4005, 
+              name: 'Backpack', 
+              quickWashPrice: '₹349', 
+              standardWashPrice: '₹299', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 4006, 
+              name: 'Designer Purse', 
+              quickWashPrice: '₹649', 
+              standardWashPrice: '₹549', 
+              unit: 'per piece' 
+            }
           ]
         }
       ]
@@ -263,10 +506,34 @@ const Settings = () => {
           price: '₹149',
           unit: 'per Kg',
           items: [
-            { id: 5001, name: 'Bed Sheet (Single)', price: '₹99', unit: 'per piece' },
-            { id: 5002, name: 'Bed Sheet (Double)', price: '₹149', unit: 'per piece' },
-            { id: 5003, name: 'Duvet Cover', price: '₹199', unit: 'per piece' },
-            { id: 5004, name: 'Pillow Case', price: '₹49', unit: 'per piece' }
+            { 
+              id: 5001, 
+              name: 'Bed Sheet (Single)', 
+              quickWashPrice: '₹149', 
+              standardWashPrice: '₹99', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 5002, 
+              name: 'Bed Sheet (Double)', 
+              quickWashPrice: '₹199', 
+              standardWashPrice: '₹149', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 5003, 
+              name: 'Duvet Cover', 
+              quickWashPrice: '₹249', 
+              standardWashPrice: '₹199', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 5004, 
+              name: 'Pillow Case', 
+              quickWashPrice: '₹69', 
+              standardWashPrice: '₹49', 
+              unit: 'per piece' 
+            }
           ]
         },
         { 
@@ -275,9 +542,27 @@ const Settings = () => {
           price: '₹75',
           unit: 'per square foot',
           items: [
-            { id: 5005, name: 'Small Rug (up to 4x6)', price: '₹599', unit: 'per piece' },
-            { id: 5006, name: 'Medium Carpet (6x9)', price: '₹999', unit: 'per piece' },
-            { id: 5007, name: 'Large Area Rug (9x12)', price: '₹1499', unit: 'per piece' }
+            { 
+              id: 5005, 
+              name: 'Small Rug (up to 4x6)', 
+              quickWashPrice: '₹699', 
+              standardWashPrice: '₹599', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 5006, 
+              name: 'Medium Carpet (6x9)', 
+              quickWashPrice: '₹1199', 
+              standardWashPrice: '₹999', 
+              unit: 'per piece' 
+            },
+            { 
+              id: 5007, 
+              name: 'Large Area Rug (9x12)', 
+              quickWashPrice: '₹1699', 
+              standardWashPrice: '₹1499', 
+              unit: 'per piece' 
+            }
           ]
         }
       ]
@@ -791,8 +1076,8 @@ const Settings = () => {
                               </Button>
                             </div>
                             {expandedSubservices[subservice.id] ? 
-                              <ChevronUp className="h-5 w-5 text-gray-500 cursor-pointer" /> : 
-                              <ChevronDown className="h-5 w-5 text-gray-500 cursor-pointer" />
+                              <ChevronUp className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => toggleSubserviceExpand(subservice.id)} /> : 
+                              <ChevronDown className="h-5 w-5 text-gray-500 cursor-pointer" onClick={() => toggleSubserviceExpand(subservice.id)} />
                             }
                           </div>
                         </div>
@@ -800,36 +1085,67 @@ const Settings = () => {
                         {expandedSubservices[subservice.id] && subservice.items && (
                           <div className="border-t border-blue-100 p-3">
                             <div className="bg-white rounded-md overflow-hidden">
-                              <div className="grid grid-cols-12 px-4 py-2 bg-gray-50 text-xs font-medium text-gray-600">
-                                <div className="col-span-6">Item Name</div>
-                                <div className="col-span-3 text-center">Price</div>
-                                <div className="col-span-3 text-center">Actions</div>
-                              </div>
-                              
-                              {subservice.items.map(item => (
-                                <div key={item.id} className="grid grid-cols-12 border-t border-gray-100 px-4 py-3 items-center">
-                                  <div className="col-span-6 font-medium">{item.name}</div>
-                                  <div className="col-span-3 text-center">{item.price} <span className="text-xs text-gray-500">{item.unit}</span></div>
-                                  <div className="col-span-3 flex justify-center gap-2">
-                                    <Button 
-                                      variant="editIcon" 
-                                      size="icon"
-                                      className="h-7 w-7"
-                                      onClick={() => toast.info(`Editing ${item.name}`)}
-                                    >
-                                      <Pencil className="h-3 w-3" />
-                                    </Button>
-                                    <Button 
-                                      variant="deleteIcon" 
-                                      size="icon"
-                                      className="h-7 w-7"
-                                      onClick={() => toast.error(`This would delete item: ${item.name}`)}
-                                    >
-                                      <Trash2 className="h-3 w-3" />
-                                    </Button>
-                                  </div>
-                                </div>
-                              ))}
+                              <Table>
+                                <TableHeader>
+                                  <TableRow className="bg-gray-50 hover:bg-gray-50">
+                                    <TableHead className="w-[40%]">Item Name</TableHead>
+                                    <TableHead className="w-[25%]">
+                                      <div className="flex items-center gap-1.5 justify-center">
+                                        <Zap className="h-3.5 w-3.5 text-amber-500" />
+                                        <span>Quick Wash</span>
+                                      </div>
+                                    </TableHead>
+                                    <TableHead className="w-[25%]">
+                                      <div className="flex items-center gap-1.5 justify-center">
+                                        <Clock className="h-3.5 w-3.5 text-blue-500" />
+                                        <span>Standard Wash</span>
+                                      </div>
+                                    </TableHead>
+                                    <TableHead className="w-[10%] text-center">Actions</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {subservice.items.map(item => (
+                                    <TableRow key={item.id}>
+                                      <TableCell className="font-medium">{item.name}</TableCell>
+                                      <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                          <Button variant="quickWash" className="pointer-events-none">
+                                            {item.quickWashPrice} <span className="opacity-70 ml-1">{item.unit}</span>
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                      <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                          <Button variant="standardWash" className="pointer-events-none">
+                                            {item.standardWashPrice} <span className="opacity-70 ml-1">{item.unit}</span>
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                      <TableCell>
+                                        <div className="flex justify-center gap-2">
+                                          <Button 
+                                            variant="editIcon" 
+                                            size="icon"
+                                            className="h-7 w-7"
+                                            onClick={() => toast.info(`Editing ${item.name}`)}
+                                          >
+                                            <Pencil className="h-3 w-3" />
+                                          </Button>
+                                          <Button 
+                                            variant="deleteIcon" 
+                                            size="icon"
+                                            className="h-7 w-7"
+                                            onClick={() => toast.error(`This would delete item: ${item.name}`)}
+                                          >
+                                            <Trash2 className="h-3 w-3" />
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
                               
                               <div className="p-3 border-t border-gray-100">
                                 <Button 
