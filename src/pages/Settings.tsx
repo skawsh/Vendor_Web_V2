@@ -85,8 +85,13 @@ const Settings = () => {
   const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
   
   const [newServiceName, setNewServiceName] = useState('');
-  const [subServices, setSubServices] = useState<{id: number, name: string}[]>([
-    { id: 1, name: '' }
+  const [subServices, setSubServices] = useState<{
+    id: number;
+    name: string;
+    basePrice: string;
+    priceUnit: string;
+  }[]>([
+    { id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }
   ]);
   
   const [newClothingCategoryName, setNewClothingCategoryName] = useState('');
@@ -185,7 +190,12 @@ const Settings = () => {
   };
 
   const handleAddSubService = () => {
-    setSubServices([...subServices, { id: subServices.length + 1, name: '' }]);
+    setSubServices([...subServices, { 
+      id: subServices.length + 1, 
+      name: '', 
+      basePrice: '0', 
+      priceUnit: 'per piece' 
+    }]);
   };
 
   const handleRemoveSubService = (id: number) => {
@@ -199,6 +209,18 @@ const Settings = () => {
   const handleSubServiceNameChange = (id: number, value: string) => {
     setSubServices(subServices.map(service => 
       service.id === id ? { ...service, name: value } : service
+    ));
+  };
+
+  const handleSubServiceBasePriceChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, basePrice: value } : service
+    ));
+  };
+
+  const handleSubServicePriceUnitChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, priceUnit: value } : service
     ));
   };
 
@@ -216,7 +238,7 @@ const Settings = () => {
     toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services`);
     
     setNewServiceName('');
-    setSubServices([{ id: 1, name: '' }]);
+    setSubServices([{ id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }]);
     setAddServiceDialogOpen(false);
   };
 
@@ -1038,7 +1060,7 @@ const Settings = () => {
       <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle className="text-center text-2xl text-primary font-semibold mb-6">Add Service</DialogTitle>
+            <DialogTitle className="text-center text-xl font-semibold text-blue-600 mb-4">Add Service</DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-2">
@@ -1048,6 +1070,7 @@ const Settings = () => {
                 placeholder="Service Name" 
                 value={newServiceName}
                 onChange={(e) => setNewServiceName(e.target.value)}
+                className="border-2 rounded-md"
               />
             </div>
             
@@ -1055,20 +1078,50 @@ const Settings = () => {
               <Label>Sub Services</Label>
               <div className="space-y-4">
                 {subServices.map((service) => (
-                  <div key={service.id} className="space-y-2">
-                    <Label htmlFor={`sub-service-${service.id}`}>Sub Service Name</Label>
-                    <div className="flex gap-2">
-                      <Input 
-                        id={`sub-service-${service.id}`} 
-                        placeholder="Sub service name" 
-                        value={service.name}
-                        onChange={(e) => handleSubServiceNameChange(service.id, e.target.value)}
-                      />
+                  <div key={service.id} className="p-4 border rounded-md bg-gray-50">
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor={`sub-service-${service.id}`}>Sub Service Name</Label>
+                        <Input 
+                          id={`sub-service-${service.id}`} 
+                          placeholder="Sub service name" 
+                          value={service.name}
+                          onChange={(e) => handleSubServiceNameChange(service.id, e.target.value)}
+                          className="mt-1"
+                        />
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor={`base-price-${service.id}`}>Base Price</Label>
+                          <Input 
+                            id={`base-price-${service.id}`} 
+                            type="number"
+                            min="0"
+                            placeholder="0" 
+                            value={service.basePrice}
+                            onChange={(e) => handleSubServiceBasePriceChange(service.id, e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor={`price-unit-${service.id}`}>Price Unit</Label>
+                          <Input 
+                            id={`price-unit-${service.id}`} 
+                            placeholder="per piece" 
+                            value={service.priceUnit}
+                            onChange={(e) => handleSubServicePriceUnitChange(service.id, e.target.value)}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+                      
                       <Button 
-                        variant="danger" 
+                        variant="removeSubService"
                         onClick={() => handleRemoveSubService(service.id)}
-                        className="shrink-0"
+                        className="flex items-center justify-center gap-2"
                       >
+                        <Trash2 className="h-4 w-4" />
                         Remove Sub Service
                       </Button>
                     </div>
@@ -1078,16 +1131,22 @@ const Settings = () => {
             </div>
             
             <Button 
-              variant="info" 
+              variant="addSubService" 
               onClick={handleAddSubService}
-              className="w-full sm:w-auto"
+              className="flex items-center justify-center gap-1"
             >
+              <Plus className="h-4 w-4" />
               Add Sub Service
             </Button>
             
-            <div className="flex justify-start pt-4">
+            <div className="flex justify-end gap-2 mt-6">
               <Button 
-                variant="info" 
+                variant="cancel" 
+                onClick={() => setAddServiceDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button 
                 onClick={handleSaveNewService}
               >
                 Save

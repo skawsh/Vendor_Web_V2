@@ -22,6 +22,9 @@ const buttonVariants = cva(
         success: "bg-[#D1FFCE] text-[#007E12] hover:bg-[#B9EAB6]",
         info: "bg-primary text-white rounded-md hover:bg-primary/90",
         danger: "bg-red-500 text-white hover:bg-red-600",
+        cancel: "bg-background text-foreground border border-input hover:bg-accent hover:text-accent-foreground",
+        addSubService: "bg-blue-50 text-blue-500 hover:bg-blue-100 rounded-md",
+        removeSubService: "text-red-500 border border-red-100 bg-white hover:bg-red-50 w-full rounded-md",
       },
       size: {
         default: "h-10 px-4 py-2",
