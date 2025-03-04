@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ShoppingBag, 
@@ -14,7 +13,8 @@ import {
   RotateCw,
   PackageCheck,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Shirt
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -134,9 +134,13 @@ const Index = () => {
   const [currentOrders, setCurrentOrders] = useState(initialCurrentOrders);
   const [isStudioActive, setIsStudioActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [activeFilter, setActiveFilter] = useState("all");
+  const [activeFilter, setActiveFilter] = useState("new");
   const [isStatCardsCollapsed, setIsStatCardsCollapsed] = useState(false);
   const [isScheduleCollapsed, setIsScheduleCollapsed] = useState(false);
+
+  useEffect(() => {
+    setActiveFilter("new");
+  }, []);
 
   const handleViewOrderDetails = (orderId: string) => {
     toast.info(`Viewing details for order ${orderId}`, {
@@ -298,13 +302,13 @@ const Index = () => {
             
             <Card className="card-stats bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Active Customers</CardTitle>
+                <CardTitle className="text-sm font-medium text-muted-foreground">Active Services</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">142</div>
-                <p className="text-xs text-muted-foreground mt-1">+3 new today</p>
+                <div className="text-2xl font-bold">8</div>
+                <p className="text-xs text-muted-foreground mt-1">+2 services added</p>
                 <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-rose-500">
-                  <Users size={20} />
+                  <Shirt size={20} />
                 </div>
               </CardContent>
             </Card>
@@ -439,7 +443,12 @@ const Index = () => {
                             <TableCell>{order.orderDate}</TableCell>
                             <TableCell>{order.weightQuantity}</TableCell>
                             <TableCell>{order.washType}</TableCell>
-                            <TableCell>{order.serviceType}</TableCell>
+                            <TableCell
+                              quickWash={order.serviceType === "Quick"}
+                              standardWash={order.serviceType === "Standard"}
+                            >
+                              {order.serviceType}
+                            </TableCell>
                             <TableCell>₹{order.price}</TableCell>
                             <TableCell>
                               <span className={cn(
