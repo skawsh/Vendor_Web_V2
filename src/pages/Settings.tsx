@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon,
@@ -42,20 +41,18 @@ const Settings = () => {
   }[]>([
     { id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }
   ]);
-  
-  // New state for tracking service and subservice enabled status
+
   const [serviceStatus, setServiceStatus] = useState<Record<number, boolean>>({
     1: true,
     2: true
   });
-  
+
   const [subserviceStatus, setSubserviceStatus] = useState<Record<number, boolean>>({
     101: true,
     102: true,
     103: true
   });
-  
-  // State for info sections
+
   const [expandedInfoSections, setExpandedInfoSections] = useState<Record<string, boolean>>({
     'basic': false,
     'address': false,
@@ -223,13 +220,11 @@ const Settings = () => {
         </div>
       </div>
 
-      {/* Studio Information Section */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Studio Information</h2>
         </div>
 
-        {/* Basic Information */}
         <Card className="border shadow-sm">
           <Collapsible open={expandedInfoSections['basic']} className="w-full">
             <CollapsibleTrigger 
@@ -278,7 +273,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Address Details */}
         <Card className="border shadow-sm">
           <Collapsible open={expandedInfoSections['address']} className="w-full">
             <CollapsibleTrigger 
@@ -331,7 +325,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Business Details */}
         <Card className="border shadow-sm">
           <Collapsible open={expandedInfoSections['business']} className="w-full">
             <CollapsibleTrigger 
@@ -380,7 +373,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Studio Setup */}
         <Card className="border shadow-sm">
           <Collapsible open={expandedInfoSections['studio']} className="w-full">
             <CollapsibleTrigger 
@@ -429,7 +421,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Payment Details */}
         <Card className="border shadow-sm">
           <Collapsible open={expandedInfoSections['payment']} className="w-full">
             <CollapsibleTrigger 
@@ -479,7 +470,6 @@ const Settings = () => {
         </Card>
       </div>
 
-      {/* Services Management Section */}
       <div className="space-y-4 mt-8">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold">Services Management</h2>
@@ -510,22 +500,21 @@ const Settings = () => {
               <Collapsible open={expandedServices[service.id]}>
                 <CollapsibleTrigger 
                   onClick={() => toggleServiceExpand(service.id)}
-                  className="w-full"
+                  className="w-full focus:outline-none"
                 >
-                  <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition">
+                  <div className="flex justify-between items-center p-4 bg-blue-50 rounded-md transition">
                     <div className="flex items-center gap-3">
-                      {expandedServices[service.id] ? 
-                        <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
-                        <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                      }
+                      <ChevronRight 
+                        className={`h-6 w-6 text-gray-500 transition-transform ${expandedServices[service.id] ? 'rotate-90' : ''}`} 
+                      />
                       <div className="text-left">
-                        <h3 className="font-semibold">{service.name}</h3>
-                        <p className="text-sm text-muted-foreground">{service.subserviceCount} subservices</p>
+                        <h3 className="font-bold text-lg">{service.name}</h3>
+                        <p className="text-sm text-gray-500">Sub services {service.subserviceCount}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm text-muted-foreground mr-1">
+                        <span className="text-sm font-medium mr-1">
                           {serviceStatus[service.id] ? 'Active' : 'Inactive'}
                         </span>
                         <Switch 
@@ -540,59 +529,53 @@ const Settings = () => {
                           onClick={(e) => e.stopPropagation()}
                         />
                       </div>
-                      <div className="text-sm bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
-                        {service.subserviceCount} Subservices
-                      </div>
                       <Button 
-                        variant="ghost" 
+                        variant="editIcon" 
                         size="icon"
-                        className="h-8 w-8"
                         onClick={(e) => {
                           e.stopPropagation();
                           handleEditItem(service.id, 'service');
                         }}
                       >
-                        <Pencil className="h-4 w-4" />
+                        <Pencil className="h-5 w-5" />
                       </Button>
                       <Button 
-                        variant="ghost" 
+                        variant="deleteIcon" 
                         size="icon"
-                        className="h-8 w-8 text-red-500"
                         onClick={(e) => {
                           e.stopPropagation();
                           toast.error(`This would delete service: ${service.name}`);
                         }}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-5 w-5" />
                       </Button>
                     </div>
                   </div>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="border-t bg-gray-50">
+                <CollapsibleContent className="bg-white">
                   <div className="p-4 space-y-3">
                     {service.subservices.map(subservice => (
-                      <Card key={subservice.id} className="border bg-white">
+                      <Card key={subservice.id} className="border shadow-sm">
                         <Collapsible open={expandedSubservices[subservice.id]}>
                           <CollapsibleTrigger 
                             onClick={() => toggleSubserviceExpand(subservice.id)}
-                            className="w-full"
+                            className="w-full focus:outline-none"
                           >
-                            <div className="flex justify-between items-center p-3 hover:bg-gray-50 transition">
+                            <div className="flex justify-between items-center p-4 bg-blue-50 rounded-md transition">
                               <div className="flex items-center gap-3">
-                                {expandedSubservices[subservice.id] ? 
-                                  <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
-                                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                                }
+                                <ChevronRight 
+                                  className={`h-5 w-5 text-gray-500 transition-transform ${expandedSubservices[subservice.id] ? 'rotate-90' : ''}`} 
+                                />
                                 <div className="text-left">
-                                  <h4 className="font-medium">{subservice.name}</h4>
-                                  <p className="text-sm text-muted-foreground">
+                                  <h4 className="font-semibold">{subservice.name}</h4>
+                                  <p className="text-sm text-gray-500">
                                     {subservice.price} {subservice.unit} • {subservice.itemCount} items
                                   </p>
                                 </div>
                               </div>
                               <div className="flex items-center gap-3">
                                 <div className="flex items-center gap-2">
-                                  <span className="text-sm text-muted-foreground mr-1">
+                                  <span className="text-sm font-medium mr-1">
                                     {subserviceStatus[subservice.id] ? 'Active' : 'Inactive'}
                                   </span>
                                   <Switch 
@@ -608,21 +591,8 @@ const Settings = () => {
                                   />
                                 </div>
                                 <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  className="gap-1"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    toast.info(`Add item to ${subservice.name}`);
-                                  }}
-                                >
-                                  <Plus className="h-4 w-4" />
-                                  Add Item
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
+                                  variant="editIcon" 
                                   size="icon"
-                                  className="h-8 w-8"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     handleEditItem(subservice.id, 'subservice');
@@ -631,9 +601,8 @@ const Settings = () => {
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <Button 
-                                  variant="ghost" 
+                                  variant="deleteIcon" 
                                   size="icon"
-                                  className="h-8 w-8 text-red-500"
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     toast.error(`This would delete subservice: ${subservice.name}`);
@@ -691,8 +660,8 @@ const Settings = () => {
                       </Card>
                     ))}
                     <Button 
-                      variant="outline"
-                      className="w-full gap-1"
+                      variant="addSubService"
+                      className="w-full gap-1 py-3"
                       onClick={() => {
                         toast.info(`Add new subservice to ${service.name}`);
                       }}
@@ -703,67 +672,6 @@ const Settings = () => {
                   </div>
                 </CollapsibleContent>
               </Collapsible>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Clothing Items Section */}
-      <div className="space-y-4 mt-8">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Clothing Items</h2>
-          <Button 
-            variant="outline"
-            className="gap-1"
-            onClick={() => {
-              toast.info("Add new clothing item");
-            }}
-          >
-            <Plus className="h-4 w-4" />
-            Add Item
-          </Button>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {[
-            { id: 1, name: 'Shirt', category: 'Tops', basePrice: '₹10' },
-            { id: 2, name: 'T-Shirt', category: 'Tops', basePrice: '₹15' },
-            { id: 3, name: 'Jeans', category: 'Bottoms', basePrice: '₹35' },
-            { id: 4, name: 'Dress', category: 'Full Body', basePrice: '₹45' },
-            { id: 5, name: 'Blazer', category: 'Outerwear', basePrice: '₹65' },
-            { id: 6, name: 'Saree', category: 'Ethnic', basePrice: '₹100' },
-          ].map(item => (
-            <Card key={item.id} className="border shadow-sm">
-              <div className="p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 className="font-medium">{item.name}</h4>
-                    <p className="text-sm text-muted-foreground">{item.category}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="h-8 w-8"
-                    >
-                      <Pencil className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon"
-                      className="h-8 w-8 text-red-500"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-md">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">Base Price</span>
-                    <span className="font-semibold">{item.basePrice}</span>
-                  </div>
-                </div>
-              </div>
             </Card>
           ))}
         </div>

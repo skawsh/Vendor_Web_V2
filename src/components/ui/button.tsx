@@ -25,12 +25,15 @@ const buttonVariants = cva(
         cancel: "bg-background text-foreground border border-input hover:bg-accent hover:text-accent-foreground",
         addSubService: "bg-blue-50 text-blue-500 hover:bg-blue-100 rounded-md",
         removeSubService: "text-red-500 border border-red-100 bg-white hover:bg-red-50 w-full rounded-md",
+        iconButton: "p-2 rounded-full bg-transparent hover:bg-gray-100",
+        deleteIcon: "p-2 rounded-full bg-transparent hover:bg-red-50 text-red-500",
+        editIcon: "p-2 rounded-full bg-transparent hover:bg-blue-50 text-blue-500",
       },
       size: {
         default: "h-10 px-4 py-2",
         sm: "h-9 rounded-md px-3",
         lg: "h-11 rounded-md px-8",
-        icon: "h-10 w-10 p-0",
+        icon: "h-9 w-9 p-0",
       },
     },
     defaultVariants: {
