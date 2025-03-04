@@ -10,7 +10,14 @@ import {
   Save,
   X,
   ArrowLeft,
-  Trash2
+  Trash2,
+  ToggleLeft,
+  Info,
+  User,
+  MapPin,
+  Building2,
+  Store,
+  CreditCard,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,6 +26,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Switch } from '@/components/ui/switch';
 
 const Settings = () => {
   const [searchServiceQuery, setSearchServiceQuery] = useState('');
@@ -34,6 +42,27 @@ const Settings = () => {
   }[]>([
     { id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }
   ]);
+  
+  // New state for tracking service and subservice enabled status
+  const [serviceStatus, setServiceStatus] = useState<Record<number, boolean>>({
+    1: true,
+    2: true
+  });
+  
+  const [subserviceStatus, setSubserviceStatus] = useState<Record<number, boolean>>({
+    101: true,
+    102: true,
+    103: true
+  });
+  
+  // State for info sections
+  const [expandedInfoSections, setExpandedInfoSections] = useState<Record<string, boolean>>({
+    'basic': false,
+    'address': false,
+    'business': false,
+    'studio': false,
+    'payment': false
+  });
 
   const services = [
     { 
@@ -95,6 +124,37 @@ const Settings = () => {
     }));
   };
 
+  const toggleInfoSection = (section: string) => {
+    setExpandedInfoSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const toggleServiceStatus = (serviceId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setServiceStatus(prev => {
+      const newStatus = !prev[serviceId];
+      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} service`);
+      return {
+        ...prev,
+        [serviceId]: newStatus
+      };
+    });
+  };
+
+  const toggleSubserviceStatus = (subserviceId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSubserviceStatus(prev => {
+      const newStatus = !prev[subserviceId];
+      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} subservice`);
+      return {
+        ...prev,
+        [subserviceId]: newStatus
+      };
+    });
+  };
+
   const handleAddSubService = () => {
     setSubServices([...subServices, { 
       id: subServices.length + 1, 
@@ -152,18 +212,279 @@ const Settings = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 md:p-6">
+    <div className="container mx-auto py-6 px-4 md:px-6 space-y-8">
       <div className="flex items-center gap-4 mb-6">
         <Button variant="ghost" size="icon" className="h-8 w-8">
           <ArrowLeft className="h-4 w-4" />
         </Button>
         <div>
-          <h1 className="text-2xl font-bold">Saiteja Laundry - Services</h1>
-          <p className="text-sm text-muted-foreground">Manage all laundry services offered by this studio</p>
+          <h1 className="text-2xl font-bold">Saiteja Laundry</h1>
+          <p className="text-sm text-muted-foreground">Manage your laundry studio settings</p>
         </div>
       </div>
 
-      <div className="space-y-6">
+      {/* Studio Information Section */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Studio Information</h2>
+        </div>
+
+        {/* Basic Information */}
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['basic']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('basic')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Basic Information</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['basic'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Owner Name</Label>
+                    <p className="text-sm font-medium">Saiteja Reddy</p>
+                  </div>
+                  <div>
+                    <Label>Contact Phone</Label>
+                    <p className="text-sm font-medium">+91 9876543210</p>
+                  </div>
+                  <div>
+                    <Label>Email Address</Label>
+                    <p className="text-sm font-medium">saiteja@example.com</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        {/* Address Details */}
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['address']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('address')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Address Details</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['address'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Street Address</Label>
+                    <p className="text-sm font-medium">123 Laundry Street</p>
+                  </div>
+                  <div>
+                    <Label>City</Label>
+                    <p className="text-sm font-medium">Hyderabad</p>
+                  </div>
+                  <div>
+                    <Label>State</Label>
+                    <p className="text-sm font-medium">Telangana</p>
+                  </div>
+                  <div>
+                    <Label>Zip Code</Label>
+                    <p className="text-sm font-medium">500081</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        {/* Business Details */}
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['business']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('business')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <Building2 className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Business Details</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['business'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Business Name</Label>
+                    <p className="text-sm font-medium">Saiteja Laundry Services</p>
+                  </div>
+                  <div>
+                    <Label>GST Number</Label>
+                    <p className="text-sm font-medium">22AAAAA0000A1Z5</p>
+                  </div>
+                  <div>
+                    <Label>Business Type</Label>
+                    <p className="text-sm font-medium">Sole Proprietorship</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        {/* Studio Setup */}
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['studio']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('studio')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <Store className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Studio Setup</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['studio'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Capacity</Label>
+                    <p className="text-sm font-medium">500 kg per day</p>
+                  </div>
+                  <div>
+                    <Label>Operating Hours</Label>
+                    <p className="text-sm font-medium">9:00 AM to 8:00 PM</p>
+                  </div>
+                  <div>
+                    <Label>Service Area</Label>
+                    <p className="text-sm font-medium">10 km radius</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        {/* Payment Details */}
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['payment']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('payment')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Payment Details</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['payment'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Bank Name</Label>
+                    <p className="text-sm font-medium">Indian Bank</p>
+                  </div>
+                  <div>
+                    <Label>Account Number</Label>
+                    <p className="text-sm font-medium">XXXX XXXX XXXX 4321</p>
+                  </div>
+                  <div>
+                    <Label>UPI ID</Label>
+                    <p className="text-sm font-medium">saiteja@upi</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+      </div>
+
+      {/* Services Management Section */}
+      <div className="space-y-4 mt-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Services Management</h2>
+        </div>
+        
         <div className="flex justify-between items-center">
           <div className="relative w-full max-w-md">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -175,7 +496,7 @@ const Settings = () => {
             />
           </div>
           <Button 
-            className="flex items-center gap-2" 
+            className="flex items-center gap-2 ml-4" 
             onClick={() => setAddServiceDialogOpen(true)}
           >
             <Plus size={16} />
@@ -183,27 +504,43 @@ const Settings = () => {
           </Button>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           {services.map(service => (
-            <div key={service.id} className="border rounded-lg overflow-hidden bg-white">
+            <Card key={service.id} className="border shadow-sm overflow-hidden">
               <Collapsible open={expandedServices[service.id]}>
                 <CollapsibleTrigger 
                   onClick={() => toggleServiceExpand(service.id)}
                   className="w-full"
                 >
                   <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-3">
                       {expandedServices[service.id] ? 
                         <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
                         <ChevronRight className="h-5 w-5 text-muted-foreground" />
                       }
-                      <div>
+                      <div className="text-left">
                         <h3 className="font-semibold">{service.name}</h3>
                         <p className="text-sm text-muted-foreground">{service.subserviceCount} subservices</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <div className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                    <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-muted-foreground mr-1">
+                          {serviceStatus[service.id] ? 'Active' : 'Inactive'}
+                        </span>
+                        <Switch 
+                          checked={serviceStatus[service.id]} 
+                          onCheckedChange={(checked) => {
+                            setServiceStatus(prev => ({
+                              ...prev,
+                              [service.id]: checked
+                            }));
+                            toast.success(`Service ${checked ? 'enabled' : 'disabled'}`);
+                          }}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </div>
+                      <div className="text-sm bg-blue-50 text-blue-600 px-3 py-1 rounded-full">
                         {service.subserviceCount} Subservices
                       </div>
                       <Button 
@@ -221,39 +558,63 @@ const Settings = () => {
                         variant="ghost" 
                         size="icon"
                         className="h-8 w-8 text-red-500"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toast.error(`This would delete service: ${service.name}`);
+                        }}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </div>
                   </div>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="border-t">
-                  <div className="p-4 space-y-2">
+                <CollapsibleContent className="border-t bg-gray-50">
+                  <div className="p-4 space-y-3">
                     {service.subservices.map(subservice => (
-                      <div key={subservice.id} className="border rounded-lg">
+                      <Card key={subservice.id} className="border bg-white">
                         <Collapsible open={expandedSubservices[subservice.id]}>
                           <CollapsibleTrigger 
                             onClick={() => toggleSubserviceExpand(subservice.id)}
                             className="w-full"
                           >
                             <div className="flex justify-between items-center p-3 hover:bg-gray-50 transition">
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-3">
                                 {expandedSubservices[subservice.id] ? 
                                   <ChevronDown className="h-4 w-4 text-muted-foreground" /> : 
                                   <ChevronRight className="h-4 w-4 text-muted-foreground" />
                                 }
-                                <div>
+                                <div className="text-left">
                                   <h4 className="font-medium">{subservice.name}</h4>
                                   <p className="text-sm text-muted-foreground">
                                     {subservice.price} {subservice.unit} • {subservice.itemCount} items
                                   </p>
                                 </div>
                               </div>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-3">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm text-muted-foreground mr-1">
+                                    {subserviceStatus[subservice.id] ? 'Active' : 'Inactive'}
+                                  </span>
+                                  <Switch 
+                                    checked={subserviceStatus[subservice.id]} 
+                                    onCheckedChange={(checked) => {
+                                      setSubserviceStatus(prev => ({
+                                        ...prev,
+                                        [subservice.id]: checked
+                                      }));
+                                      toast.success(`Subservice ${checked ? 'enabled' : 'disabled'}`);
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </div>
                                 <Button 
                                   variant="outline" 
                                   size="sm"
                                   className="gap-1"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toast.info(`Add item to ${subservice.name}`);
+                                  }}
                                 >
                                   <Plus className="h-4 w-4" />
                                   Add Item
@@ -273,6 +634,10 @@ const Settings = () => {
                                   variant="ghost" 
                                   size="icon"
                                   className="h-8 w-8 text-red-500"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toast.error(`This would delete subservice: ${subservice.name}`);
+                                  }}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
@@ -283,7 +648,7 @@ const Settings = () => {
                             <div className="p-4">
                               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {subservice.items.map(item => (
-                                  <div key={item.id} className="border rounded-lg p-4">
+                                  <Card key={item.id} className="border p-4 bg-white">
                                     <div className="flex justify-between items-start mb-4">
                                       <h5 className="font-medium">{item.name}</h5>
                                       <Button 
@@ -295,7 +660,7 @@ const Settings = () => {
                                         <Pencil className="h-4 w-4" />
                                       </Button>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                       <div className="flex justify-between">
                                         <span className="text-sm text-muted-foreground">Standard</span>
                                         <span className="font-medium">{item.standardPrice}</span>
@@ -305,24 +670,32 @@ const Settings = () => {
                                         <span className="font-medium">{item.expressPrice}</span>
                                       </div>
                                     </div>
-                                  </div>
+                                  </Card>
                                 ))}
                               </div>
-                              <Button 
-                                variant="outline"
-                                className="mt-4 gap-1"
-                              >
-                                <Plus className="h-4 w-4" />
-                                Add New Item
-                              </Button>
+                              {subservice.items.length > 0 && (
+                                <Button 
+                                  variant="outline"
+                                  className="mt-4 gap-1"
+                                  onClick={() => {
+                                    toast.info(`Add new item to ${subservice.name}`);
+                                  }}
+                                >
+                                  <Plus className="h-4 w-4" />
+                                  Add New Item
+                                </Button>
+                              )}
                             </div>
                           </CollapsibleContent>
                         </Collapsible>
-                      </div>
+                      </Card>
                     ))}
                     <Button 
                       variant="outline"
                       className="w-full gap-1"
+                      onClick={() => {
+                        toast.info(`Add new subservice to ${service.name}`);
+                      }}
                     >
                       <Plus className="h-4 w-4" />
                       Add New Subservice
@@ -330,19 +703,80 @@ const Settings = () => {
                   </div>
                 </CollapsibleContent>
               </Collapsible>
-            </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Clothing Items Section */}
+      <div className="space-y-4 mt-8">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Clothing Items</h2>
+          <Button 
+            variant="outline"
+            className="gap-1"
+            onClick={() => {
+              toast.info("Add new clothing item");
+            }}
+          >
+            <Plus className="h-4 w-4" />
+            Add Item
+          </Button>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[
+            { id: 1, name: 'Shirt', category: 'Tops', basePrice: '₹10' },
+            { id: 2, name: 'T-Shirt', category: 'Tops', basePrice: '₹15' },
+            { id: 3, name: 'Jeans', category: 'Bottoms', basePrice: '₹35' },
+            { id: 4, name: 'Dress', category: 'Full Body', basePrice: '₹45' },
+            { id: 5, name: 'Blazer', category: 'Outerwear', basePrice: '₹65' },
+            { id: 6, name: 'Saree', category: 'Ethnic', basePrice: '₹100' },
+          ].map(item => (
+            <Card key={item.id} className="border shadow-sm">
+              <div className="p-4">
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <h4 className="font-medium">{item.name}</h4>
+                    <p className="text-sm text-muted-foreground">{item.category}</p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8"
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      className="h-8 w-8 text-red-500"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                <div className="bg-gray-50 p-3 rounded-md">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-medium">Base Price</span>
+                    <span className="font-semibold">{item.basePrice}</span>
+                  </div>
+                </div>
+              </div>
+            </Card>
           ))}
         </div>
       </div>
 
       <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
             <DialogTitle className="text-center text-xl font-semibold text-blue-600 mb-4">Add Service</DialogTitle>
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="service-name">Service Name</Label>
+              <Label htmlFor="service-name" className="text-base">Service Name</Label>
               <Input 
                 id="service-name" 
                 placeholder="Service Name" 
@@ -352,8 +786,8 @@ const Settings = () => {
               />
             </div>
             
-            <div className="space-y-2">
-              <Label>Sub Services</Label>
+            <div className="space-y-3">
+              <Label className="text-base">Sub Services</Label>
               <div className="space-y-4">
                 {subServices.map((service) => (
                   <div key={service.id} className="p-4 border rounded-md bg-gray-50">
@@ -411,13 +845,13 @@ const Settings = () => {
             <Button 
               variant="addSubService" 
               onClick={handleAddSubService}
-              className="flex items-center justify-center gap-1"
+              className="flex items-center justify-center gap-1 w-full"
             >
               <Plus className="h-4 w-4" />
               Add Sub Service
             </Button>
             
-            <div className="flex justify-end gap-2 mt-6">
+            <div className="flex justify-end gap-3 mt-6">
               <Button 
                 variant="cancel" 
                 onClick={() => setAddServiceDialogOpen(false)}
