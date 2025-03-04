@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon, 
@@ -11,7 +10,8 @@ import {
   Save,
   X,
   Shirt,
-  Zap
+  Zap,
+  Trash2
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,8 +19,10 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { Label } from '@/components/ui/label';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
-// Mock data for clothing items within subservices
 const mockClothingItems = {
   101: [ // Wash & Fold
     { id: 1, name: 'Shirt', standardPrice: 10, expressPrice: 15 },
@@ -75,13 +77,20 @@ const Settings = () => {
     payment: false
   });
   
-  // Track which services are expanded
   const [expandedServices, setExpandedServices] = useState<Record<number, boolean>>({});
   
-  // Track which subservices are expanded
   const [expandedSubservices, setExpandedSubservices] = useState<Record<number, boolean>>({});
 
-  // Mock data with subservices
+  const [addServiceDialogOpen, setAddServiceDialogOpen] = useState(false);
+  const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
+  
+  const [newServiceName, setNewServiceName] = useState('');
+  const [subServices, setSubServices] = useState<{id: number, name: string}[]>([
+    { id: 1, name: '' }
+  ]);
+  
+  const [newClothingCategoryName, setNewClothingCategoryName] = useState('');
+
   const services = [
     { 
       id: 1, 
@@ -164,20 +173,67 @@ const Settings = () => {
   };
 
   const handleAddService = () => {
-    toast.info("Add service modal would open here");
+    setAddServiceDialogOpen(true);
   };
 
   const handleAddClothingItem = () => {
-    toast.info("Add clothing item modal would open here");
+    setAddItemDialogOpen(true);
   };
 
   const handleEditItem = (id, type) => {
     toast.info(`Editing ${type} with ID: ${id}`);
   };
 
+  const handleAddSubService = () => {
+    setSubServices([...subServices, { id: subServices.length + 1, name: '' }]);
+  };
+
+  const handleRemoveSubService = (id: number) => {
+    if (subServices.length > 1) {
+      setSubServices(subServices.filter(service => service.id !== id));
+    } else {
+      toast.error("You need at least one sub-service");
+    }
+  };
+
+  const handleSubServiceNameChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, name: value } : service
+    ));
+  };
+
+  const handleSaveNewService = () => {
+    if (!newServiceName.trim()) {
+      toast.error("Service name is required");
+      return;
+    }
+
+    if (subServices.some(service => !service.name.trim())) {
+      toast.error("All sub-service names are required");
+      return;
+    }
+
+    toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services`);
+    
+    setNewServiceName('');
+    setSubServices([{ id: 1, name: '' }]);
+    setAddServiceDialogOpen(false);
+  };
+
+  const handleSaveNewClothingCategory = () => {
+    if (!newClothingCategoryName.trim()) {
+      toast.error("Clothing category name is required");
+      return;
+    }
+
+    toast.success(`Clothing category "${newClothingCategoryName}" added`);
+    
+    setNewClothingCategoryName('');
+    setAddItemDialogOpen(false);
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-6">
-      {/* Header with Edit Button */}
       <div className="flex justify-between items-center mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-1 flex items-center gap-2">
@@ -188,9 +244,7 @@ const Settings = () => {
         </div>
       </div>
 
-      {/* Laundry Details Cards */}
       <div className="grid grid-cols-1 gap-6 mb-8">
-        {/* Basic Information */}
         <Card>
           <Collapsible open={expandedSections.basic}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('basic')}>
@@ -289,7 +343,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Address Details */}
         <Card>
           <Collapsible open={expandedSections.address}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('address')}>
@@ -396,7 +449,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Business Details */}
         <Card>
           <Collapsible open={expandedSections.business}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('business')}>
@@ -503,7 +555,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Studio Setup */}
         <Card>
           <Collapsible open={expandedSections.studio}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('studio')}>
@@ -612,7 +663,6 @@ const Settings = () => {
           </Collapsible>
         </Card>
 
-        {/* Payment Details */}
         <Card>
           <Collapsible open={expandedSections.payment}>
             <CardHeader className="cursor-pointer hover:bg-muted/20 transition-colors" onClick={() => toggleSection('payment')}>
@@ -728,9 +778,7 @@ const Settings = () => {
         </Card>
       </div>
 
-      {/* Services and Items Management */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Services Management */}
         <Card className="h-full">
           <CardHeader className="pb-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
@@ -887,7 +935,6 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        {/* Clothing Items Management */}
         <Card className="h-full">
           <CardHeader className="pb-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-2">
@@ -915,7 +962,6 @@ const Settings = () => {
             </div>
 
             <div className="overflow-hidden rounded-lg border">
-              {/* Mobile view for clothing items (shown only on small screens) */}
               <div className="block md:hidden">
                 {filteredClothingItems.map(item => (
                   <div key={item.id} className="border-b p-3 flex justify-between items-center">
@@ -944,7 +990,6 @@ const Settings = () => {
                 )}
               </div>
 
-              {/* Desktop view for clothing items (shown only on medium screens and up) */}
               <div className="hidden md:block">
                 <Table>
                   <TableHeader>
@@ -989,6 +1034,97 @@ const Settings = () => {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl text-primary font-semibold mb-6">Add Service</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="service-name">Service Name</Label>
+              <Input 
+                id="service-name" 
+                placeholder="Service Name" 
+                value={newServiceName}
+                onChange={(e) => setNewServiceName(e.target.value)}
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label>Sub Services</Label>
+              <div className="space-y-4">
+                {subServices.map((service) => (
+                  <div key={service.id} className="space-y-2">
+                    <Label htmlFor={`sub-service-${service.id}`}>Sub Service Name</Label>
+                    <div className="flex gap-2">
+                      <Input 
+                        id={`sub-service-${service.id}`} 
+                        placeholder="Sub service name" 
+                        value={service.name}
+                        onChange={(e) => handleSubServiceNameChange(service.id, e.target.value)}
+                      />
+                      <Button 
+                        variant="danger" 
+                        onClick={() => handleRemoveSubService(service.id)}
+                        className="shrink-0"
+                      >
+                        Remove Sub Service
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <Button 
+              variant="info" 
+              onClick={handleAddSubService}
+              className="w-full sm:w-auto"
+            >
+              Add Sub Service
+            </Button>
+            
+            <div className="flex justify-start pt-4">
+              <Button 
+                variant="info" 
+                onClick={handleSaveNewService}
+              >
+                Save
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
+      <Dialog open={addItemDialogOpen} onOpenChange={setAddItemDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl text-primary font-semibold mb-6">Add Clothing category</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="clothing-category">Clothing Category Name</Label>
+              <Input 
+                id="clothing-category" 
+                placeholder="Clothing Category Name" 
+                value={newClothingCategoryName}
+                onChange={(e) => setNewClothingCategoryName(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex justify-start pt-4">
+              <Button 
+                variant="info" 
+                onClick={handleSaveNewClothingCategory}
+                className="px-8"
+              >
+                Add Clothing category
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
