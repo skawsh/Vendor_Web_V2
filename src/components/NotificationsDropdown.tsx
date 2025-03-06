@@ -21,6 +21,7 @@ export interface Notification {
   time: string;
   read: boolean;
   type: NotificationType;
+  orderData?: any; // Add the orderData property as optional
 }
 
 // Shared state for notifications to allow access from other components
