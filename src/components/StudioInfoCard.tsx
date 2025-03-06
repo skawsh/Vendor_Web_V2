@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, MapPin, Building2, Store, CreditCard, ChevronUp, ChevronDown, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
@@ -17,37 +17,42 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   
-  // Initialize with the provided field values
-  const initialData = fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {});
+  // Create the initial data structure from fields
+  const initialFieldValues = fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {});
   
-  // Current form data that gets updated during editing
-  const [formData, setFormData] = useState<Record<string, string>>(initialData);
+  // State for the form data (what's currently being edited)
+  const [formData, setFormData] = useState<Record<string, string>>(initialFieldValues);
   
-  // Saved data that represents the last confirmed state
-  const [savedData, setSavedData] = useState<Record<string, string>>(initialData);
+  // State for the saved data (what's been committed)
+  const [savedData, setSavedData] = useState<Record<string, string>>(initialFieldValues);
 
-  const toggleExpand = () => {
-    if (isEditing) return;
+  // Handle clicks on the card header to expand/collapse
+  const toggleExpand = (e: React.MouseEvent) => {
+    if (isEditing) return; // Don't toggle when editing
     setIsExpanded(!isExpanded);
   };
 
+  // Start editing mode
   const startEditing = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Ensure we're working with the current saved values
+    // Copy the current saved data to form data for editing
     setFormData({...savedData});
     setIsEditing(true);
+    // Ensure the card is expanded when editing
     if (!isExpanded) {
       setIsExpanded(true);
     }
   };
 
+  // Cancel editing and revert changes
   const cancelEditing = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Reset form data to the last saved state
+    // Revert form data to the last saved state
     setFormData({...savedData});
     setIsEditing(false);
   };
 
+  // Handle input field changes
   const handleInputChange = (id: string, value: string) => {
     setFormData(prev => ({
       ...prev,
@@ -55,9 +60,10 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
     }));
   };
 
+  // Save the edited changes
   const saveChanges = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Update the saved data with the current form values
+    // Update the saved data with current form values
     setSavedData({...formData});
     setIsEditing(false);
     toast.success(`${title} information updated successfully`);
