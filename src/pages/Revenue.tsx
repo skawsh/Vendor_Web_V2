@@ -15,7 +15,7 @@ import {
   Receipt, 
   ShoppingBag,
   IndianRupee,
-  FileArrowDown,
+  FileDown,
   Printer 
 } from "lucide-react";
 import { toast } from "sonner";
@@ -487,18 +487,12 @@ const Revenue = () => {
 
   // Function to handle export
   const handleExport = (format: string) => {
-    // In a real app, this would generate and download a file
-    // For this demo, we'll just show a toast notification
     toast.success(`Payment history exported as ${format.toUpperCase()}`);
   };
 
   // Function to generate a report
   const handleGenerateReport = () => {
-    // Close the dialog
     setReportDialogOpen(false);
-    
-    // In a real app, this would generate a report based on selected options
-    // For this demo, we'll just show a toast notification
     toast.success(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} report generated successfully!`);
   };
 
@@ -517,10 +511,7 @@ const Revenue = () => {
 
   // Get filtered data for display
   const getFilteredPendingPayments = () => {
-    // First filter by wash type
     const washTypeFiltered = filterDataByWashType(pendingPaymentsData);
-    
-    // Then filter by search query
     return washTypeFiltered.filter(payment => 
       searchQuery === "" || 
       payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -529,10 +520,7 @@ const Revenue = () => {
   };
 
   const getFilteredPaymentHistory = () => {
-    // First filter by wash type
     const washTypeFiltered = filterDataByWashType(paymentHistoryData);
-    
-    // Then filter by search query
     return washTypeFiltered.filter(payment => 
       searchQuery === "" || 
       payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -542,7 +530,6 @@ const Revenue = () => {
 
   // Update data based on date filter
   useEffect(() => {
-    // Update pending payments data based on filter
     switch(dateFilter) {
       case "today":
         setPendingPaymentsData(todayPendingPayments);
@@ -602,7 +589,6 @@ const Revenue = () => {
         break;
       case "customRange":
         if (dateRange?.from && dateRange?.to) {
-          // For demo purposes, just show this month's data for any custom range
           setPendingPaymentsData(thisMonthPendingPayments);
           setPaymentHistoryData(thisMonthPaymentHistory);
           setRevenueSummary({
@@ -618,7 +604,6 @@ const Revenue = () => {
         }
         break;
       default:
-        // Reset to default data
         setPendingPaymentsData([
           {
             id: 1,
@@ -1066,7 +1051,7 @@ const Revenue = () => {
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline">
-                      <FileArrowDown className="h-4 w-4 mr-2" />
+                      <FileDown className="h-4 w-4 mr-2" />
                       Export
                     </Button>
                   </DropdownMenuTrigger>
