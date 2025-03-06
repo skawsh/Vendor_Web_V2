@@ -1,12 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { 
   Calendar, 
   Download, 
   FileText, 
-  Info, 
   Search, 
   X, 
   DollarSign, 
@@ -338,12 +339,21 @@ const dateFilterOptions = [
   { id: "customRange", label: "Custom Range" },
 ];
 
+// Wash type filter options
+const washTypeOptions = [
+  { id: "all", label: "All Wash Types" },
+  { id: "express", label: "Express Wash" },
+  { id: "standard", label: "Standard Wash" },
+  { id: "both", label: "Both" },
+];
+
 const Revenue = () => {
   const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("pending");
   const [dateFilter, setDateFilter] = useState("all");
+  const [washTypeFilter, setWashTypeFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
   const [pendingPaymentsData, setPendingPaymentsData] = useState([
     {
@@ -456,6 +466,44 @@ const Revenue = () => {
     lastMonthRevenue: 28500,
     totalRevenue: 142500
   });
+
+  // Filter data based on wash type
+  const filterDataByWashType = (data) => {
+    if (washTypeFilter === "all") return data;
+    
+    return data.filter(item => {
+      const washType = item.washType.toLowerCase();
+      if (washTypeFilter === "express") return washType.includes("quick");
+      if (washTypeFilter === "standard") return washType.includes("standard");
+      if (washTypeFilter === "both") return washType.includes("standard") && washType.includes("quick");
+      return true;
+    });
+  };
+
+  // Get filtered data for display
+  const getFilteredPendingPayments = () => {
+    // First filter by wash type
+    const washTypeFiltered = filterDataByWashType(pendingPaymentsData);
+    
+    // Then filter by search query
+    return washTypeFiltered.filter(payment => 
+      searchQuery === "" || 
+      payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.customerName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
+
+  const getFilteredPaymentHistory = () => {
+    // First filter by wash type
+    const washTypeFiltered = filterDataByWashType(paymentHistoryData);
+    
+    // Then filter by search query
+    return washTypeFiltered.filter(payment => 
+      searchQuery === "" || 
+      payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.customerName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  };
 
   // Update data based on date filter
   useEffect(() => {
@@ -861,17 +909,27 @@ const Revenue = () => {
                 </button>
               )}
             </div>
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
-              <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
-                <TabsTrigger value="pending">Pending Payments</TabsTrigger>
-                <TabsTrigger value="history">Payment History</TabsTrigger>
-              </TabsList>
-            </Tabs>
           </div>
 
-          {/* Important: Wrap TabsContent inside the Tabs component */}
-          <Tabs value={activeTab} className="w-full">
-            <TabsContent value="pending" className="mt-0">
+          {/* Tabs for Unpaid Payments and Payment History */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+            <TabsList className="w-full sm:w-[400px]">
+              <TabsTrigger value="pending" className="flex-1">Unpaid Payments</TabsTrigger>
+              <TabsTrigger value="history" className="flex-1">Payment History</TabsTrigger>
+            </TabsList>
+          
+            {/* Wash Type Filter */}
+            <div className="mt-4 mb-4">
+              <ToggleGroup type="single" value={washTypeFilter} onValueChange={(value) => value && setWashTypeFilter(value)}>
+                {washTypeOptions.map((option) => (
+                  <ToggleGroupItem key={option.id} value={option.id}>
+                    {option.label}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </div>
+
+            <TabsContent value="pending">
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
@@ -887,70 +945,64 @@ const Revenue = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {pendingPaymentsData
-                      .filter(payment => 
-                        searchQuery === "" || 
-                        payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        payment.customerName.toLowerCase().includes(searchQuery.toLowerCase())
-                      )
-                      .map(payment => (
-                        <TableRow key={payment.id}>
-                          <TableCell>{payment.orderId}</TableCell>
-                          <TableCell>{payment.customerName}</TableCell>
-                          <TableCell>{payment.deliveredDate}</TableCell>
-                          <TableCell>{payment.service}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-1 rounded-full text-xs ${
-                              payment.washType.includes("Quick") ? "bg-amber-50 text-amber-600" : 
-                              payment.washType.includes("Standard") ? "bg-blue-50 text-blue-600" : 
-                              "bg-purple-50 text-purple-600"
-                            }`}>
-                              {payment.washType}
-                            </span>
-                          </TableCell>
-                          <TableCell>₹{payment.totalAmount}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-1 rounded-full text-xs ${
-                              payment.orderStatus === "In Process" ? "bg-yellow-50 text-yellow-600" : 
-                              payment.orderStatus === "Delivered" ? "bg-green-50 text-green-600" : 
-                              "bg-blue-50 text-blue-600"
-                            }`}>
-                              {payment.orderStatus}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => {
-                                toast.success(`Payment received for order ${payment.orderId}`);
-                                const updatedPendingPayments = pendingPaymentsData.filter(p => p.id !== payment.id);
-                                setPendingPaymentsData(updatedPendingPayments);
-                                setPaymentHistoryData([
-                                  ...paymentHistoryData, 
-                                  {
-                                    id: paymentHistoryData.length + 1,
-                                    orderId: payment.orderId,
-                                    customerName: payment.customerName,
-                                    paymentDate: new Date().toLocaleDateString(),
-                                    service: payment.service,
-                                    washType: payment.washType,
-                                    amount: payment.totalAmount
-                                  }
-                                ]);
-                              }}
-                            >
-                              Mark Paid
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                    {getFilteredPendingPayments().map(payment => (
+                      <TableRow key={payment.id}>
+                        <TableCell>{payment.orderId}</TableCell>
+                        <TableCell>{payment.customerName}</TableCell>
+                        <TableCell>{payment.deliveredDate}</TableCell>
+                        <TableCell>{payment.service}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            payment.washType.includes("Quick") ? "bg-amber-50 text-amber-600" : 
+                            payment.washType.includes("Standard") ? "bg-blue-50 text-blue-600" : 
+                            "bg-purple-50 text-purple-600"
+                          }`}>
+                            {payment.washType}
+                          </span>
+                        </TableCell>
+                        <TableCell>₹{payment.totalAmount}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            payment.orderStatus === "In Process" ? "bg-yellow-50 text-yellow-600" : 
+                            payment.orderStatus === "Delivered" ? "bg-green-50 text-green-600" : 
+                            "bg-blue-50 text-blue-600"
+                          }`}>
+                            {payment.orderStatus}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => {
+                              toast.success(`Payment received for order ${payment.orderId}`);
+                              const updatedPendingPayments = pendingPaymentsData.filter(p => p.id !== payment.id);
+                              setPendingPaymentsData(updatedPendingPayments);
+                              setPaymentHistoryData([
+                                ...paymentHistoryData, 
+                                {
+                                  id: paymentHistoryData.length + 1,
+                                  orderId: payment.orderId,
+                                  customerName: payment.customerName,
+                                  paymentDate: new Date().toLocaleDateString(),
+                                  service: payment.service,
+                                  washType: payment.washType,
+                                  amount: payment.totalAmount
+                                }
+                              ]);
+                            }}
+                          >
+                            Mark Paid
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </div>
             </TabsContent>
 
-            <TabsContent value="history" className="mt-0">
+            <TabsContent value="history">
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
@@ -965,41 +1017,35 @@ const Revenue = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {paymentHistoryData
-                      .filter(payment => 
-                        searchQuery === "" || 
-                        payment.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                        payment.customerName.toLowerCase().includes(searchQuery.toLowerCase())
-                      )
-                      .map(payment => (
-                        <TableRow key={payment.id}>
-                          <TableCell>{payment.orderId}</TableCell>
-                          <TableCell>{payment.customerName}</TableCell>
-                          <TableCell>{payment.paymentDate}</TableCell>
-                          <TableCell>{payment.service}</TableCell>
-                          <TableCell>
-                            <span className={`px-2 py-1 rounded-full text-xs ${
-                              payment.washType.includes("Quick") ? "bg-amber-50 text-amber-600" : 
-                              payment.washType.includes("Standard") ? "bg-blue-50 text-blue-600" : 
-                              "bg-purple-50 text-purple-600"
-                            }`}>
-                              {payment.washType}
-                            </span>
-                          </TableCell>
-                          <TableCell>₹{payment.amount}</TableCell>
-                          <TableCell className="text-right">
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => {
-                                toast.info(`Viewing invoice for order ${payment.orderId}`);
-                              }}
-                            >
-                              View Invoice
-                            </Button>
-                          </TableCell>
-                        </TableRow>
-                      ))}
+                    {getFilteredPaymentHistory().map(payment => (
+                      <TableRow key={payment.id}>
+                        <TableCell>{payment.orderId}</TableCell>
+                        <TableCell>{payment.customerName}</TableCell>
+                        <TableCell>{payment.paymentDate}</TableCell>
+                        <TableCell>{payment.service}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            payment.washType.includes("Quick") ? "bg-amber-50 text-amber-600" : 
+                            payment.washType.includes("Standard") ? "bg-blue-50 text-blue-600" : 
+                            "bg-purple-50 text-purple-600"
+                          }`}>
+                            {payment.washType}
+                          </span>
+                        </TableCell>
+                        <TableCell>₹{payment.amount}</TableCell>
+                        <TableCell className="text-right">
+                          <Button 
+                            size="sm" 
+                            variant="outline"
+                            onClick={() => {
+                              toast.info(`Viewing invoice for order ${payment.orderId}`);
+                            }}
+                          >
+                            View Invoice
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                   </TableBody>
                 </Table>
               </div>
