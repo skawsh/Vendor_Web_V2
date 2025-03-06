@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -15,7 +14,9 @@ import {
   Clock, 
   Receipt, 
   ShoppingBag,
-  IndianRupee 
+  IndianRupee,
+  FileArrowDown,
+  Printer 
 } from "lucide-react";
 import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
@@ -36,6 +37,21 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // Sample data for different time periods
 const todayPendingPayments = [
@@ -355,6 +371,8 @@ const Revenue = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [washTypeFilter, setWashTypeFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
+  const [reportDialogOpen, setReportDialogOpen] = useState(false);
+  const [reportType, setReportType] = useState("summary");
   const [pendingPaymentsData, setPendingPaymentsData] = useState([
     {
       id: 1,
@@ -466,6 +484,23 @@ const Revenue = () => {
     lastMonthRevenue: 28500,
     totalRevenue: 142500
   });
+
+  // Function to handle export
+  const handleExport = (format: string) => {
+    // In a real app, this would generate and download a file
+    // For this demo, we'll just show a toast notification
+    toast.success(`Payment history exported as ${format.toUpperCase()}`);
+  };
+
+  // Function to generate a report
+  const handleGenerateReport = () => {
+    // Close the dialog
+    setReportDialogOpen(false);
+    
+    // In a real app, this would generate a report based on selected options
+    // For this demo, we'll just show a toast notification
+    toast.success(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} report generated successfully!`);
+  };
 
   // Filter data based on wash type
   const filterDataByWashType = (data) => {
@@ -858,32 +893,56 @@ const Revenue = () => {
                 </div>
               </PopoverContent>
             </Popover>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline">
-                    <Download className="h-4 w-4 mr-2" />
-                    Export
+            
+            {/* Report Dialog */}
+            <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Report
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Generate Revenue Report</DialogTitle>
+                  <DialogDescription>
+                    Select the type of report you want to generate.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="py-4">
+                  <RadioGroup 
+                    value={reportType} 
+                    onValueChange={setReportType}
+                    className="space-y-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="summary" id="summary" />
+                      <Label htmlFor="summary">Summary Report</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="detailed" id="detailed" />
+                      <Label htmlFor="detailed">Detailed Report</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="monthly" id="monthly" />
+                      <Label htmlFor="monthly">Monthly Report</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="yearly" id="yearly" />
+                      <Label htmlFor="yearly">Yearly Report</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setReportDialogOpen(false)}>
+                    Cancel
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Export revenue data</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline">
-                    <FileText className="h-4 w-4 mr-2" />
-                    Report
+                  <Button onClick={handleGenerateReport}>
+                    Generate Report
                   </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Generate revenue report</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
@@ -1003,6 +1062,39 @@ const Revenue = () => {
             </TabsContent>
 
             <TabsContent value="history">
+              <div className="flex justify-end mb-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">
+                      <FileArrowDown className="h-4 w-4 mr-2" />
+                      Export
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('excel')}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as Excel
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('csv')}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as CSV
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {
+                      toast.success('Print layout prepared');
+                      setTimeout(() => {
+                        window.print();
+                      }, 500);
+                    }}>
+                      <Printer className="h-4 w-4 mr-2" />
+                      Print
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
