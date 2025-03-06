@@ -1,3 +1,4 @@
+<lov-code>
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -650,118 +651,7 @@ const Revenue = () => {
     }
   }, [dateFilter, dateRange]);
 
-  // Revenue summary data
-  // const revenueSummary = {
-  //   todayEarnings: 1250,
-  //   quickWashEarnings: 2850,
-  //   standardWashEarnings: 3200,
-  //   combinedWashEarnings: 4150,
-  //   pendingPayments: 2700,
-  //   lastMonthRevenue: 28500,
-  //   totalRevenue: 142500
-  // };
-
-      // Revenue Summary Tiles
-      // <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
-      //   <Card className="bg-[#E5DEFF] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Today's Earnings</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.todayEarnings}</h3>
-      //         </div>
-      //         <div className="bg-[#9b87f5] p-2 rounded-full">
-      //           <Clock className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-
-      //   <Card className="bg-[#D3E4FD] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Quick Wash Revenue</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.quickWashEarnings}</h3>
-      //         </div>
-      //         <div className="bg-[#0EA5E9] p-2 rounded-full">
-      //           <ShoppingBag className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-
-      //   <Card className="bg-[#FDE1D3] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Standard Wash Revenue</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.standardWashEarnings}</h3>
-      //         </div>
-      //         <div className="bg-[#F97316] p-2 rounded-full">
-      //           <ShoppingBag className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-
-      //   <Card className="bg-[#FFDEE2] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Combined Wash Revenue</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.combinedWashEarnings}</h3>
-      //         </div>
-      //         <div className="bg-[#D946EF] p-2 rounded-full">
-      //           <ShoppingBag className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-
-      //   <Card className="bg-[#FEF7CD] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Pending Payments</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.pendingPayments}</h3>
-      //         </div>
-      //         <div className="bg-[#e6a31c] p-2 rounded-full">
-      //           <Receipt className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-
-      //   <Card className="bg-[#F2FCE2] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Last Month Revenue</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.lastMonthRevenue}</h3>
-      //         </div>
-      //         <div className="bg-[#4ade80] p-2 rounded-full">
-      //           <TrendingUp className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-
-      //   <Card className="bg-[#F1F0FB] border-none shadow-sm hover:shadow-md transition-shadow">
-      //     <CardContent className="pt-6">
-      //       <div className="flex items-start justify-between">
-      //         <div>
-      //           <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-      //           <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.totalRevenue}</h3>
-      //         </div>
-      //         <div className="bg-[#8B5CF6] p-2 rounded-full">
-      //           <IndianRupee className="h-5 w-5 text-white" />
-      //         </div>
-      //       </div>
-      //     </CardContent>
-      //   </Card>
-      // </div>
-  
+  // Revenue summary tiles component
   const revenueSummaryTiles = (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
       <Card className="bg-[#E5DEFF] border-none shadow-sm hover:shadow-md transition-shadow">
@@ -841,4 +731,162 @@ const Revenue = () => {
               <p className="text-sm font-medium text-gray-600">Last Month Revenue</p>
               <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.lastMonthRevenue}</h3>
             </div>
-            <div className="bg-[#4ade80] p-2 rounded-
+            <div className="bg-[#4ade80] p-2 rounded-full">
+              <TrendingUp className="h-5 w-5 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-[#F1F0FB] border-none shadow-sm hover:shadow-md transition-shadow">
+        <CardContent className="pt-6">
+          <div className="flex items-start justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+              <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.totalRevenue}</h3>
+            </div>
+            <div className="bg-[#8B5CF6] p-2 rounded-full">
+              <IndianRupee className="h-5 w-5 text-white" />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  // Main rendering
+  return (
+    <div className="container mx-auto py-8">
+      <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold mb-1">Revenue Management</h1>
+            <p className="text-gray-500">Track and manage all revenue data</p>
+          </div>
+          <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
+            <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className="flex items-center">
+                  <Calendar className="h-4 w-4 mr-2" />
+                  {dateFilter === "all" && "All Dates"}
+                  {dateFilter === "today" && "Today"}
+                  {dateFilter === "yesterday" && "Yesterday"}
+                  {dateFilter === "thisWeek" && "This Week"}
+                  {dateFilter === "thisMonth" && "This Month"}
+                  {dateFilter === "customRange" && "Custom Range"}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-4" align="end">
+                <div className="space-y-4">
+                  <h4 className="font-medium">Filter by date</h4>
+                  <RadioGroup
+                    defaultValue={dateFilter}
+                    onValueChange={(value) => {
+                      setDateFilter(value);
+                      if (value !== "customRange") {
+                        setDatePopoverOpen(false);
+                      }
+                    }}
+                  >
+                    {dateFilterOptions.map((option) => (
+                      <div className="flex items-center space-x-2" key={option.id}>
+                        <RadioGroupItem value={option.id} id={option.id} />
+                        <Label htmlFor={option.id}>{option.label}</Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                  {dateFilter === "customRange" && (
+                    <div className="pt-4">
+                      <DateRangePicker
+                        value={dateRange}
+                        onChange={(range) => {
+                          setDateRange(range);
+                          if (range?.from && range?.to) {
+                            setDatePopoverOpen(false);
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </PopoverContent>
+            </Popover>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Export revenue data</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="outline">
+                    <FileText className="h-4 w-4 mr-2" />
+                    Report
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Generate revenue report</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          </div>
+        </div>
+
+        {/* Revenue Summary Tiles */}
+        {revenueSummaryTiles}
+        
+        <div className="mb-6">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Input
+                placeholder="Search by order ID or customer name"
+                className="pl-10 w-full max-w-xs"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={() => setSearchQuery("")}
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+              <TabsList className="grid w-full sm:w-[400px] grid-cols-2">
+                <TabsTrigger value="pending">Pending Payments</TabsTrigger>
+                <TabsTrigger value="history">Payment History</TabsTrigger>
+              </TabsList>
+            </Tabs>
+          </div>
+
+          <TabsContent value="pending" className="mt-0">
+            <div className="border rounded-lg overflow-hidden">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead>Customer</TableHead>
+                    <TableHead>Delivered Date</TableHead>
+                    <TableHead>Service</TableHead>
+                    <TableHead>Wash Type</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {pendingPaymentsData
+                    .filter(payment => 
+                      searchQuery === "" || 
+                      payment.orderId.toLowerCase().includes(searchQuery.toLowerCase
