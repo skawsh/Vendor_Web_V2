@@ -1,8 +1,22 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Download, FileText, Info, Search, X } from "lucide-react";
+import { 
+  Calendar, 
+  Download, 
+  FileText, 
+  Info, 
+  Search, 
+  X, 
+  DollarSign, 
+  TrendingUp, 
+  Clock, 
+  Receipt, 
+  ShoppingBag,
+  IndianRupee 
+} from "lucide-react";
 import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
@@ -21,6 +35,7 @@ import {
 } from "@/components/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Sample pending payments data
 const pendingPaymentsData = [
@@ -143,6 +158,17 @@ const Revenue = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
 
+  // Revenue summary data
+  const revenueSummary = {
+    todayEarnings: 1250,
+    quickWashEarnings: 2850,
+    standardWashEarnings: 3200,
+    combinedWashEarnings: 4150,
+    pendingPayments: 2700,
+    lastMonthRevenue: 28500,
+    totalRevenue: 142500
+  };
+
   // Apply date filters to payment data
   const applyDateFilter = (data) => {
     const today = new Date();
@@ -232,6 +258,107 @@ const Revenue = () => {
         <h1 className="text-3xl font-bold tracking-tight mb-1">Revenue Management</h1>
         <p className="text-muted-foreground">Manage your revenue and financial analytics</p>
       </header>
+      
+      {/* Revenue Summary Tiles */}
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
+        <Card className="bg-[#E5DEFF] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Today's Earnings</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.todayEarnings}</h3>
+              </div>
+              <div className="bg-[#9b87f5] p-2 rounded-full">
+                <Clock className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#D3E4FD] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Quick Wash Revenue</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.quickWashEarnings}</h3>
+              </div>
+              <div className="bg-[#0EA5E9] p-2 rounded-full">
+                <ShoppingBag className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#FDE1D3] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Standard Wash Revenue</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.standardWashEarnings}</h3>
+              </div>
+              <div className="bg-[#F97316] p-2 rounded-full">
+                <ShoppingBag className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#FFDEE2] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Combined Wash Revenue</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.combinedWashEarnings}</h3>
+              </div>
+              <div className="bg-[#D946EF] p-2 rounded-full">
+                <ShoppingBag className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#FEF7CD] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Pending Payments</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.pendingPayments}</h3>
+              </div>
+              <div className="bg-[#e6a31c] p-2 rounded-full">
+                <Receipt className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#F2FCE2] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Last Month Revenue</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.lastMonthRevenue}</h3>
+              </div>
+              <div className="bg-[#4ade80] p-2 rounded-full">
+                <TrendingUp className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-[#F1F0FB] border-none shadow-sm hover:shadow-md transition-shadow">
+          <CardContent className="pt-6">
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
+                <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.totalRevenue}</h3>
+              </div>
+              <div className="bg-[#8B5CF6] p-2 rounded-full">
+                <IndianRupee className="h-5 w-5 text-white" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         {/* Search Bar */}
