@@ -1,6 +1,8 @@
-
 import React, { useState } from 'react';
-import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User } from 'lucide-react';
+import { 
+  UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, 
+  Edit2, User, Store, CreditCard, Building2, Info, LogOut
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,8 +11,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: 'Rajesh Kumar',
@@ -39,6 +43,11 @@ const Profile = () => {
 
   const handleEditProfile = () => {
     setIsEditing(true);
+  };
+
+  const handleLogout = () => {
+    toast.success('Logged out successfully');
+    navigate('/'); // Redirect to home page
   };
 
   return (
@@ -182,21 +191,169 @@ const Profile = () => {
           </CardFooter>
         </Card>
 
-        {/* Account Settings Tabs */}
+        {/* Studio Information */}
+        <Card className="md:col-span-3">
+          <CardHeader>
+            <CardTitle>Studio Information</CardTitle>
+            <CardDescription>
+              Manage your laundry studio details
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* Basic Information */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold">Basic Information</h3>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
+                <div>
+                  <Label>Owner Name</Label>
+                  <p className="text-sm font-medium mt-1">Saiteja Reddy</p>
+                </div>
+                <div>
+                  <Label>Contact Phone</Label>
+                  <p className="text-sm font-medium mt-1">+91 9876543210</p>
+                </div>
+                <div>
+                  <Label>Email Address</Label>
+                  <p className="text-sm font-medium mt-1">saiteja@example.com</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Address Details */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold">Address Details</h3>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
+                <div>
+                  <Label>Street Address</Label>
+                  <p className="text-sm font-medium mt-1">123 Laundry Street</p>
+                </div>
+                <div>
+                  <Label>City</Label>
+                  <p className="text-sm font-medium mt-1">Hyderabad</p>
+                </div>
+                <div>
+                  <Label>State</Label>
+                  <p className="text-sm font-medium mt-1">Telangana</p>
+                </div>
+                <div>
+                  <Label>Zip Code</Label>
+                  <p className="text-sm font-medium mt-1">500081</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Business Details */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Building2 className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold">Business Details</h3>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
+                <div>
+                  <Label>Business Name</Label>
+                  <p className="text-sm font-medium mt-1">Saiteja Laundry Services</p>
+                </div>
+                <div>
+                  <Label>GST Number</Label>
+                  <p className="text-sm font-medium mt-1">22AAAAA0000A1Z5</p>
+                </div>
+                <div>
+                  <Label>Business Type</Label>
+                  <p className="text-sm font-medium mt-1">Sole Proprietorship</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Studio Setup */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Store className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold">Studio Setup</h3>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
+                <div>
+                  <Label>Capacity</Label>
+                  <p className="text-sm font-medium mt-1">500 kg per day</p>
+                </div>
+                <div>
+                  <Label>Operating Hours</Label>
+                  <p className="text-sm font-medium mt-1">9:00 AM to 8:00 PM</p>
+                </div>
+                <div>
+                  <Label>Service Area</Label>
+                  <p className="text-sm font-medium mt-1">10 km radius</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Details */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold">Payment Details</h3>
+                </div>
+                <Button variant="ghost" size="icon">
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
+                <div>
+                  <Label>Bank Name</Label>
+                  <p className="text-sm font-medium mt-1">Indian Bank</p>
+                </div>
+                <div>
+                  <Label>Account Number</Label>
+                  <p className="text-sm font-medium mt-1">XXXX XXXX XXXX 4321</p>
+                </div>
+                <div>
+                  <Label>UPI ID</Label>
+                  <p className="text-sm font-medium mt-1">saiteja@upi</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Account Settings */}
         <Card className="md:col-span-3">
           <CardHeader>
             <CardTitle>Account Settings</CardTitle>
-            <CardDescription>
-              Manage your account preferences and settings
-            </CardDescription>
+            <CardDescription>Manage your account preferences and settings</CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="notifications">
+            <Tabs defaultValue="notifications" className="w-full">
               <TabsList>
                 <TabsTrigger value="notifications">Notifications</TabsTrigger>
                 <TabsTrigger value="security">Security</TabsTrigger>
-                <TabsTrigger value="billing">Billing</TabsTrigger>
               </TabsList>
+
               <TabsContent value="notifications" className="space-y-4 mt-4">
                 <h3 className="text-lg font-medium">Notification Preferences</h3>
                 <div className="grid gap-2">
@@ -250,6 +407,7 @@ const Profile = () => {
                   </div>
                 </div>
               </TabsContent>
+
               <TabsContent value="security" className="space-y-4 mt-4">
                 <h3 className="text-lg font-medium">Security Settings</h3>
                 <div className="space-y-4">
@@ -273,35 +431,18 @@ const Profile = () => {
                   </Button>
                 </div>
               </TabsContent>
-              <TabsContent value="billing" className="space-y-4 mt-4">
-                <h3 className="text-lg font-medium">Billing Information</h3>
-                <div className="space-y-4">
-                  <div className="rounded-lg border p-4">
-                    <h4 className="font-medium mb-2">Current Plan</h4>
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <p className="text-lg font-semibold">Professional</p>
-                        <p className="text-sm text-muted-foreground">₹2,999/month</p>
-                      </div>
-                      <Button variant="outline">Upgrade Plan</Button>
-                    </div>
-                  </div>
-                  <div className="rounded-lg border p-4">
-                    <h4 className="font-medium mb-2">Payment Method</h4>
-                    <div className="flex items-center gap-4">
-                      <div className="bg-gray-100 p-2 rounded-md">
-                        <User className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <p className="font-medium">**** **** **** 4242</p>
-                        <p className="text-sm text-muted-foreground">Expires 04/25</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </TabsContent>
             </Tabs>
           </CardContent>
+          <CardFooter className="flex justify-end">
+            <Button 
+              variant="destructive" 
+              onClick={handleLogout}
+              className="flex items-center gap-2"
+            >
+              <LogOut className="h-4 w-4" />
+              Logout
+            </Button>
+          </CardFooter>
         </Card>
       </div>
     </div>

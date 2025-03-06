@@ -7,9 +7,10 @@ import {
   DollarSign, 
   HelpCircle, 
   UserCircle, 
-  Settings, 
-  ChevronLeft, 
-  Menu
+  Settings,
+  ChevronLeft,
+  Menu,
+  LogOut
 } from 'lucide-react';
 import {
   Sidebar,
@@ -62,14 +63,14 @@ const AppSidebar: React.FC = () => {
           <SidebarLink to="/revenue" icon={<DollarSign className="h-4 w-4" />}>
             Revenue
           </SidebarLink>
-          <SidebarLink to="/support" icon={<HelpCircle className="h-4 w-4" />}>
-            Support
-          </SidebarLink>
           <SidebarLink to="/profile" icon={<UserCircle className="h-4 w-4" />}>
             Profile
           </SidebarLink>
           <SidebarLink to="/settings" icon={<Settings className="h-4 w-4" />}>
             Settings
+          </SidebarLink>
+          <SidebarLink to="/support" icon={<HelpCircle className="h-4 w-4" />}>
+            Support
           </SidebarLink>
         </div>
       </SidebarContent>
