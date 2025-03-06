@@ -45,7 +45,9 @@ const AppSidebar = () => {
           <li key={link.name}>
             <Link
               to={link.path}
-              className={`sidebar-link ${isActive(link.path) ? 'active' : ''}`}
+              className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary hover:bg-accent ${
+                isActive(link.path) ? 'bg-accent text-primary font-medium' : 'text-foreground/80'
+              }`}
             >
               <link.icon className="h-5 w-5" />
               <span>{link.name}</span>

@@ -91,21 +91,26 @@ interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   TableCellProps
->(({ className, highlight, quickWash, standardWash, deliveryStatus, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn(
-      "p-4 align-middle [&:has([role=checkbox])]:pr-0", 
-      highlight && "bg-blue-50/50",
-      quickWash && "bg-amber-50/50",
-      standardWash && "bg-blue-50/50",
-      deliveryStatus === "picked" && "bg-yellow-50/50",
-      deliveryStatus === "delivered" && "bg-green-50/50",
-      className
-    )}
-    {...props}
-  />
-))
+>(({ className, highlight, quickWash, standardWash, deliveryStatus, ...props }, ref) => {
+  // Let's make sure delivery status styling is applied consistently
+  const cellStyles = cn(
+    "p-4 align-middle [&:has([role=checkbox])]:pr-0", 
+    highlight && "bg-blue-50/50",
+    quickWash && "bg-amber-50/50",
+    standardWash && "bg-blue-50/50",
+    deliveryStatus === "picked" && "bg-yellow-50/50",
+    deliveryStatus === "delivered" && "bg-green-50/50",
+    className
+  );
+
+  return (
+    <td
+      ref={ref}
+      className={cellStyles}
+      {...props}
+    />
+  );
+})
 TableCell.displayName = "TableCell"
 
 const TableCaption = React.forwardRef<
