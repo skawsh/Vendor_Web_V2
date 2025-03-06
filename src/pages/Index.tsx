@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   ShoppingBag, 
   DollarSign, 
@@ -138,14 +138,14 @@ const Index = () => {
   const [isStatCardsCollapsed, setIsStatCardsCollapsed] = useState(false);
   const [isScheduleCollapsed, setIsScheduleCollapsed] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     setActiveFilter("new");
   }, []);
 
   const handleViewOrderDetails = (orderId: string) => {
-    toast.info(`Viewing details for order ${orderId}`, {
-      description: "Opening order details view."
-    });
+    navigate(`/order/${orderId}`);
   };
 
   const handleMarkReceived = (orderId: string) => {

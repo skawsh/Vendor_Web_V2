@@ -9,6 +9,7 @@ import NotFound from "./pages/NotFound";
 import Orders from "./pages/Orders";
 import { lazy, Suspense } from "react";
 import AppSidebar from "./components/AppSidebar";
+import OrderDetails from "./pages/OrderDetails";
 
 // Lazy load the pages
 const Revenue = lazy(() => import("./pages/Revenue"));
@@ -32,6 +33,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/orders" element={<Orders />} />
+                <Route path="/order/:orderId" element={<OrderDetails />} />
                 <Route path="/revenue" element={<Revenue />} />
                 <Route path="/support" element={<Support />} />
                 <Route path="/profile" element={<Profile />} />
