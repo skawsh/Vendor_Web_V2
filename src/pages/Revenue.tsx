@@ -505,7 +505,7 @@ const Revenue = () => {
   };
 
   const handleViewOrderDetails = (orderId) => {
-    navigate(`/orders/${orderId}`);
+    navigate(`/order/${orderId}`);
     toast.info(`Viewing details for order ${orderId}`);
   };
 
