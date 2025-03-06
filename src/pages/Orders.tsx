@@ -24,7 +24,6 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
-// Sample orders data based on the mockup design
 const ordersData = [
   {
     id: 1,
@@ -128,7 +127,6 @@ const ordersData = [
   }
 ];
 
-// Order history data - using the actual "Order collected" items from ordersData
 const orderHistoryData = ordersData.filter(order => order.status === "Order collected").map((order, index) => ({
   slNo: index + 1,
   orderId: order.orderId,
@@ -143,7 +141,6 @@ const orderHistoryData = ordersData.filter(order => order.status === "Order coll
   status: "Order collected"
 }));
 
-// Date filter options
 const dateFilterOptions = [
   { id: "all", label: "All Dates" },
   { id: "today", label: "Today" },
@@ -164,10 +161,8 @@ const Orders = () => {
   const [isFilterSectionOpen, setIsFilterSectionOpen] = useState(false);
   const navigate = useNavigate();
   
-  // All possible order statuses
   const statusOptions = ["New Orders", "Order Received", "Orders In Progress", "Ready for collect", "Order collected"];
 
-  // Function to update order status
   const updateOrderStatus = (orderId: string, newStatus: string) => {
     setOrders(prevOrders => 
       prevOrders.map(order => 
@@ -182,7 +177,6 @@ const Orders = () => {
     });
   };
 
-  // Get appropriate action button based on current status
   const getActionButton = (order: any) => {
     switch(order.status) {
       case "New Orders":
@@ -268,14 +262,12 @@ const Orders = () => {
     }
   };
 
-  // Filter orders based on the selected status
   const filteredOrders = orders.filter(order => 
     order.status === statusFilter && 
     (searchQuery === "" || 
      order.orderId.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  // Apply date filters to order history
   const applyDateFilter = (historyData) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -320,31 +312,26 @@ const Orders = () => {
     }
   };
 
-  // Apply both date filter and search query
   const filteredOrderHistory = applyDateFilter(orderHistoryData).filter(order => 
     searchQuery === "" || 
     order.orderId.toLowerCase().includes(searchQuery.toLowerCase()) ||
     order.customerName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Reset date filters
   const resetDateFilters = () => {
     setDateFilter('all');
     setDateRange(undefined);
     setDatePopoverOpen(false);
   };
 
-  // Apply custom date range
   const applyDateFilters = () => {
     setDatePopoverOpen(false);
   };
 
-  // View order details
   const viewOrderDetails = (orderId: string) => {
     navigate(`/order/${orderId}`);
   };
 
-  // Mobile order card component for responsive design
   const OrderCard = ({ order, index }) => (
     <Card className="mb-3">
       <CardHeader className="pb-2 pt-3 px-3">
@@ -400,7 +387,6 @@ const Orders = () => {
     </Card>
   );
 
-  // History order card component
   const HistoryOrderCard = ({ order }) => (
     <Card className="mb-3">
       <CardHeader className="pb-2 pt-3 px-3">
@@ -417,11 +403,11 @@ const Orders = () => {
       <CardContent className="pt-0 pb-3 px-3">
         <div className="grid grid-cols-2 gap-2 text-sm mb-3">
           <div>
-            <div className="text-gray-500">Service Type</div>
+            <div className="text-gray-500">Wash Type</div>
             <div>{order.serviceType}</div>
           </div>
           <div>
-            <div className="text-gray-500">Wash Type</div>
+            <div className="text-gray-500">Service Type</div>
             <div>{order.washType}</div>
           </div>
           <div>
@@ -471,7 +457,6 @@ const Orders = () => {
       </div>
       
       <div className="flex flex-col space-y-4 mb-6">
-        {/* Search Bar */}
         <div className="relative flex-1 max-w-full">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
           <Input
@@ -559,7 +544,6 @@ const Orders = () => {
         
         <TabsContent value="current">
           <div className="rounded-lg overflow-hidden border-2 border-[#0F7EA3] bg-[#0F7EA3]">
-            {/* Status Filter Buttons at the top of the table */}
             <Collapsible 
               open={isFilterSectionOpen} 
               onOpenChange={setIsFilterSectionOpen}
@@ -613,7 +597,6 @@ const Orders = () => {
               ))}
             </div>
             
-            {/* Mobile view - Cards */}
             <div className="md:hidden bg-white p-3">
               {filteredOrders.length > 0 ? (
                 filteredOrders.map((order, index) => (
@@ -626,7 +609,6 @@ const Orders = () => {
               )}
             </div>
             
-            {/* Desktop view - Table */}
             <div className="hidden md:block">
               <div className="overflow-x-auto bg-white">
                 <Table>
@@ -696,7 +678,6 @@ const Orders = () => {
               <h3 className="text-white font-semibold px-4 py-2">Order History - Completed Orders</h3>
             </div>
             
-            {/* Mobile view - History Cards */}
             <div className="md:hidden bg-white p-3">
               {filteredOrderHistory.length > 0 ? (
                 filteredOrderHistory.map((order) => (
@@ -709,7 +690,6 @@ const Orders = () => {
               )}
             </div>
             
-            {/* Desktop view - History Table */}
             <div className="hidden md:block">
               <div className="overflow-x-auto bg-white">
                 <Table>
@@ -718,8 +698,8 @@ const Orders = () => {
                       <TableHead className="text-white font-bold">S.No</TableHead>
                       <TableHead className="text-white font-bold">Order ID</TableHead>
                       <TableHead className="text-white font-bold">Customer Name</TableHead>
-                      <TableHead className="text-white font-bold">Service Type</TableHead>
                       <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Service Type</TableHead>
                       <TableHead className="text-white font-bold">Weight / Quantity</TableHead>
                       <TableHead className="text-white font-bold">Price (₹)</TableHead>
                       <TableHead className="text-white font-bold">Order Date</TableHead>
