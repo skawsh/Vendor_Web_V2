@@ -35,6 +35,41 @@ import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const Settings = () => {
+  // Studio information state
+  const [studioInfo, setStudioInfo] = useState({
+    basic: {
+      ownerName: 'Saiteja Reddy',
+      contactPhone: '+91 9876543210',
+      emailAddress: 'saiteja@example.com',
+      isEditing: false
+    },
+    address: {
+      streetAddress: '123 Laundry Street',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      zipCode: '500081',
+      isEditing: false
+    },
+    business: {
+      businessName: 'Saiteja Laundry Services',
+      gstNumber: '22AAAAA0000A1Z5',
+      businessType: 'Sole Proprietorship',
+      isEditing: false
+    },
+    studio: {
+      capacity: '500 kg per day',
+      operatingHours: '9:00 AM to 8:00 PM',
+      serviceArea: '10 km radius',
+      isEditing: false
+    },
+    payment: {
+      bankName: 'Indian Bank',
+      accountNumber: 'XXXX XXXX XXXX 4321',
+      upiId: 'saiteja@upi',
+      isEditing: false
+    }
+  });
+
   const [searchServiceQuery, setSearchServiceQuery] = useState('');
   const [expandedServices, setExpandedServices] = useState<Record<number, boolean>>({});
   const [expandedSubservices, setExpandedSubservices] = useState<Record<number, boolean>>({});
@@ -84,6 +119,162 @@ const Settings = () => {
   });
 
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
+
+  // Function to toggle edit mode for a specific section
+  const toggleEditSection = (section: keyof typeof studioInfo) => {
+    setStudioInfo(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        isEditing: !prev[section].isEditing
+      }
+    }));
+  };
+
+  // Function to handle input changes in a section
+  const handleInfoChange = (section: keyof typeof studioInfo, field: string, value: string) => {
+    setStudioInfo(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        [field]: value
+      }
+    }));
+  };
+
+  // Function to save changes in a section
+  const saveInfoChanges = (section: keyof typeof studioInfo) => {
+    setStudioInfo(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        isEditing: false
+      }
+    }));
+    toast.success(`${section.charAt(0).toUpperCase() + section.slice(1)} information updated successfully`);
+  };
+
+  // Function to cancel edit mode without saving changes
+  const cancelInfoEdit = (section: keyof typeof studioInfo) => {
+    // Here we would revert to previous values, but for simplicity
+    // we'll just exit edit mode in this implementation
+    setStudioInfo(prev => ({
+      ...prev,
+      [section]: {
+        ...prev[section],
+        isEditing: false
+      }
+    }));
+    toast.info('Edit canceled');
+  };
+
+  const toggleServiceExpand = (serviceId: number) => {
+    setExpandedServices(prev => ({
+      ...prev,
+      [serviceId]: !prev[serviceId]
+    }));
+  };
+
+  const toggleSubserviceExpand = (subserviceId: number) => {
+    setExpandedSubservices(prev => ({
+      ...prev,
+      [subserviceId]: !prev[subserviceId]
+    }));
+  };
+
+  const toggleItemsExpand = (subserviceId: number) => {
+    setExpandedSubservices(prev => ({
+      ...prev,
+      [subserviceId]: !prev[subserviceId]
+    }));
+  };
+
+  const toggleInfoSection = (section: string) => {
+    setExpandedInfoSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
+  const toggleServiceStatus = (serviceId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setServiceStatus(prev => {
+      const newStatus = !prev[serviceId];
+      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} service`);
+      return {
+        ...prev,
+        [serviceId]: newStatus
+      };
+    });
+  };
+
+  const toggleSubserviceStatus = (subserviceId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSubserviceStatus(prev => {
+      const newStatus = !prev[subserviceId];
+      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} subservice`);
+      return {
+        ...prev,
+        [subserviceId]: newStatus
+      };
+    });
+  };
+
+  const handleAddSubService = () => {
+    setSubServices([...subServices, { 
+      id: subServices.length + 1, 
+      name: '', 
+      basePrice: '0', 
+      priceUnit: 'per piece' 
+    }]);
+  };
+
+  const handleRemoveSubService = (id: number) => {
+    if (subServices.length > 1) {
+      setSubServices(subServices.filter(service => service.id !== id));
+    } else {
+      toast.error("You need at least one sub-service");
+    }
+  };
+
+  const handleSubServiceNameChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, name: value } : service
+    ));
+  };
+
+  const handleSubServiceBasePriceChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, basePrice: value } : service
+    ));
+  };
+
+  const handleSubServicePriceUnitChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, priceUnit: value } : service
+    ));
+  };
+
+  const handleSaveNewService = () => {
+    if (!newServiceName.trim()) {
+      toast.error("Service name is required");
+      return;
+    }
+
+    if (subServices.some(service => !service.name.trim())) {
+      toast.error("All sub-service names are required");
+      return;
+    }
+
+    toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services`);
+    setNewServiceName('');
+    setSubServices([{ id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }]);
+    setAddServiceDialogOpen(false);
+  };
+
+  const handleEditItem = (id: number, type: 'service' | 'subservice' | 'item') => {
+    toast.info(`Editing ${type} with ID: ${id}`);
+  };
 
   const services = [
     { 
@@ -569,114 +760,6 @@ const Settings = () => {
     }
   ];
 
-  const toggleServiceExpand = (serviceId: number) => {
-    setExpandedServices(prev => ({
-      ...prev,
-      [serviceId]: !prev[serviceId]
-    }));
-  };
-
-  const toggleSubserviceExpand = (subserviceId: number) => {
-    setExpandedSubservices(prev => ({
-      ...prev,
-      [subserviceId]: !prev[subserviceId]
-    }));
-  };
-
-  const toggleItemsExpand = (subserviceId: number) => {
-    setExpandedSubservices(prev => ({
-      ...prev,
-      [subserviceId]: !prev[subserviceId]
-    }));
-  };
-
-  const toggleInfoSection = (section: string) => {
-    setExpandedInfoSections(prev => ({
-      ...prev,
-      [section]: !prev[section]
-    }));
-  };
-
-  const toggleServiceStatus = (serviceId: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setServiceStatus(prev => {
-      const newStatus = !prev[serviceId];
-      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} service`);
-      return {
-        ...prev,
-        [serviceId]: newStatus
-      };
-    });
-  };
-
-  const toggleSubserviceStatus = (subserviceId: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setSubserviceStatus(prev => {
-      const newStatus = !prev[subserviceId];
-      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} subservice`);
-      return {
-        ...prev,
-        [subserviceId]: newStatus
-      };
-    });
-  };
-
-  const handleAddSubService = () => {
-    setSubServices([...subServices, { 
-      id: subServices.length + 1, 
-      name: '', 
-      basePrice: '0', 
-      priceUnit: 'per piece' 
-    }]);
-  };
-
-  const handleRemoveSubService = (id: number) => {
-    if (subServices.length > 1) {
-      setSubServices(subServices.filter(service => service.id !== id));
-    } else {
-      toast.error("You need at least one sub-service");
-    }
-  };
-
-  const handleSubServiceNameChange = (id: number, value: string) => {
-    setSubServices(subServices.map(service => 
-      service.id === id ? { ...service, name: value } : service
-    ));
-  };
-
-  const handleSubServiceBasePriceChange = (id: number, value: string) => {
-    setSubServices(subServices.map(service => 
-      service.id === id ? { ...service, basePrice: value } : service
-    ));
-  };
-
-  const handleSubServicePriceUnitChange = (id: number, value: string) => {
-    setSubServices(subServices.map(service => 
-      service.id === id ? { ...service, priceUnit: value } : service
-    ));
-  };
-
-  const handleSaveNewService = () => {
-    if (!newServiceName.trim()) {
-      toast.error("Service name is required");
-      return;
-    }
-
-    if (subServices.some(service => !service.name.trim())) {
-      toast.error("All sub-service names are required");
-      return;
-    }
-
-    toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services`);
-    setNewServiceName('');
-    setSubServices([{ id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }]);
-    setAddServiceDialogOpen(false);
-  };
-
-  const handleEditItem = (id: number, type: 'service' | 'subservice' | 'item') => {
-    toast.info(`Editing ${type} with ID: ${id}`);
-  };
-
   return (
     <div className="container mx-auto py-6 px-4 md:px-6 space-y-8">
       <div className="flex items-center gap-4 mb-6">
@@ -710,6 +793,10 @@ const Settings = () => {
                     variant="ghost" 
                     size="icon"
                     className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleEditSection('basic');
+                    }}
                   >
                     <Pencil className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -726,17 +813,60 @@ const Settings = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label>Owner Name</Label>
-                    <p className="text-sm font-medium">Saiteja Reddy</p>
+                    {studioInfo.basic.isEditing ? (
+                      <Input 
+                        value={studioInfo.basic.ownerName} 
+                        onChange={(e) => handleInfoChange('basic', 'ownerName', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.basic.ownerName}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Contact Phone</Label>
-                    <p className="text-sm font-medium">+91 9876543210</p>
+                    {studioInfo.basic.isEditing ? (
+                      <Input 
+                        value={studioInfo.basic.contactPhone} 
+                        onChange={(e) => handleInfoChange('basic', 'contactPhone', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.basic.contactPhone}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Email Address</Label>
-                    <p className="text-sm font-medium">saiteja@example.com</p>
+                    {studioInfo.basic.isEditing ? (
+                      <Input 
+                        value={studioInfo.basic.emailAddress} 
+                        onChange={(e) => handleInfoChange('basic', 'emailAddress', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.basic.emailAddress}</p>
+                    )}
                   </div>
                 </div>
+                {studioInfo.basic.isEditing && (
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button 
+                      variant="cancel" 
+                      size="sm" 
+                      onClick={() => cancelInfoEdit('basic')}
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => saveInfoChanges('basic')}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Save
+                    </Button>
+                  </div>
+                )}
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -758,6 +888,10 @@ const Settings = () => {
                     variant="ghost" 
                     size="icon"
                     className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleEditSection('address');
+                    }}
                   >
                     <Pencil className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -774,21 +908,72 @@ const Settings = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label>Street Address</Label>
-                    <p className="text-sm font-medium">123 Laundry Street</p>
+                    {studioInfo.address.isEditing ? (
+                      <Input 
+                        value={studioInfo.address.streetAddress} 
+                        onChange={(e) => handleInfoChange('address', 'streetAddress', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.address.streetAddress}</p>
+                    )}
                   </div>
                   <div>
                     <Label>City</Label>
-                    <p className="text-sm font-medium">Hyderabad</p>
+                    {studioInfo.address.isEditing ? (
+                      <Input 
+                        value={studioInfo.address.city} 
+                        onChange={(e) => handleInfoChange('address', 'city', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.address.city}</p>
+                    )}
                   </div>
                   <div>
                     <Label>State</Label>
-                    <p className="text-sm font-medium">Telangana</p>
+                    {studioInfo.address.isEditing ? (
+                      <Input 
+                        value={studioInfo.address.state} 
+                        onChange={(e) => handleInfoChange('address', 'state', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.address.state}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Zip Code</Label>
-                    <p className="text-sm font-medium">500081</p>
+                    {studioInfo.address.isEditing ? (
+                      <Input 
+                        value={studioInfo.address.zipCode} 
+                        onChange={(e) => handleInfoChange('address', 'zipCode', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.address.zipCode}</p>
+                    )}
                   </div>
                 </div>
+                {studioInfo.address.isEditing && (
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button 
+                      variant="cancel" 
+                      size="sm" 
+                      onClick={() => cancelInfoEdit('address')}
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => saveInfoChanges('address')}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Save
+                    </Button>
+                  </div>
+                )}
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -810,6 +995,10 @@ const Settings = () => {
                     variant="ghost" 
                     size="icon"
                     className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleEditSection('business');
+                    }}
                   >
                     <Pencil className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -826,17 +1015,60 @@ const Settings = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label>Business Name</Label>
-                    <p className="text-sm font-medium">Saiteja Laundry Services</p>
+                    {studioInfo.business.isEditing ? (
+                      <Input 
+                        value={studioInfo.business.businessName} 
+                        onChange={(e) => handleInfoChange('business', 'businessName', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.business.businessName}</p>
+                    )}
                   </div>
                   <div>
                     <Label>GST Number</Label>
-                    <p className="text-sm font-medium">22AAAAA0000A1Z5</p>
+                    {studioInfo.business.isEditing ? (
+                      <Input 
+                        value={studioInfo.business.gstNumber} 
+                        onChange={(e) => handleInfoChange('business', 'gstNumber', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.business.gstNumber}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Business Type</Label>
-                    <p className="text-sm font-medium">Sole Proprietorship</p>
+                    {studioInfo.business.isEditing ? (
+                      <Input 
+                        value={studioInfo.business.businessType} 
+                        onChange={(e) => handleInfoChange('business', 'businessType', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.business.businessType}</p>
+                    )}
                   </div>
                 </div>
+                {studioInfo.business.isEditing && (
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button 
+                      variant="cancel" 
+                      size="sm" 
+                      onClick={() => cancelInfoEdit('business')}
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => saveInfoChanges('business')}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Save
+                    </Button>
+                  </div>
+                )}
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -858,6 +1090,10 @@ const Settings = () => {
                     variant="ghost" 
                     size="icon"
                     className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleEditSection('studio');
+                    }}
                   >
                     <Pencil className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -874,17 +1110,60 @@ const Settings = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label>Capacity</Label>
-                    <p className="text-sm font-medium">500 kg per day</p>
+                    {studioInfo.studio.isEditing ? (
+                      <Input 
+                        value={studioInfo.studio.capacity} 
+                        onChange={(e) => handleInfoChange('studio', 'capacity', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.studio.capacity}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Operating Hours</Label>
-                    <p className="text-sm font-medium">9:00 AM to 8:00 PM</p>
+                    {studioInfo.studio.isEditing ? (
+                      <Input 
+                        value={studioInfo.studio.operatingHours} 
+                        onChange={(e) => handleInfoChange('studio', 'operatingHours', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.studio.operatingHours}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Service Area</Label>
-                    <p className="text-sm font-medium">10 km radius</p>
+                    {studioInfo.studio.isEditing ? (
+                      <Input 
+                        value={studioInfo.studio.serviceArea} 
+                        onChange={(e) => handleInfoChange('studio', 'serviceArea', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.studio.serviceArea}</p>
+                    )}
                   </div>
                 </div>
+                {studioInfo.studio.isEditing && (
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button 
+                      variant="cancel" 
+                      size="sm" 
+                      onClick={() => cancelInfoEdit('studio')}
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => saveInfoChanges('studio')}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Save
+                    </Button>
+                  </div>
+                )}
               </div>
             </CollapsibleContent>
           </Collapsible>
@@ -906,6 +1185,10 @@ const Settings = () => {
                     variant="ghost" 
                     size="icon"
                     className="h-8 w-8"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleEditSection('payment');
+                    }}
                   >
                     <Pencil className="h-4 w-4" />
                     <span className="sr-only">Edit</span>
@@ -922,17 +1205,60 @@ const Settings = () => {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <Label>Bank Name</Label>
-                    <p className="text-sm font-medium">Indian Bank</p>
+                    {studioInfo.payment.isEditing ? (
+                      <Input 
+                        value={studioInfo.payment.bankName} 
+                        onChange={(e) => handleInfoChange('payment', 'bankName', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.payment.bankName}</p>
+                    )}
                   </div>
                   <div>
                     <Label>Account Number</Label>
-                    <p className="text-sm font-medium">XXXX XXXX XXXX 4321</p>
+                    {studioInfo.payment.isEditing ? (
+                      <Input 
+                        value={studioInfo.payment.accountNumber} 
+                        onChange={(e) => handleInfoChange('payment', 'accountNumber', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.payment.accountNumber}</p>
+                    )}
                   </div>
                   <div>
                     <Label>UPI ID</Label>
-                    <p className="text-sm font-medium">saiteja@upi</p>
+                    {studioInfo.payment.isEditing ? (
+                      <Input 
+                        value={studioInfo.payment.upiId} 
+                        onChange={(e) => handleInfoChange('payment', 'upiId', e.target.value)}
+                        className="mt-1"
+                      />
+                    ) : (
+                      <p className="text-sm font-medium">{studioInfo.payment.upiId}</p>
+                    )}
                   </div>
                 </div>
+                {studioInfo.payment.isEditing && (
+                  <div className="flex justify-end gap-2 mt-4">
+                    <Button 
+                      variant="cancel" 
+                      size="sm" 
+                      onClick={() => cancelInfoEdit('payment')}
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Cancel
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      onClick={() => saveInfoChanges('payment')}
+                    >
+                      <Save className="mr-2 h-4 w-4" />
+                      Save
+                    </Button>
+                  </div>
+                )}
               </div>
             </CollapsibleContent>
           </Collapsible>
