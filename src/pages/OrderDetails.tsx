@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -260,8 +261,11 @@ const OrderDetails = () => {
     return 'text-gray-600';
   };
 
-  // Only show delivery info for orders in the order history section (those with a deliveredDate)
-  const isInOrderHistory = order.deliveredDate ? true : false;
+  // Check if the order is in the order history section
+  // Only orders that have been delivered (have a deliveredDate) are in the order history
+  const isInOrderHistory = Boolean(order.deliveredDate);
+  
+  // Only show delivery info for orders in the order history section
   const showDeliveryInfo = isInOrderHistory;
 
   return (
@@ -293,7 +297,7 @@ const OrderDetails = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Order Delivered date</span>
-                <span className="font-medium">{order.deliveredDate}</span>
+                <span className="font-medium">{order.deliveredDate || "Not yet delivered"}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Payment Status</span>
