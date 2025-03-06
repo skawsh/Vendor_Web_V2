@@ -133,6 +133,19 @@
   .glassmorphism {
     @apply bg-white/75 backdrop-blur-lg border border-white/20 shadow-sm;
   }
+  
+  /* Additional consistent styling */
+  .filter-container {
+    @apply bg-[#D3E4FD] rounded-lg p-3 border border-[#A3C4FD];
+  }
+  
+  .table-container {
+    @apply bg-[#F0FDF9] rounded-lg p-3 border border-[#C0F8E1];
+  }
+  
+  .selected-item {
+    @apply bg-[#8B5CF6] text-white;
+  }
 }
 
 /* Custom Animations */
