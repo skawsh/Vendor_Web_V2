@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, 
@@ -12,6 +13,7 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import StudioInfoCard from '@/components/StudioInfoCard';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -49,6 +51,61 @@ const Profile = () => {
     toast.success('Logged out successfully');
     navigate('/'); // Redirect to home page
   };
+
+  // Studio information data for the cards
+  const studioInfoCards = [
+    {
+      id: 'basic',
+      title: 'Basic Information',
+      icon: <User className="h-5 w-5 text-primary" />,
+      fields: [
+        { id: 'ownerName', label: 'Owner Name', value: 'Saiteja Reddy' },
+        { id: 'contactPhone', label: 'Contact Phone', value: '+91 9876543210' },
+        { id: 'emailAddress', label: 'Email Address', value: 'saiteja@example.com' },
+      ]
+    },
+    {
+      id: 'address',
+      title: 'Address Details',
+      icon: <MapPin className="h-5 w-5 text-primary" />,
+      fields: [
+        { id: 'streetAddress', label: 'Street Address', value: '123 Laundry Street' },
+        { id: 'city', label: 'City', value: 'Hyderabad' },
+        { id: 'state', label: 'State', value: 'Telangana' },
+        { id: 'zipCode', label: 'Zip Code', value: '500081' },
+      ]
+    },
+    {
+      id: 'business',
+      title: 'Business Details',
+      icon: <Building2 className="h-5 w-5 text-primary" />,
+      fields: [
+        { id: 'businessName', label: 'Business Name', value: 'Saiteja Laundry Services' },
+        { id: 'gstNumber', label: 'GST Number', value: '22AAAAA0000A1Z5' },
+        { id: 'businessType', label: 'Business Type', value: 'Sole Proprietorship' },
+      ]
+    },
+    {
+      id: 'studio',
+      title: 'Studio Setup',
+      icon: <Store className="h-5 w-5 text-primary" />,
+      fields: [
+        { id: 'capacity', label: 'Capacity', value: '500 kg per day' },
+        { id: 'operatingHours', label: 'Operating Hours', value: '9:00 AM to 8:00 PM' },
+        { id: 'serviceArea', label: 'Service Area', value: '10 km radius' },
+      ]
+    },
+    {
+      id: 'payment',
+      title: 'Payment Details',
+      icon: <CreditCard className="h-5 w-5 text-primary" />,
+      fields: [
+        { id: 'bankName', label: 'Bank Name', value: 'Indian Bank' },
+        { id: 'accountNumber', label: 'Account Number', value: 'XXXX XXXX XXXX 4321' },
+        { id: 'upiId', label: 'UPI ID', value: 'saiteja@upi' },
+      ]
+    },
+  ];
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -191,7 +248,7 @@ const Profile = () => {
           </CardFooter>
         </Card>
 
-        {/* Studio Information */}
+        {/* Studio Information Cards */}
         <Card className="md:col-span-3">
           <CardHeader>
             <CardTitle>Studio Information</CardTitle>
@@ -199,145 +256,15 @@ const Profile = () => {
               Manage your laundry studio details
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Basic Information */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <User className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="font-semibold">Basic Information</h3>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
-                <div>
-                  <Label>Owner Name</Label>
-                  <p className="text-sm font-medium mt-1">Saiteja Reddy</p>
-                </div>
-                <div>
-                  <Label>Contact Phone</Label>
-                  <p className="text-sm font-medium mt-1">+91 9876543210</p>
-                </div>
-                <div>
-                  <Label>Email Address</Label>
-                  <p className="text-sm font-medium mt-1">saiteja@example.com</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Address Details */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="font-semibold">Address Details</h3>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
-                <div>
-                  <Label>Street Address</Label>
-                  <p className="text-sm font-medium mt-1">123 Laundry Street</p>
-                </div>
-                <div>
-                  <Label>City</Label>
-                  <p className="text-sm font-medium mt-1">Hyderabad</p>
-                </div>
-                <div>
-                  <Label>State</Label>
-                  <p className="text-sm font-medium mt-1">Telangana</p>
-                </div>
-                <div>
-                  <Label>Zip Code</Label>
-                  <p className="text-sm font-medium mt-1">500081</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Business Details */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Building2 className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="font-semibold">Business Details</h3>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
-                <div>
-                  <Label>Business Name</Label>
-                  <p className="text-sm font-medium mt-1">Saiteja Laundry Services</p>
-                </div>
-                <div>
-                  <Label>GST Number</Label>
-                  <p className="text-sm font-medium mt-1">22AAAAA0000A1Z5</p>
-                </div>
-                <div>
-                  <Label>Business Type</Label>
-                  <p className="text-sm font-medium mt-1">Sole Proprietorship</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Studio Setup */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Store className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="font-semibold">Studio Setup</h3>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
-                <div>
-                  <Label>Capacity</Label>
-                  <p className="text-sm font-medium mt-1">500 kg per day</p>
-                </div>
-                <div>
-                  <Label>Operating Hours</Label>
-                  <p className="text-sm font-medium mt-1">9:00 AM to 8:00 PM</p>
-                </div>
-                <div>
-                  <Label>Service Area</Label>
-                  <p className="text-sm font-medium mt-1">10 km radius</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Payment Details */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <CreditCard className="h-5 w-5 text-muted-foreground" />
-                  <h3 className="font-semibold">Payment Details</h3>
-                </div>
-                <Button variant="ghost" size="icon">
-                  <Edit2 className="h-4 w-4" />
-                </Button>
-              </div>
-              <div className="grid md:grid-cols-2 gap-4 p-4 bg-muted/10 rounded-lg">
-                <div>
-                  <Label>Bank Name</Label>
-                  <p className="text-sm font-medium mt-1">Indian Bank</p>
-                </div>
-                <div>
-                  <Label>Account Number</Label>
-                  <p className="text-sm font-medium mt-1">XXXX XXXX XXXX 4321</p>
-                </div>
-                <div>
-                  <Label>UPI ID</Label>
-                  <p className="text-sm font-medium mt-1">saiteja@upi</p>
-                </div>
-              </div>
-            </div>
+          <CardContent className="space-y-4">
+            {studioInfoCards.map(card => (
+              <StudioInfoCard 
+                key={card.id}
+                title={card.title}
+                icon={card.icon}
+                fields={card.fields}
+              />
+            ))}
           </CardContent>
         </Card>
 
