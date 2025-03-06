@@ -16,7 +16,8 @@ import {
   ShoppingBag,
   IndianRupee,
   FileDown,
-  Printer 
+  Printer,
+  ExternalLink
 } from "lucide-react";
 import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
@@ -503,6 +504,11 @@ const Revenue = () => {
     );
   };
 
+  const handleViewOrderDetails = (orderId) => {
+    navigate(`/orders/${orderId}`);
+    toast.info(`Viewing details for order ${orderId}`);
+  };
+
   useEffect(() => {
     switch(dateFilter) {
       case "today":
@@ -936,29 +942,23 @@ const Revenue = () => {
                           </span>
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              toast.success(`Payment received for order ${payment.orderId}`);
-                              const updatedPendingPayments = pendingPaymentsData.filter(p => p.id !== payment.id);
-                              setPendingPaymentsData(updatedPendingPayments);
-                              setPaymentHistoryData([
-                                ...paymentHistoryData, 
-                                {
-                                  id: paymentHistoryData.length + 1,
-                                  orderId: payment.orderId,
-                                  customerName: payment.customerName,
-                                  paymentDate: new Date().toLocaleDateString(),
-                                  service: payment.service,
-                                  washType: payment.washType,
-                                  amount: payment.totalAmount
-                                }
-                              ]);
-                            }}
-                          >
-                            Mark Paid
-                          </Button>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleViewOrderDetails(payment.orderId)}
+                                >
+                                  <ExternalLink className="h-4 w-4 mr-2" />
+                                  Order Detail
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>View order details</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -1010,6 +1010,7 @@ const Revenue = () => {
                       <TableHead className="text-white font-bold">Service</TableHead>
                       <TableHead className="text-white font-bold">Wash Type</TableHead>
                       <TableHead className="text-white font-bold">Amount</TableHead>
+                      <TableHead className="text-white font-bold text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1030,6 +1031,25 @@ const Revenue = () => {
                           </span>
                         </TableCell>
                         <TableCell>₹{payment.amount}</TableCell>
+                        <TableCell className="text-right">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleViewOrderDetails(payment.orderId)}
+                                >
+                                  <ExternalLink className="h-4 w-4 mr-2" />
+                                  Order Detail
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>View order details</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
