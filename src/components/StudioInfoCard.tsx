@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { User, MapPin, Building2, Store, CreditCard, ChevronUp, ChevronDown, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -18,10 +19,6 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
   const [formData, setFormData] = useState<Record<string, string>>(
     fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {})
   );
-  // Keep original data to revert to on cancel
-  const [originalData, setOriginalData] = useState<Record<string, string>>(
-    fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {})
-  );
 
   const toggleExpand = () => {
     if (isEditing) return; // Don't collapse when editing
@@ -30,8 +27,6 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
 
   const startEditing = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Save original data before editing begins
-    setOriginalData({...formData});
     setIsEditing(true);
     // Ensure the card is expanded when editing starts
     if (!isExpanded) {
@@ -41,9 +36,9 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
 
   const cancelEditing = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Revert to original data
-    setFormData({...originalData});
     setIsEditing(false);
+    // Reset form data to original values
+    setFormData(fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {}));
   };
 
   const handleInputChange = (id: string, value: string) => {
@@ -55,8 +50,6 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
 
   const saveChanges = (e: React.MouseEvent) => {
     e.stopPropagation();
-    // Save the current data as the new original data
-    setOriginalData({...formData});
     setIsEditing(false);
     toast.success(`${title} information updated successfully`);
   };
@@ -126,7 +119,7 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
                     className="mt-1"
                   />
                 ) : (
-                  <p className="text-sm font-medium">{formData[field.id]}</p>
+                  <p className="text-sm font-medium">{field.value}</p>
                 )}
               </div>
             ))}
