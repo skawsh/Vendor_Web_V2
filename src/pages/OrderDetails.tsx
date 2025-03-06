@@ -115,7 +115,6 @@ const orderData = {
       deliveredDateTime: "15/01/2025 09:45 AM"
     }
   },
-  // Adding order IDs from the orders list
   "ORD-1008": {
     orderId: "ORD-1008",
     orderedDate: "04/02/2025",
@@ -261,8 +260,9 @@ const OrderDetails = () => {
     return 'text-gray-600';
   };
 
-  // Check if the order is in Order collected status
-  const showDeliveryInfo = order.status === "Order collected" || order.deliveredDate;
+  // Only show delivery info for orders in the order history section (those with a deliveredDate)
+  const isInOrderHistory = order.deliveredDate ? true : false;
+  const showDeliveryInfo = isInOrderHistory;
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -354,7 +354,7 @@ const OrderDetails = () => {
         </div>
       </div>
 
-      {/* Delivery Information Section - Only show for collected orders or orders with delivery date */}
+      {/* Delivery Information Section - Only show for orders in order history */}
       {showDeliveryInfo && (
         <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
           <div className="px-4 py-3 bg-green-100 flex items-center">
