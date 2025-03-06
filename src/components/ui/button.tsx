@@ -35,6 +35,9 @@ const buttonVariants = cva(
         phoneButton: "bg-blue-500 text-white hover:bg-blue-600",
         emailButton: "bg-green-500 text-white hover:bg-green-600",
         contactSendButton: "bg-primary text-white hover:bg-primary/90",
+        filter: "bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white",
+        selected: "bg-[#8B5CF6] text-white hover:bg-[#7C4FE7]",
+        tableAction: "bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white",
       },
       size: {
         default: "h-10 px-4 py-2",

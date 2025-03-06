@@ -359,6 +359,7 @@ const Revenue = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [washTypeFilter, setWashTypeFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
+  
   const [pendingPaymentsData, setPendingPaymentsData] = useState([
     {
       id: 1,
@@ -411,7 +412,7 @@ const Revenue = () => {
       orderStatus: "Delivered"
     }
   ]);
-  
+
   const [paymentHistoryData, setPaymentHistoryData] = useState([
     {
       id: 1,
@@ -707,7 +708,7 @@ const Revenue = () => {
               <p className="text-sm font-medium text-gray-600">Today's Earnings</p>
               <h3 className="text-2xl font-bold mt-1">₹{revenueSummary.todayEarnings}</h3>
             </div>
-            <div className="bg-[#9b87f5] p-2 rounded-full">
+            <div className="bg-[#8B5CF6] p-2 rounded-full">
               <Clock className="h-5 w-5 text-white" />
             </div>
           </div>
@@ -811,7 +812,7 @@ const Revenue = () => {
           <div className="flex flex-wrap gap-2 mt-4 md:mt-0">
             <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
               <PopoverTrigger asChild>
-                <Button variant="outline" className="flex items-center">
+                <Button variant="outline" className="flex items-center bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3]">
                   <Calendar className="h-4 w-4 mr-2" />
                   {dateFilter === "all" && "All Dates"}
                   {dateFilter === "today" && "Today"}
@@ -821,7 +822,7 @@ const Revenue = () => {
                   {dateFilter === "customRange" && "Custom Range"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-4" align="end">
+              <PopoverContent className="w-auto p-4 bg-[#F1F0FB]" align="end">
                 <div className="space-y-4">
                   <h4 className="font-medium">Filter by date</h4>
                   <RadioGroup
@@ -835,7 +836,7 @@ const Revenue = () => {
                   >
                     {dateFilterOptions.map((option) => (
                       <div className="flex items-center space-x-2" key={option.id}>
-                        <RadioGroupItem value={option.id} id={option.id} />
+                        <RadioGroupItem value={option.id} id={option.id} className="border-[#8B5CF6] text-[#8B5CF6]" />
                         <Label htmlFor={option.id}>{option.label}</Label>
                       </div>
                     ))}
@@ -867,7 +868,7 @@ const Revenue = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
               <Input
                 placeholder="Search by order ID or customer name"
-                className="pl-10 w-full max-w-xs"
+                className="pl-10 w-full max-w-xs bg-[#D3E4FD] border-[#A3C4FD] placeholder-[#6B7A99]"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -883,15 +884,24 @@ const Revenue = () => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
-            <TabsList className="w-full sm:w-[400px]">
-              <TabsTrigger value="pending" className="flex-1">Unpaid Payments</TabsTrigger>
-              <TabsTrigger value="history" className="flex-1">Payment History</TabsTrigger>
+            <TabsList className="w-full sm:w-[400px] bg-[#D3E4FD] border border-[#A3C4FD]">
+              <TabsTrigger value="pending" className="flex-1 data-[state=active]:bg-[#8B5CF6] data-[state=active]:text-white">Unpaid Payments</TabsTrigger>
+              <TabsTrigger value="history" className="flex-1 data-[state=active]:bg-[#8B5CF6] data-[state=active]:text-white">Payment History</TabsTrigger>
             </TabsList>
           
             <div className="mt-4 mb-4">
-              <ToggleGroup type="single" value={washTypeFilter} onValueChange={(value) => value && setWashTypeFilter(value)}>
+              <ToggleGroup 
+                type="single" 
+                value={washTypeFilter} 
+                onValueChange={(value) => value && setWashTypeFilter(value)}
+                className="bg-[#D3E4FD] border-[#A3C4FD]"
+              >
                 {washTypeOptions.map((option) => (
-                  <ToggleGroupItem key={option.id} value={option.id}>
+                  <ToggleGroupItem 
+                    key={option.id} 
+                    value={option.id}
+                    className="data-[state=on]:bg-[#8B5CF6] data-[state=on]:text-white"
+                  >
                     {option.label}
                   </ToggleGroupItem>
                 ))}
@@ -899,7 +909,7 @@ const Revenue = () => {
             </div>
 
             <TabsContent value="pending">
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-hidden bg-[#F2FCE2]">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-[#0F7EA3] border-none">
@@ -949,6 +959,7 @@ const Revenue = () => {
                                   size="sm" 
                                   variant="outline"
                                   onClick={() => handleViewOrderDetails(payment.orderId)}
+                                  className="bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white"
                                 >
                                   <ExternalLink className="h-4 w-4 mr-2" />
                                   Order Detail
@@ -971,12 +982,12 @@ const Revenue = () => {
               <div className="flex justify-end mb-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline">
+                    <Button variant="outline" className="bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3]">
                       <FileDown className="h-4 w-4 mr-2" />
                       Export
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="bg-[#F1F0FB]">
                     <DropdownMenuItem onClick={() => handleExport('pdf')}>
                       <FileText className="h-4 w-4 mr-2" />
                       Export as PDF
@@ -999,7 +1010,7 @@ const Revenue = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <div className="border rounded-lg overflow-hidden">
+              <div className="border rounded-lg overflow-hidden bg-[#F2FCE2]">
                 <Table>
                   <TableHeader>
                     <TableRow className="bg-[#0F7EA3] border-none">
@@ -1039,6 +1050,7 @@ const Revenue = () => {
                                   size="sm" 
                                   variant="outline"
                                   onClick={() => handleViewOrderDetails(payment.orderId)}
+                                  className="bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white"
                                 >
                                   <ExternalLink className="h-4 w-4 mr-2" />
                                   Order Detail
