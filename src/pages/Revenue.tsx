@@ -43,17 +43,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
-// Sample data for different time periods
 const todayPendingPayments = [
   {
     id: 1,
@@ -206,7 +196,6 @@ const thisMonthPendingPayments = [
   }
 ];
 
-// Sample payment history data for different periods
 const todayPaymentHistory = [
   {
     id: 1,
@@ -345,7 +334,6 @@ const thisMonthPaymentHistory = [
   }
 ];
 
-// Date filter options
 const dateFilterOptions = [
   { id: "all", label: "All Dates" },
   { id: "today", label: "Today" },
@@ -355,7 +343,6 @@ const dateFilterOptions = [
   { id: "customRange", label: "Custom Range" },
 ];
 
-// Wash type filter options
 const washTypeOptions = [
   { id: "all", label: "All Wash Types" },
   { id: "express", label: "Express Wash" },
@@ -371,8 +358,6 @@ const Revenue = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [washTypeFilter, setWashTypeFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
-  const [reportDialogOpen, setReportDialogOpen] = useState(false);
-  const [reportType, setReportType] = useState("summary");
   const [pendingPaymentsData, setPendingPaymentsData] = useState([
     {
       id: 1,
@@ -474,7 +459,6 @@ const Revenue = () => {
     }
   ]);
 
-  // Revenue summary states for different periods
   const [revenueSummary, setRevenueSummary] = useState({
     todayEarnings: 1250,
     quickWashEarnings: 2850,
@@ -485,18 +469,10 @@ const Revenue = () => {
     totalRevenue: 142500
   });
 
-  // Function to handle export
   const handleExport = (format: string) => {
     toast.success(`Payment history exported as ${format.toUpperCase()}`);
   };
 
-  // Function to generate a report
-  const handleGenerateReport = () => {
-    setReportDialogOpen(false);
-    toast.success(`${reportType.charAt(0).toUpperCase() + reportType.slice(1)} report generated successfully!`);
-  };
-
-  // Filter data based on wash type
   const filterDataByWashType = (data) => {
     if (washTypeFilter === "all") return data;
     
@@ -509,7 +485,6 @@ const Revenue = () => {
     });
   };
 
-  // Get filtered data for display
   const getFilteredPendingPayments = () => {
     const washTypeFiltered = filterDataByWashType(pendingPaymentsData);
     return washTypeFiltered.filter(payment => 
@@ -528,7 +503,6 @@ const Revenue = () => {
     );
   };
 
-  // Update data based on date filter
   useEffect(() => {
     switch(dateFilter) {
       case "today":
@@ -718,7 +692,6 @@ const Revenue = () => {
     }
   }, [dateFilter, dateRange]);
 
-  // Revenue summary tiles component
   const revenueSummaryTiles = (
     <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-8">
       <Card className="bg-[#E5DEFF] border-none shadow-sm hover:shadow-md transition-shadow">
@@ -821,7 +794,6 @@ const Revenue = () => {
     </div>
   );
 
-  // Main rendering
   return (
     <div className="container mx-auto py-8">
       <div className="bg-white rounded-lg shadow-sm p-6">
@@ -878,60 +850,9 @@ const Revenue = () => {
                 </div>
               </PopoverContent>
             </Popover>
-            
-            {/* Report Dialog */}
-            <Dialog open={reportDialogOpen} onOpenChange={setReportDialogOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline">
-                  <FileText className="h-4 w-4 mr-2" />
-                  Report
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
-                <DialogHeader>
-                  <DialogTitle>Generate Revenue Report</DialogTitle>
-                  <DialogDescription>
-                    Select the type of report you want to generate.
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="py-4">
-                  <RadioGroup 
-                    value={reportType} 
-                    onValueChange={setReportType}
-                    className="space-y-2"
-                  >
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="summary" id="summary" />
-                      <Label htmlFor="summary">Summary Report</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="detailed" id="detailed" />
-                      <Label htmlFor="detailed">Detailed Report</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="monthly" id="monthly" />
-                      <Label htmlFor="monthly">Monthly Report</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="yearly" id="yearly" />
-                      <Label htmlFor="yearly">Yearly Report</Label>
-                    </div>
-                  </RadioGroup>
-                </div>
-                <DialogFooter>
-                  <Button variant="outline" onClick={() => setReportDialogOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button onClick={handleGenerateReport}>
-                    Generate Report
-                  </Button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
           </div>
         </div>
 
-        {/* Revenue Summary Tiles */}
         {revenueSummaryTiles}
         
         <div className="mb-6">
@@ -955,14 +876,12 @@ const Revenue = () => {
             </div>
           </div>
 
-          {/* Tabs for Unpaid Payments and Payment History */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
             <TabsList className="w-full sm:w-[400px]">
               <TabsTrigger value="pending" className="flex-1">Unpaid Payments</TabsTrigger>
               <TabsTrigger value="history" className="flex-1">Payment History</TabsTrigger>
             </TabsList>
           
-            {/* Wash Type Filter */}
             <div className="mt-4 mb-4">
               <ToggleGroup type="single" value={washTypeFilter} onValueChange={(value) => value && setWashTypeFilter(value)}>
                 {washTypeOptions.map((option) => (
