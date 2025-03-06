@@ -33,9 +33,9 @@ const AppSidebar = () => {
     { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
     { name: 'Orders', icon: ShoppingBag, path: '/orders' },
     { name: 'Revenue', icon: DollarSign, path: '/revenue' },
-    { name: 'Support', icon: HelpCircle, path: '/support' },
     { name: 'Profile', icon: User, path: '/profile' },
     { name: 'Settings', icon: Settings, path: '/settings' },
+    { name: 'Support', icon: HelpCircle, path: '/support' }, // Moved to last
   ];
 
   const SidebarContent = () => (
