@@ -12,6 +12,12 @@ import {
   Trash2,
   ToggleLeft,
   Info,
+  User,
+  MapPin,
+  Building2,
+  Store,
+  CreditCard,
+  ChevronUp,
   Shirt,
   Umbrella,
   ShoppingBag,
@@ -67,6 +73,14 @@ const Settings = () => {
     402: false,
     501: true,
     502: true
+  });
+
+  const [expandedInfoSections, setExpandedInfoSections] = useState<Record<string, boolean>>({
+    'basic': false,
+    'address': false,
+    'business': false,
+    'studio': false,
+    'payment': false
   });
 
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
@@ -576,6 +590,13 @@ const Settings = () => {
     }));
   };
 
+  const toggleInfoSection = (section: string) => {
+    setExpandedInfoSections(prev => ({
+      ...prev,
+      [section]: !prev[section]
+    }));
+  };
+
   const toggleServiceStatus = (serviceId: number, event: React.MouseEvent) => {
     event.stopPropagation();
     setServiceStatus(prev => {
@@ -666,6 +687,256 @@ const Settings = () => {
           <h1 className="text-2xl font-bold">Saiteja Laundry</h1>
           <p className="text-sm text-muted-foreground">Manage your laundry studio settings</p>
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Studio Information</h2>
+        </div>
+
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['basic']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('basic')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <User className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Basic Information</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['basic'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Owner Name</Label>
+                    <p className="text-sm font-medium">Saiteja Reddy</p>
+                  </div>
+                  <div>
+                    <Label>Contact Phone</Label>
+                    <p className="text-sm font-medium">+91 9876543210</p>
+                  </div>
+                  <div>
+                    <Label>Email Address</Label>
+                    <p className="text-sm font-medium">saiteja@example.com</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['address']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('address')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <MapPin className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Address Details</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['address'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Street Address</Label>
+                    <p className="text-sm font-medium">123 Laundry Street</p>
+                  </div>
+                  <div>
+                    <Label>City</Label>
+                    <p className="text-sm font-medium">Hyderabad</p>
+                  </div>
+                  <div>
+                    <Label>State</Label>
+                    <p className="text-sm font-medium">Telangana</p>
+                  </div>
+                  <div>
+                    <Label>Zip Code</Label>
+                    <p className="text-sm font-medium">500081</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['business']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('business')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <Building2 className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Business Details</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['business'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Business Name</Label>
+                    <p className="text-sm font-medium">Saiteja Laundry Services</p>
+                  </div>
+                  <div>
+                    <Label>GST Number</Label>
+                    <p className="text-sm font-medium">22AAAAA0000A1Z5</p>
+                  </div>
+                  <div>
+                    <Label>Business Type</Label>
+                    <p className="text-sm font-medium">Sole Proprietorship</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['studio']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('studio')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <Store className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Studio Setup</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['studio'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Capacity</Label>
+                    <p className="text-sm font-medium">500 kg per day</p>
+                  </div>
+                  <div>
+                    <Label>Operating Hours</Label>
+                    <p className="text-sm font-medium">9:00 AM to 8:00 PM</p>
+                  </div>
+                  <div>
+                    <Label>Service Area</Label>
+                    <p className="text-sm font-medium">10 km radius</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+
+        <Card className="border shadow-sm">
+          <Collapsible open={expandedInfoSections['payment']} className="w-full">
+            <CollapsibleTrigger 
+              onClick={() => toggleInfoSection('payment')}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                <div className="flex items-center gap-3">
+                  <CreditCard className="h-5 w-5 text-muted-foreground" />
+                  <h3 className="font-semibold text-base">Payment Details</h3>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    className="h-8 w-8"
+                  >
+                    <Pencil className="h-4 w-4" />
+                    <span className="sr-only">Edit</span>
+                  </Button>
+                  {expandedInfoSections['payment'] ? 
+                    <ChevronDown className="h-5 w-5 text-muted-foreground" /> : 
+                    <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                  }
+                </div>
+              </div>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="border-t">
+              <div className="p-4 space-y-4">
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <Label>Bank Name</Label>
+                    <p className="text-sm font-medium">Indian Bank</p>
+                  </div>
+                  <div>
+                    <Label>Account Number</Label>
+                    <p className="text-sm font-medium">XXXX XXXX XXXX 4321</p>
+                  </div>
+                  <div>
+                    <Label>UPI ID</Label>
+                    <p className="text-sm font-medium">saiteja@upi</p>
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
       </div>
 
       <div className="space-y-4 mt-8">
