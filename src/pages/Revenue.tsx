@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -798,8 +797,8 @@ const Revenue = () => {
                   {dateFilter === "customRange" && (
                     <div className="pt-4">
                       <DateRangePicker
-                        value={dateRange}
-                        onChange={(range) => {
+                        date={dateRange}
+                        onDateChange={(range) => {
                           setDateRange(range);
                           if (range?.from && range?.to) {
                             setDatePopoverOpen(false);
