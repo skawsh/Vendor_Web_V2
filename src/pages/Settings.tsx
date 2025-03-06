@@ -1,11 +1,8 @@
-
 import React, { useState } from 'react';
-import { Bell, Mail } from 'lucide-react';
+import { Bell, Mail, Package } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 const Settings = () => {
@@ -21,6 +18,13 @@ const Settings = () => {
     orderStatus: true,
     deliveryUpdates: true,
     promotions: false
+  });
+
+  const [services, setServices] = useState({
+    quickWash: true,
+    dryClean: true,
+    ironing: true,
+    heavyItems: false
   });
 
   const handleEmailNotificationChange = (key: string) => {
@@ -39,12 +43,64 @@ const Settings = () => {
     toast.success('Push notification settings updated');
   };
 
+  const handleServiceChange = (key: string) => {
+    setServices(prev => ({
+      ...prev,
+      [key]: !prev[key as keyof typeof prev]
+    }));
+    toast.success('Service settings updated');
+  };
+
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl font-bold tracking-tight mb-6">Settings</h1>
 
-      {/* Notification Settings */}
       <div className="space-y-6">
+        {/* Services Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              Services
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="quick-wash">Quick Wash Service</Label>
+              <Switch
+                id="quick-wash"
+                checked={services.quickWash}
+                onCheckedChange={() => handleServiceChange('quickWash')}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="dry-clean">Dry Cleaning Service</Label>
+              <Switch
+                id="dry-clean"
+                checked={services.dryClean}
+                onCheckedChange={() => handleServiceChange('dryClean')}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="ironing">Ironing Service</Label>
+              <Switch
+                id="ironing"
+                checked={services.ironing}
+                onCheckedChange={() => handleServiceChange('ironing')}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="heavy-items">Heavy Items Service</Label>
+              <Switch
+                id="heavy-items"
+                checked={services.heavyItems}
+                onCheckedChange={() => handleServiceChange('heavyItems')}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Email Notifications Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -88,6 +144,7 @@ const Settings = () => {
           </CardContent>
         </Card>
 
+        {/* Push Notifications Card */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
