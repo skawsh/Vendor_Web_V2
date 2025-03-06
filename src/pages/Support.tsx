@@ -1,43 +1,12 @@
 
-import React, { useState } from 'react';
-import { HelpCircle, Phone, Mail, Clock, MessageCircle, ExternalLink, Send } from 'lucide-react';
+import React from 'react';
+import { HelpCircle, Phone, Mail, Clock, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 
 const Support = () => {
-  const [contactForm, setContactForm] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  });
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setContactForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmitForm = (e) => {
-    e.preventDefault();
-    toast.success('Message sent successfully', {
-      description: 'Our support team will get back to you shortly.'
-    });
-    setContactForm({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-  };
-
   return (
     <div className="container mx-auto p-4 md:p-6">
       <header className="mb-8">
@@ -162,71 +131,6 @@ const Support = () => {
           </CardFooter>
         </Card>
       </div>
-
-      {/* Contact Form */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-primary" />
-            Contact Us
-          </CardTitle>
-          <CardDescription>
-            Send us a message and we'll get back to you as soon as possible
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmitForm} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Your Name</Label>
-                <Input 
-                  id="name" 
-                  name="name" 
-                  value={contactForm.name} 
-                  onChange={handleInputChange} 
-                  required 
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input 
-                  id="email" 
-                  name="email" 
-                  type="email" 
-                  value={contactForm.email} 
-                  onChange={handleInputChange} 
-                  required 
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="subject">Subject</Label>
-              <Input 
-                id="subject" 
-                name="subject" 
-                value={contactForm.subject} 
-                onChange={handleInputChange} 
-                required 
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="message">Message</Label>
-              <Textarea 
-                id="message" 
-                name="message" 
-                rows={5} 
-                value={contactForm.message} 
-                onChange={handleInputChange} 
-                required 
-              />
-            </div>
-            <Button type="submit" className="w-full sm:w-auto gap-2">
-              <Send className="h-4 w-4" />
-              Send Message
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
 
       {/* FAQ Section */}
       <Card>

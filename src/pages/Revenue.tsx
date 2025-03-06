@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Calendar, Download, FileText, Info, Search, Truck, X } from "lucide-react";
+import { Calendar, Download, FileText, Info, Search, X } from "lucide-react";
 import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 import {
   Tooltip,
   TooltipContent,
@@ -135,6 +136,7 @@ const dateFilterOptions = [
 ];
 
 const Revenue = () => {
+  const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("pending");
@@ -212,25 +214,9 @@ const Revenue = () => {
     setDatePopoverOpen(false);
   };
 
-  // Handle order details view
+  // Handle order details view - navigate to order details page
   const viewOrderDetails = (orderId: string) => {
-    toast.info(`Viewing details for order ${orderId}`, {
-      description: "Opening order details view."
-    });
-  };
-
-  // Handle delivery details view
-  const viewDeliveryDetails = (orderId: string) => {
-    toast.info(`Viewing delivery details for order ${orderId}`, {
-      description: "Opening delivery details view."
-    });
-  };
-
-  // Handle payment action (for pending payments)
-  const handlePayment = (orderId: string) => {
-    toast.success(`Processing payment for order ${orderId}`, {
-      description: "Opening payment processing interface."
-    });
+    navigate(`/order/${orderId}`);
   };
 
   // Handle export of payment history
@@ -392,22 +378,6 @@ const Revenue = () => {
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              className="rounded-full bg-black text-white w-8 h-8 p-0"
-                              onClick={() => viewDeliveryDetails(payment.orderId)}
-                            >
-                              <Truck className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>View delivery details</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -467,22 +437,6 @@ const Revenue = () => {
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>View order details</p>
-                          </TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button 
-                              variant="outline" 
-                              className="rounded-full bg-black text-white w-8 h-8 p-0"
-                              onClick={() => viewDeliveryDetails(payment.orderId)}
-                            >
-                              <Truck className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>
-                            <p>View delivery details</p>
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
