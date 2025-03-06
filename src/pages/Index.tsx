@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -33,6 +32,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { NotificationsDropdown } from '@/components/NotificationsDropdown';
 
 const initialCurrentOrders = [
   {
@@ -147,7 +147,6 @@ const Index = () => {
 
   const navigate = useNavigate();
 
-  // Set active filter to "new" by default
   useEffect(() => {
     setActiveFilter("new");
   }, []);
@@ -210,7 +209,6 @@ const Index = () => {
         return true;
       });
 
-  // Get appropriate action button based on current status
   const getActionButton = (order: any) => {
     switch(order.status) {
       case "New Orders":
@@ -304,6 +302,7 @@ const Index = () => {
           <p className="text-muted-foreground">Welcome to your laundry management system</p>
         </div>
         <div className="flex items-center gap-3">
+          <NotificationsDropdown />
           <span className={`text-sm font-medium ${isStudioActive ? 'text-green-600' : 'text-red-600'}`}>
             Studio {isStudioActive ? 'Active' : 'Inactive'}
           </span>
