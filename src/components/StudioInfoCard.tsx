@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { User, MapPin, Building2, Store, CreditCard, ChevronUp, ChevronDown, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,12 +16,15 @@ interface StudioInfoCardProps {
 const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<Record<string, string>>(
-    fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {})
-  );
-  const [originalData, setOriginalData] = useState<Record<string, string>>(
-    fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {})
-  );
+  
+  // Initialize with the provided field values
+  const initialData = fields.reduce((acc, field) => ({ ...acc, [field.id]: field.value }), {});
+  
+  // Current form data that gets updated during editing
+  const [formData, setFormData] = useState<Record<string, string>>(initialData);
+  
+  // Saved data that represents the last confirmed state
+  const [savedData, setSavedData] = useState<Record<string, string>>(initialData);
 
   const toggleExpand = () => {
     if (isEditing) return;
@@ -29,7 +33,8 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
 
   const startEditing = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setOriginalData({...formData});
+    // Ensure we're working with the current saved values
+    setFormData({...savedData});
     setIsEditing(true);
     if (!isExpanded) {
       setIsExpanded(true);
@@ -38,7 +43,8 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
 
   const cancelEditing = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setFormData({...originalData});
+    // Reset form data to the last saved state
+    setFormData({...savedData});
     setIsEditing(false);
   };
 
@@ -51,7 +57,8 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
 
   const saveChanges = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setOriginalData({...formData});
+    // Update the saved data with the current form values
+    setSavedData({...formData});
     setIsEditing(false);
     toast.success(`${title} information updated successfully`);
   };
@@ -121,7 +128,7 @@ const StudioInfoCard = ({ title, icon, fields }: StudioInfoCardProps) => {
                     className="mt-1"
                   />
                 ) : (
-                  <p className="text-sm font-medium">{formData[field.id]}</p>
+                  <p className="text-sm font-medium">{savedData[field.id]}</p>
                 )}
               </div>
             ))}
