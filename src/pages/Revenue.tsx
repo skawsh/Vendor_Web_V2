@@ -896,20 +896,22 @@ const Revenue = () => {
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Delivered Date</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Wash Type</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="bg-[#0F7EA3] border-none">
+                      <TableHead className="text-white font-bold">S.No</TableHead>
+                      <TableHead className="text-white font-bold">Order ID</TableHead>
+                      <TableHead className="text-white font-bold">Customer</TableHead>
+                      <TableHead className="text-white font-bold">Delivered Date</TableHead>
+                      <TableHead className="text-white font-bold">Service</TableHead>
+                      <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Amount</TableHead>
+                      <TableHead className="text-white font-bold">Status</TableHead>
+                      <TableHead className="text-white font-bold text-right">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {getFilteredPendingPayments().map(payment => (
-                      <TableRow key={payment.id}>
+                    {getFilteredPendingPayments().map((payment, index) => (
+                      <TableRow key={payment.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                        <TableCell>{index + 1}</TableCell>
                         <TableCell>{payment.orderId}</TableCell>
                         <TableCell>{payment.customerName}</TableCell>
                         <TableCell>{payment.deliveredDate}</TableCell>
@@ -989,9 +991,7 @@ const Revenue = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => {
                       toast.success('Print layout prepared');
-                      setTimeout(() => {
-                        window.print();
-                      }, 500);
+                      window.print();
                     }}>
                       <Printer className="h-4 w-4 mr-2" />
                       Print
@@ -1002,19 +1002,20 @@ const Revenue = () => {
               <div className="border rounded-lg overflow-hidden">
                 <Table>
                   <TableHeader>
-                    <TableRow>
-                      <TableHead>Order ID</TableHead>
-                      <TableHead>Customer</TableHead>
-                      <TableHead>Payment Date</TableHead>
-                      <TableHead>Service</TableHead>
-                      <TableHead>Wash Type</TableHead>
-                      <TableHead>Amount</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="bg-[#0F7EA3] border-none">
+                      <TableHead className="text-white font-bold">S.No</TableHead>
+                      <TableHead className="text-white font-bold">Order ID</TableHead>
+                      <TableHead className="text-white font-bold">Customer</TableHead>
+                      <TableHead className="text-white font-bold">Payment Date</TableHead>
+                      <TableHead className="text-white font-bold">Service</TableHead>
+                      <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Amount</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {getFilteredPaymentHistory().map(payment => (
-                      <TableRow key={payment.id}>
+                    {getFilteredPaymentHistory().map((payment, index) => (
+                      <TableRow key={payment.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                        <TableCell>{index + 1}</TableCell>
                         <TableCell>{payment.orderId}</TableCell>
                         <TableCell>{payment.customerName}</TableCell>
                         <TableCell>{payment.paymentDate}</TableCell>
@@ -1029,17 +1030,6 @@ const Revenue = () => {
                           </span>
                         </TableCell>
                         <TableCell>₹{payment.amount}</TableCell>
-                        <TableCell className="text-right">
-                          <Button 
-                            size="sm" 
-                            variant="outline"
-                            onClick={() => {
-                              toast.info(`Viewing invoice for order ${payment.orderId}`);
-                            }}
-                          >
-                            View Invoice
-                          </Button>
-                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
