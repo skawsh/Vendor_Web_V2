@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -11,7 +10,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-// Sample order data - in a real application, this would come from an API
 const orderData = {
   "ORD-1001": {
     orderId: "ORD-1001",
@@ -226,7 +224,6 @@ const OrderDetails = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   
-  // Find the order data based on the orderId parameter
   const order = orderId ? orderData[orderId] : null;
   
   if (!order) {
@@ -261,12 +258,7 @@ const OrderDetails = () => {
     return 'text-gray-600';
   };
 
-  // Check if the order is in the order history section
-  // Only orders that have been delivered (have a deliveredDate) are in the order history
-  const isInOrderHistory = Boolean(order.deliveredDate);
-  
-  // Only show delivery info for orders in the order history section
-  const showDeliveryInfo = isInOrderHistory;
+  const isDelivered = Boolean(order.deliveredDate && order.deliveredDate !== "");
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -282,7 +274,6 @@ const OrderDetails = () => {
         <p className="text-gray-500">View details for order {order.orderId}</p>
       </div>
 
-      {/* Order Information Section */}
       <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
         <div className="px-4 py-3 bg-green-100 flex items-center">
           <Info className="h-5 w-5 text-green-700 mr-2" />
@@ -334,7 +325,6 @@ const OrderDetails = () => {
         </div>
       </div>
 
-      {/* Customer Information Section */}
       <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
         <div className="px-4 py-3 bg-green-100 flex items-center">
           <User className="h-5 w-5 text-green-700 mr-2" />
@@ -358,8 +348,7 @@ const OrderDetails = () => {
         </div>
       </div>
 
-      {/* Delivery Information Section - Only show for orders in order history */}
-      {showDeliveryInfo && (
+      {isDelivered && (
         <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
           <div className="px-4 py-3 bg-green-100 flex items-center">
             <Truck className="h-5 w-5 text-green-700 mr-2" />
@@ -404,7 +393,6 @@ const OrderDetails = () => {
         </div>
       )}
 
-      {/* Services Information Section */}
       <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
         <div className="px-4 py-3 bg-green-100 flex items-center">
           <DollarSign className="h-5 w-5 text-green-700 mr-2" />
