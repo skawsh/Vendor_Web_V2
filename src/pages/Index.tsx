@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -149,6 +150,33 @@ const Index = () => {
 
   useEffect(() => {
     setActiveFilter("new");
+    
+    // Add event listener for new order notifications
+    const handleNewOrder = (event: CustomEvent) => {
+      if (event.detail?.orderData) {
+        const newOrder = event.detail.orderData;
+        setCurrentOrders(prevOrders => [
+          {
+            id: prevOrders.length + 1,
+            ...newOrder
+          },
+          ...prevOrders
+        ]);
+        
+        // Show toast notification for the new order
+        toast.success(`New Order ${newOrder.orderId} Received`, {
+          description: `${newOrder.washType} - ${newOrder.serviceType} service`
+        });
+      }
+    };
+    
+    // Listen for the custom event
+    window.addEventListener('newOrder', handleNewOrder as EventListener);
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('newOrder', handleNewOrder as EventListener);
+    };
   }, []);
 
   const handleViewOrderDetails = (orderId: string) => {

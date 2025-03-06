@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bell, BellOff, Check, Trash2, Info, Calendar, ShoppingBag, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,8 +23,9 @@ export interface Notification {
   type: NotificationType;
 }
 
-export const NotificationsDropdown = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([
+// Shared state for notifications to allow access from other components
+const useNotificationsStore = (() => {
+  let notifications: Notification[] = [
     {
       id: '1',
       title: 'New Order Received',
@@ -65,14 +66,126 @@ export const NotificationsDropdown = () => {
       read: true,
       type: 'warning'
     }
-  ]);
+  ];
+  
+  let listeners: React.Dispatch<React.SetStateAction<Notification[]>>[] = [];
+  
+  return {
+    getNotifications: () => notifications,
+    setNotifications: (newNotifications: Notification[]) => {
+      notifications = newNotifications;
+      listeners.forEach(listener => listener([...notifications]));
+    },
+    addNotification: (notification: Notification) => {
+      notifications = [notification, ...notifications];
+      listeners.forEach(listener => listener([...notifications]));
+      return notification;
+    },
+    subscribe: (listener: React.Dispatch<React.SetStateAction<Notification[]>>) => {
+      listeners.push(listener);
+      listener([...notifications]);
+      
+      return () => {
+        listeners = listeners.filter(l => l !== listener);
+      };
+    }
+  };
+})();
 
+// Export for other components to use
+export const notificationsStore = useNotificationsStore;
+
+export const generateRandomOrder = () => {
+  const orderTypes = ['Wash & Fold', 'Wash & Iron', 'Dry clean'];
+  const serviceTypes = ['Standard', 'Express', 'Quick', 'Premium'];
+  const weights = [
+    '1.5Kg', '2Kg', '2.5Kg', '3Kg', '3.5Kg', '4Kg', '4.5Kg', '5Kg',
+    '1 pcs', '2 pcs', '3 pcs', '4 pcs', '5 pcs'
+  ];
+  const statuses = ['New Orders'];
+  
+  const nextOrderId = `ORD-${1011 + Math.floor(Math.random() * 100)}`;
+  const price = Math.floor(Math.random() * 500) + 100;
+  
+  return {
+    id: Date.now().toString(),
+    orderId: nextOrderId,
+    orderDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: '2-digit' }),
+    weightQuantity: weights[Math.floor(Math.random() * weights.length)],
+    washType: orderTypes[Math.floor(Math.random() * orderTypes.length)],
+    serviceType: serviceTypes[Math.floor(Math.random() * serviceTypes.length)],
+    price,
+    status: statuses[Math.floor(Math.random() * statuses.length)]
+  };
+};
+
+export const createRandomNotification = (): Notification => {
+  const randomOrder = generateRandomOrder();
+  
+  return {
+    id: Date.now().toString(),
+    title: 'New Order Received',
+    message: `Order #${randomOrder.orderId} has been placed`,
+    time: 'Just now',
+    read: false,
+    type: 'order',
+    orderData: randomOrder
+  };
+};
+
+export const NotificationsDropdown = () => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
   const unreadCount = notifications.filter(notification => !notification.read).length;
 
+  useEffect(() => {
+    // Subscribe to notification changes
+    const unsubscribe = notificationsStore.subscribe(setNotifications);
+    
+    // Random notification timer
+    const randomTimeout = () => {
+      // Random time between 10 and 60 seconds
+      const randomTime = (Math.floor(Math.random() * 50) + 10) * 1000;
+      
+      return setTimeout(() => {
+        const newNotification = createRandomNotification();
+        notificationsStore.addNotification(newNotification);
+        
+        // Show toast notification
+        toast.info('New Order Received', {
+          description: newNotification.message,
+          action: {
+            label: 'View',
+            onClick: () => setOpen(true)
+          }
+        });
+        
+        // Trigger a custom event so the Index component can update orders
+        const event = new CustomEvent('newOrder', { 
+          detail: { 
+            orderData: newNotification.orderData 
+          } 
+        });
+        window.dispatchEvent(event);
+        
+        // Set next random notification
+        timeoutRef.current = randomTimeout();
+      }, randomTime);
+    };
+    
+    // Start the random notification timer
+    const timeoutRef = { current: randomTimeout() };
+    
+    // Cleanup
+    return () => {
+      unsubscribe();
+      clearTimeout(timeoutRef.current);
+    };
+  }, []);
+
   const handleMarkAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(notification => ({
+    notificationsStore.setNotifications(
+      notifications.map(notification => ({
         ...notification,
         read: true
       }))
@@ -81,14 +194,14 @@ export const NotificationsDropdown = () => {
   };
 
   const handleClearAll = () => {
-    setNotifications([]);
+    notificationsStore.setNotifications([]);
     setOpen(false);
     toast.success('All notifications cleared');
   };
 
   const handleMarkAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(notification => 
+    notificationsStore.setNotifications(
+      notifications.map(notification => 
         notification.id === id 
           ? { ...notification, read: true } 
           : notification
