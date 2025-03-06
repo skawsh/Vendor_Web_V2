@@ -85,12 +85,13 @@ interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
   highlight?: boolean;
   quickWash?: boolean;
   standardWash?: boolean;
+  deliveryStatus?: string;
 }
 
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
   TableCellProps
->(({ className, highlight, quickWash, standardWash, ...props }, ref) => (
+>(({ className, highlight, quickWash, standardWash, deliveryStatus, ...props }, ref) => (
   <td
     ref={ref}
     className={cn(
@@ -98,6 +99,8 @@ const TableCell = React.forwardRef<
       highlight && "bg-blue-50/50",
       quickWash && "bg-amber-50/50",
       standardWash && "bg-blue-50/50",
+      deliveryStatus === "picked" && "bg-yellow-50/50",
+      deliveryStatus === "delivered" && "bg-green-50/50",
       className
     )}
     {...props}

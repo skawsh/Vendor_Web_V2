@@ -6,7 +6,8 @@ import {
   Info, 
   User, 
   DollarSign,
-  ShoppingBag
+  ShoppingBag,
+  Truck
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -35,7 +36,16 @@ const orderData = {
       { name: "Shirt", quantity: 1 },
       { name: "Pant", quantity: 1 }
     ],
-    totalAmount: 122.5
+    totalAmount: 122.5,
+    delivery: {
+      driverName: "Ramesh Kumar",
+      driverPhone: "9876543210",
+      assignedDateTime: "09/01/2025 10:00 AM",
+      pickupDateTime: "09/01/2025 11:30 AM",
+      droppedToStudioDateTime: "09/01/2025 12:45 PM",
+      collectedFromStudioDateTime: "12/01/2025 02:15 PM",
+      deliveredDateTime: "13/01/2025 10:30 AM"
+    }
   },
   "ORD-1002": {
     orderId: "ORD-1002",
@@ -61,7 +71,16 @@ const orderData = {
       { name: "Suit", quantity: 1 },
       { name: "Dress", quantity: 1 }
     ],
-    totalAmount: 300
+    totalAmount: 300,
+    delivery: {
+      driverName: "Suresh Patel",
+      driverPhone: "8765432109",
+      assignedDateTime: "10/01/2025 09:15 AM",
+      pickupDateTime: "10/01/2025 10:45 AM",
+      droppedToStudioDateTime: "10/01/2025 12:30 PM",
+      collectedFromStudioDateTime: "13/01/2025 03:45 PM",
+      deliveredDateTime: "14/01/2025 11:15 AM"
+    }
   },
   "ORD-1003": {
     orderId: "ORD-1003",
@@ -86,7 +105,121 @@ const orderData = {
       { name: "Shirt", quantity: 3 },
       { name: "Pant", quantity: 2 }
     ],
-    totalAmount: 182
+    totalAmount: 182,
+    delivery: {
+      driverName: "Amit Singh",
+      driverPhone: "7654321098",
+      assignedDateTime: "11/01/2025 08:30 AM",
+      pickupDateTime: "11/01/2025 10:00 AM",
+      droppedToStudioDateTime: "11/01/2025 11:15 AM",
+      collectedFromStudioDateTime: "14/01/2025 04:30 PM",
+      deliveredDateTime: "15/01/2025 09:45 AM"
+    }
+  },
+  // Adding order IDs from the orders list
+  "ORD-1008": {
+    orderId: "ORD-1008",
+    orderedDate: "04/02/2025",
+    deliveredDate: "08/02/2025",
+    paymentStatus: "Paid",
+    paymentDate: "04/02/2025",
+    paymentMethod: "UPI",
+    referenceNumber: "UTR87654321",
+    washType: "Standard Wash",
+    customerName: "Customer 1",
+    customerPhone: "8765432109",
+    customerAddress: "42, Sunshine Apartments, Banjara Hills, Hyderabad-500034",
+    services: [
+      {
+        name: "Wash & Iron",
+        quantity: "2.7Kg",
+        price: 215
+      }
+    ],
+    clothingItems: [
+      { name: "Shirt", quantity: 2 },
+      { name: "Pant", quantity: 3 }
+    ],
+    totalAmount: 215,
+    delivery: {
+      driverName: "Vijay Kumar",
+      driverPhone: "9087654321",
+      assignedDateTime: "04/02/2025 09:00 AM",
+      pickupDateTime: "04/02/2025 10:30 AM",
+      droppedToStudioDateTime: "04/02/2025 12:00 PM",
+      collectedFromStudioDateTime: "07/02/2025 03:00 PM",
+      deliveredDateTime: "08/02/2025 10:00 AM"
+    }
+  },
+  "ORD-1009": {
+    orderId: "ORD-1009",
+    orderedDate: "04/02/2025",
+    deliveredDate: "08/02/2025",
+    paymentStatus: "Paid",
+    paymentDate: "04/02/2025",
+    paymentMethod: "Card",
+    referenceNumber: "TXN12345678",
+    washType: "Premium Wash",
+    customerName: "Customer 2",
+    customerPhone: "7654321098",
+    customerAddress: "78, Green Park Colony, Jubilee Hills, Hyderabad-500033",
+    services: [
+      {
+        name: "Dry clean",
+        quantity: "3 pcs",
+        price: 410
+      }
+    ],
+    clothingItems: [
+      { name: "Suit", quantity: 1 },
+      { name: "Dress", quantity: 1 },
+      { name: "Coat", quantity: 1 }
+    ],
+    totalAmount: 410,
+    delivery: {
+      driverName: "Ravi Teja",
+      driverPhone: "8907654321",
+      assignedDateTime: "04/02/2025 08:45 AM",
+      pickupDateTime: "04/02/2025 10:15 AM",
+      droppedToStudioDateTime: "04/02/2025 11:30 AM",
+      collectedFromStudioDateTime: "07/02/2025 02:30 PM",
+      deliveredDateTime: "08/02/2025 09:45 AM"
+    }
+  },
+  "ORD-1010": {
+    orderId: "ORD-1010",
+    orderedDate: "05/02/2025",
+    deliveredDate: "09/02/2025",
+    paymentStatus: "Paid",
+    paymentDate: "05/02/2025",
+    paymentMethod: "UPI",
+    referenceNumber: "UTR23456789",
+    washType: "Express Wash",
+    customerName: "Customer 3",
+    customerPhone: "9876543210",
+    customerAddress: "123, Cloud View Residency, Madhapur, Hyderabad-500081",
+    services: [
+      {
+        name: "Wash & Fold",
+        quantity: "4.2Kg",
+        price: 480
+      }
+    ],
+    clothingItems: [
+      { name: "Shirt", quantity: 4 },
+      { name: "Pant", quantity: 3 },
+      { name: "T-Shirt", quantity: 2 }
+    ],
+    totalAmount: 480,
+    delivery: {
+      driverName: "Krishna Reddy",
+      driverPhone: "7890654321",
+      assignedDateTime: "05/02/2025 09:30 AM",
+      pickupDateTime: "05/02/2025 11:00 AM",
+      droppedToStudioDateTime: "05/02/2025 12:15 PM",
+      collectedFromStudioDateTime: "08/02/2025 04:00 PM",
+      deliveredDateTime: "09/02/2025 10:15 AM"
+    }
   }
 };
 
@@ -102,7 +235,7 @@ const OrderDetails = () => {
       <div className="container mx-auto p-4 md:p-6 text-center">
         <h1 className="text-2xl font-bold mb-4">Order not found</h1>
         <p className="mb-4">The order you are looking for does not exist.</p>
-        <Button onClick={() => navigate('/')}>Back to Dashboard</Button>
+        <Button onClick={() => navigate('/orders')}>Back to Dashboard</Button>
       </div>
     );
   }
@@ -214,6 +347,50 @@ const OrderDetails = () => {
             <div className="flex justify-between flex-wrap">
               <span className="text-gray-600">Address</span>
               <span className="font-medium text-right max-w-[60%]">{order.customerAddress}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Delivery Information Section */}
+      <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
+        <div className="px-4 py-3 bg-green-100 flex items-center">
+          <Truck className="h-5 w-5 text-green-700 mr-2" />
+          <h2 className="text-lg font-medium text-green-700">Delivery Information</h2>
+        </div>
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Driver Name</span>
+                <span className="font-medium">{order.delivery.driverName}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Driver Contact</span>
+                <span className="font-medium">{order.delivery.driverPhone}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Assigned Date & Time</span>
+                <span className="font-medium">{order.delivery.assignedDateTime}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Pickup Date & Time</span>
+                <span className="font-medium">{order.delivery.pickupDateTime}</span>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Dropped to Studio</span>
+                <span className="font-medium">{order.delivery.droppedToStudioDateTime}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Collected from Studio</span>
+                <span className="font-medium">{order.delivery.collectedFromStudioDateTime}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Delivered Date & Time</span>
+                <span className="font-medium">{order.delivery.deliveredDateTime}</span>
+              </div>
             </div>
           </div>
         </div>
