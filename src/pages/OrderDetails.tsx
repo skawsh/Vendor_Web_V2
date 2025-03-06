@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { 
@@ -262,6 +261,9 @@ const OrderDetails = () => {
     return 'text-gray-600';
   };
 
+  // Check if the order is in Order collected status
+  const showDeliveryInfo = order.status === "Order collected" || order.deliveredDate;
+
   return (
     <div className="container mx-auto p-4 md:p-6">
       <div className="mb-6">
@@ -352,49 +354,51 @@ const OrderDetails = () => {
         </div>
       </div>
 
-      {/* Delivery Information Section */}
-      <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
-        <div className="px-4 py-3 bg-green-100 flex items-center">
-          <Truck className="h-5 w-5 text-green-700 mr-2" />
-          <h2 className="text-lg font-medium text-green-700">Delivery Information</h2>
-        </div>
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Driver Name</span>
-                <span className="font-medium">{order.delivery.driverName}</span>
+      {/* Delivery Information Section - Only show for collected orders or orders with delivery date */}
+      {showDeliveryInfo && (
+        <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
+          <div className="px-4 py-3 bg-green-100 flex items-center">
+            <Truck className="h-5 w-5 text-green-700 mr-2" />
+            <h2 className="text-lg font-medium text-green-700">Delivery Information</h2>
+          </div>
+          <div className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Driver Name</span>
+                  <span className="font-medium">{order.delivery?.driverName || "Not assigned"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Driver Contact</span>
+                  <span className="font-medium">{order.delivery?.driverPhone || "Not assigned"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Assigned Date & Time</span>
+                  <span className="font-medium">{order.delivery?.assignedDateTime || "Not assigned"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Pickup Date & Time</span>
+                  <span className="font-medium">{order.delivery?.pickupDateTime || "Not assigned"}</span>
+                </div>
               </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Driver Contact</span>
-                <span className="font-medium">{order.delivery.driverPhone}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Assigned Date & Time</span>
-                <span className="font-medium">{order.delivery.assignedDateTime}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Pickup Date & Time</span>
-                <span className="font-medium">{order.delivery.pickupDateTime}</span>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Dropped to Studio</span>
-                <span className="font-medium">{order.delivery.droppedToStudioDateTime}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Collected from Studio</span>
-                <span className="font-medium">{order.delivery.collectedFromStudioDateTime}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-600">Delivered Date & Time</span>
-                <span className="font-medium">{order.delivery.deliveredDateTime}</span>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Dropped to Studio</span>
+                  <span className="font-medium">{order.delivery?.droppedToStudioDateTime || "Not assigned"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Collected from Studio</span>
+                  <span className="font-medium">{order.delivery?.collectedFromStudioDateTime || "Not assigned"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-600">Delivered Date & Time</span>
+                  <span className="font-medium">{order.delivery?.deliveredDateTime || "Not assigned"}</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Services Information Section */}
       <div className="mb-6 border rounded-lg overflow-hidden bg-green-50">
