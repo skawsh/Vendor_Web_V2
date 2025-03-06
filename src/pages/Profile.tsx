@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { 
   UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, 
-  Edit2, User, Store, CreditCard, Building2, Info, LogOut
+  Edit2, User, LogOut
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,7 +13,6 @@ import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import StudioInfoCard from '@/components/StudioInfoCard';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -51,61 +50,6 @@ const Profile = () => {
     toast.success('Logged out successfully');
     navigate('/'); // Redirect to home page
   };
-
-  // Studio information data for the cards
-  const studioInfoCards = [
-    {
-      id: 'basic',
-      title: 'Basic Information',
-      icon: <User className="h-5 w-5 text-primary" />,
-      fields: [
-        { id: 'ownerName', label: 'Owner Name', value: 'Saiteja Reddy' },
-        { id: 'contactPhone', label: 'Contact Phone', value: '+91 9876543210' },
-        { id: 'emailAddress', label: 'Email Address', value: 'saiteja@example.com' },
-      ]
-    },
-    {
-      id: 'address',
-      title: 'Address Details',
-      icon: <MapPin className="h-5 w-5 text-primary" />,
-      fields: [
-        { id: 'streetAddress', label: 'Street Address', value: '123 Laundry Street' },
-        { id: 'city', label: 'City', value: 'Hyderabad' },
-        { id: 'state', label: 'State', value: 'Telangana' },
-        { id: 'zipCode', label: 'Zip Code', value: '500081' },
-      ]
-    },
-    {
-      id: 'business',
-      title: 'Business Details',
-      icon: <Building2 className="h-5 w-5 text-primary" />,
-      fields: [
-        { id: 'businessName', label: 'Business Name', value: 'Saiteja Laundry Services' },
-        { id: 'gstNumber', label: 'GST Number', value: '22AAAAA0000A1Z5' },
-        { id: 'businessType', label: 'Business Type', value: 'Sole Proprietorship' },
-      ]
-    },
-    {
-      id: 'studio',
-      title: 'Studio Setup',
-      icon: <Store className="h-5 w-5 text-primary" />,
-      fields: [
-        { id: 'capacity', label: 'Capacity', value: '500 kg per day' },
-        { id: 'operatingHours', label: 'Operating Hours', value: '9:00 AM to 8:00 PM' },
-        { id: 'serviceArea', label: 'Service Area', value: '10 km radius' },
-      ]
-    },
-    {
-      id: 'payment',
-      title: 'Payment Details',
-      icon: <CreditCard className="h-5 w-5 text-primary" />,
-      fields: [
-        { id: 'bankName', label: 'Bank Name', value: 'Indian Bank' },
-        { id: 'accountNumber', label: 'Account Number', value: 'XXXX XXXX XXXX 4321' },
-        { id: 'upiId', label: 'UPI ID', value: 'saiteja@upi' },
-      ]
-    },
-  ];
 
   return (
     <div className="container mx-auto p-4 md:p-6">
@@ -246,26 +190,6 @@ const Profile = () => {
               </Button>
             )}
           </CardFooter>
-        </Card>
-
-        {/* Studio Information Cards */}
-        <Card className="md:col-span-3">
-          <CardHeader>
-            <CardTitle>Studio Information</CardTitle>
-            <CardDescription>
-              Manage your laundry studio details
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {studioInfoCards.map(card => (
-              <StudioInfoCard 
-                key={card.id}
-                title={card.title}
-                icon={card.icon}
-                fields={card.fields}
-              />
-            ))}
-          </CardContent>
         </Card>
 
         {/* Account Settings */}
