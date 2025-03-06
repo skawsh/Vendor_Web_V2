@@ -81,13 +81,15 @@ const TableHead = React.forwardRef<
 ))
 TableHead.displayName = "TableHead"
 
+interface TableCellProps extends React.TdHTMLAttributes<HTMLTableCellElement> {
+  highlight?: boolean;
+  quickWash?: boolean;
+  standardWash?: boolean;
+}
+
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
-  React.TdHTMLAttributes<HTMLTableCellElement> & {
-    highlight?: boolean;
-    quickWash?: boolean;
-    standardWash?: boolean;
-  }
+  TableCellProps
 >(({ className, highlight, quickWash, standardWash, ...props }, ref) => (
   <td
     ref={ref}

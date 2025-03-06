@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 import {
   Tooltip,
   TooltipContent,
@@ -103,7 +104,7 @@ const ordersData = [
     washType: "Wash & Iron",
     serviceType: "Standard",
     price: 215,
-    status: "Ready for collect"
+    status: "Order collected"
   },
   {
     id: 9,
@@ -113,7 +114,7 @@ const ordersData = [
     washType: "Dry clean",
     serviceType: "Premium",
     price: 410,
-    status: "Ready for collect"
+    status: "Order collected"
   },
   {
     id: 10,
@@ -127,7 +128,7 @@ const ordersData = [
   }
 ];
 
-// Order history data - now using the actual "Order collected" items from ordersData
+// Order history data - using the actual "Order collected" items from ordersData
 const orderHistoryData = ordersData.filter(order => order.status === "Order collected").map((order, index) => ({
   slNo: index + 1,
   orderId: order.orderId,
@@ -138,7 +139,7 @@ const orderHistoryData = ordersData.filter(order => order.status === "Order coll
   price: order.price,
   orderType: ["Regular", "Express", "Premium", "Standard"][Math.floor(Math.random() * 4)],
   orderDate: order.orderDate,
-  completionDate: "05/02/25",
+  completionDate: order.orderDate,
   status: "Order collected"
 }));
 
@@ -161,6 +162,7 @@ const Orders = () => {
   const [dateFilter, setDateFilter] = useState("all");
   const [datePopoverOpen, setDatePopoverOpen] = useState(false);
   const [isFilterSectionOpen, setIsFilterSectionOpen] = useState(false);
+  const navigate = useNavigate();
   
   // All possible order statuses
   const statusOptions = ["New Orders", "Order Received", "Orders In Progress", "Ready for collect", "Order collected"];
@@ -339,9 +341,7 @@ const Orders = () => {
 
   // View order details
   const viewOrderDetails = (orderId: string) => {
-    toast.info(`Viewing details for order ${orderId}`, {
-      description: "Opening order details view."
-    });
+    navigate(`/order/${orderId}`);
   };
 
   // Mobile order card component for responsive design

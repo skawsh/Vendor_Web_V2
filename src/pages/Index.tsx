@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -8,13 +9,13 @@ import {
   FileText,
   Search,
   Power,
-  Users,
+  Shirt,
   TrendingUp,
   RotateCw,
   PackageCheck,
   ChevronDown,
   ChevronUp,
-  Shirt
+  Info
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -26,6 +27,12 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const initialCurrentOrders = [
   {
@@ -101,32 +108,32 @@ const initialCurrentOrders = [
   {
     id: 8,
     orderId: "ORD-1008",
-    orderDate: "01/02/25",
-    weightQuantity: "3.5Kg",
-    washType: "Dry Clean",
-    serviceType: "Express",
-    price: 550,
-    status: "Orders Ready"
+    orderDate: "04/02/25",
+    weightQuantity: "2.7Kg",
+    washType: "Wash & Iron",
+    serviceType: "Standard",
+    price: 215,
+    status: "Order collected"
   },
   {
     id: 9,
     orderId: "ORD-1009",
-    orderDate: "02/02/25",
-    weightQuantity: "2.8Kg",
-    washType: "Wash & Iron",
-    serviceType: "Quick",
-    price: 220,
-    status: "Orders Ready"
+    orderDate: "04/02/25",
+    weightQuantity: "3 pcs",
+    washType: "Dry clean",
+    serviceType: "Premium",
+    price: 410,
+    status: "Order collected"
   },
   {
     id: 10,
     orderId: "ORD-1010",
-    orderDate: "01/02/25",
+    orderDate: "05/02/25",
     weightQuantity: "4.2Kg",
     washType: "Wash & Fold",
-    serviceType: "Standard",
-    price: 420,
-    status: "Delivered"
+    serviceType: "Express",
+    price: 480,
+    status: "Order collected"
   }
 ];
 
@@ -140,6 +147,7 @@ const Index = () => {
 
   const navigate = useNavigate();
 
+  // Set active filter to "new" by default
   useEffect(() => {
     setActiveFilter("new");
   }, []);
@@ -157,6 +165,20 @@ const Index = () => {
       prevOrders.map(order =>
         order.orderId === orderId
           ? { ...order, status: "Order Received" }
+          : order
+      )
+    );
+  };
+
+  const handleUpdateStatus = (orderId: string, newStatus: string) => {
+    toast.success(`Order ${orderId} status updated to ${newStatus}`, {
+      description: "Order status updated successfully."
+    });
+    
+    setCurrentOrders(prevOrders =>
+      prevOrders.map(order =>
+        order.orderId === orderId
+          ? { ...order, status: newStatus }
           : order
       )
     );
@@ -183,10 +205,96 @@ const Index = () => {
         if (activeFilter === "new") return order.status === "New Orders";
         if (activeFilter === "received") return order.status === "Order Received";
         if (activeFilter === "progress") return order.status === "Orders In Progress";
-        if (activeFilter === "ready") return order.status === "Orders Ready";
-        if (activeFilter === "collected") return order.status === "Delivered";
+        if (activeFilter === "ready") return order.status === "Ready for collect";
+        if (activeFilter === "collected") return order.status === "Order collected";
         return true;
       });
+
+  // Get appropriate action button based on current status
+  const getActionButton = (order: any) => {
+    switch(order.status) {
+      case "New Orders":
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto mr-2"
+                  onClick={() => handleUpdateStatus(order.orderId, "Order Received")}
+                >
+                  Mark Received
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as received</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      case "Order Received":
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto mr-2"
+                  onClick={() => handleUpdateStatus(order.orderId, "Orders In Progress")}
+                >
+                  Mark InProgress
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as in progress</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      case "Orders In Progress":
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto mr-2"
+                  onClick={() => handleUpdateStatus(order.orderId, "Ready for collect")}
+                >
+                  Ready For Collect
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as ready for collection</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      case "Ready for collect":
+        return (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button 
+                  variant="outline"
+                  className="bg-[#D1FFCE] text-black font-medium text-xs sm:text-sm py-1 px-2 sm:px-3 h-auto mr-2"
+                  onClick={() => handleUpdateStatus(order.orderId, "Order collected")}
+                >
+                  Order collected
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Mark order as collected</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        );
+      case "Order collected":
+        return null;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="container mx-auto p-3 md:p-6">
@@ -350,13 +458,13 @@ const Index = () => {
             <TabsList className="h-auto p-0 bg-transparent">
               <TabsTrigger 
                 value="current-orders" 
-                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-4 sm:px-8 py-4 font-medium text-sm sm:text-base whitespace-nowrap"
+                className="data-[state=active]:bg-[#0F7EA3] data-[state=active]:text-white rounded-none px-4 sm:px-8 py-4 font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Current orders
               </TabsTrigger>
               <TabsTrigger 
                 value="orders-history" 
-                className="data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-none px-4 sm:px-8 py-4 font-medium text-sm sm:text-base whitespace-nowrap"
+                className="data-[state=active]:bg-[#0F7EA3] data-[state=active]:text-white rounded-none px-4 sm:px-8 py-4 font-medium text-sm sm:text-base whitespace-nowrap"
               >
                 Orders history
               </TabsTrigger>
@@ -365,77 +473,95 @@ const Index = () => {
           
           <TabsContent value="current-orders" className="m-0">
             <div className="p-2 sm:p-4 bg-white dark:bg-card">
-              <div className="flex flex-wrap gap-2 mb-4 overflow-x-auto">
-                <Button 
-                  onClick={() => setActiveFilter("all")}
-                  variant={activeFilter === "all" ? "default" : "outline"}
-                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "all" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
-                  size="sm"
-                >
-                  All
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("new")}
-                  variant={activeFilter === "new" ? "default" : "outline"}
-                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "new" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
-                  size="sm"
-                >
-                  New order
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("received")}
-                  variant={activeFilter === "received" ? "default" : "outline"}
-                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "received" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
-                  size="sm"
-                >
-                  Order received
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("progress")}
-                  variant={activeFilter === "progress" ? "default" : "outline"}
-                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "progress" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
-                  size="sm"
-                >
-                  Order in progress
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("ready")}
-                  variant={activeFilter === "ready" ? "default" : "outline"}
-                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "ready" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
-                  size="sm"
-                >
-                  Ready for collect
-                </Button>
-                <Button 
-                  onClick={() => setActiveFilter("collected")}
-                  variant={activeFilter === "collected" ? "default" : "outline"}
-                  className={`text-xs sm:text-sm py-1 px-2 sm:px-3 ${activeFilter === "collected" ? "bg-cyan-600 hover:bg-cyan-700" : ""}`}
-                  size="sm"
-                >
-                  Order collected
-                </Button>
-              </div>
+              <div className="rounded-lg overflow-hidden border-2 border-[#0F7EA3] bg-[#0F7EA3] mb-4">
+                <div className="flex flex-wrap p-2 bg-[#0F7EA3] rounded-t-lg overflow-x-auto">
+                  <Button 
+                    onClick={() => setActiveFilter("all")}
+                    className={`
+                      ${activeFilter === "all" 
+                        ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                        : 'bg-white text-black border-2 border-white'} 
+                      rounded-md px-4 py-2 m-1
+                    `}
+                  >
+                    All
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveFilter("new")}
+                    className={`
+                      ${activeFilter === "new" 
+                        ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                        : 'bg-white text-black border-2 border-white'} 
+                      rounded-md px-4 py-2 m-1
+                    `}
+                  >
+                    New Orders
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveFilter("received")}
+                    className={`
+                      ${activeFilter === "received" 
+                        ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                        : 'bg-white text-black border-2 border-white'} 
+                      rounded-md px-4 py-2 m-1
+                    `}
+                  >
+                    Order Received
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveFilter("progress")}
+                    className={`
+                      ${activeFilter === "progress" 
+                        ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                        : 'bg-white text-black border-2 border-white'} 
+                      rounded-md px-4 py-2 m-1
+                    `}
+                  >
+                    Orders In Progress
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveFilter("ready")}
+                    className={`
+                      ${activeFilter === "ready" 
+                        ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                        : 'bg-white text-black border-2 border-white'} 
+                      rounded-md px-4 py-2 m-1
+                    `}
+                  >
+                    Ready for collect
+                  </Button>
+                  <Button 
+                    onClick={() => setActiveFilter("collected")}
+                    className={`
+                      ${activeFilter === "collected" 
+                        ? 'bg-[#0F7EA3] text-white border-2 border-white' 
+                        : 'bg-white text-black border-2 border-white'} 
+                      rounded-md px-4 py-2 m-1
+                    `}
+                  >
+                    Order collected
+                  </Button>
+                </div>
               
-              <div className="overflow-x-auto -mx-2 sm:mx-0">
-                <div className="min-w-[800px] px-2 sm:px-0">
+                <div className="overflow-x-auto bg-white">
                   <Table>
-                    <TableHeader className="bg-cyan-600 text-white">
-                      <TableRow className="border-none hover:bg-cyan-600">
-                        <TableHead className="text-white font-medium">Sl No</TableHead>
-                        <TableHead className="text-white font-medium">Order ID</TableHead>
-                        <TableHead className="text-white font-medium">Order date</TableHead>
-                        <TableHead className="text-white font-medium">Weight/ Quantity</TableHead>
-                        <TableHead className="text-white font-medium">Wash Type</TableHead>
-                        <TableHead className="text-white font-medium">Service Type</TableHead>
-                        <TableHead className="text-white font-medium">Price</TableHead>
-                        <TableHead className="text-white font-medium">Status</TableHead>
-                        <TableHead className="text-white font-medium">Action</TableHead>
+                    <TableHeader>
+                      <TableRow className="bg-[#0F7EA3] border-none">
+                        <TableHead className="text-white font-bold">Sl No</TableHead>
+                        <TableHead className="text-white font-bold">Order ID</TableHead>
+                        <TableHead className="text-white font-bold">Order date</TableHead>
+                        <TableHead className="text-white font-bold">Weight/ Quantity</TableHead>
+                        <TableHead className="text-white font-bold">Wash Type</TableHead>
+                        <TableHead className="text-white font-bold">Service Type</TableHead>
+                        <TableHead className="text-white font-bold">Price</TableHead>
+                        <TableHead className="text-white font-bold">Status</TableHead>
+                        <TableHead className="text-white font-bold">Action</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredOrders.length > 0 ? (
                         filteredOrders.map((order, index) => (
-                          <TableRow key={order.id} className="hover:bg-gray-50 even:bg-gray-50/50">
+                          <TableRow key={order.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
                             <TableCell>{index + 1}</TableCell>
                             <TableCell className="font-medium">
                               {order.orderId}
@@ -459,9 +585,9 @@ const Index = () => {
                                     ? "bg-purple-100 text-purple-700"
                                     : order.status === "Orders In Progress"
                                       ? "bg-amber-100 text-amber-700" 
-                                      : order.status === "Orders Ready"
+                                      : order.status === "Ready for collect"
                                         ? "bg-emerald-100 text-emerald-700"
-                                        : order.status === "Delivered"
+                                        : order.status === "Order collected"
                                           ? "bg-green-100 text-green-700"
                                           : "bg-gray-100 text-gray-700"
                               )}>
@@ -469,23 +595,23 @@ const Index = () => {
                               </span>
                             </TableCell>
                             <TableCell className="flex items-center gap-2">
-                              {order.status === "New Orders" && (
-                                <Button 
-                                  size="sm" 
-                                  onClick={() => handleMarkReceived(order.orderId)}
-                                  className="bg-green-100 text-green-700 hover:bg-green-200 border-green-200 text-xs whitespace-nowrap px-2"
-                                >
-                                  Mark Received
-                                </Button>
-                              )}
-                              <Button 
-                                size="sm" 
-                                variant="outline"
-                                className="rounded-full p-1 w-7 h-7 sm:p-2 sm:w-9 sm:h-9"
-                                onClick={() => handleViewOrderDetails(order.orderId)}
-                              >
-                                <FileText className="h-3 w-3 sm:h-4 sm:w-4" />
-                              </Button>
+                              {getActionButton(order)}
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button 
+                                      variant="outline" 
+                                      className="rounded-full bg-black text-white w-8 h-8 p-0"
+                                      onClick={() => handleViewOrderDetails(order.orderId)}
+                                    >
+                                      <Info className="h-4 w-4" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>View order details</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                             </TableCell>
                           </TableRow>
                         ))
@@ -511,12 +637,83 @@ const Index = () => {
           </TabsContent>
           
           <TabsContent value="orders-history" className="m-0">
-            <div className="p-12 text-center">
-              <h3 className="text-lg font-medium mb-2">Orders History</h3>
-              <p className="text-muted-foreground">View your past orders and their details here</p>
-              <Button className="mt-4 bg-cyan-600 hover:bg-cyan-700">
-                View Complete History
-              </Button>
+            <div className="p-2 sm:p-4 bg-white dark:bg-card">
+              <div className="rounded-lg overflow-hidden border-2 border-[#0F7EA3] bg-[#0F7EA3]">
+                <div className="flex flex-wrap p-2 bg-[#0F7EA3] rounded-t-lg overflow-x-auto">
+                  <h3 className="text-white font-semibold px-4 py-2">Order History - Completed Orders</h3>
+                </div>
+                
+                <div className="overflow-x-auto bg-white">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="bg-[#0F7EA3] border-none">
+                        <TableHead className="text-white font-bold">S.No</TableHead>
+                        <TableHead className="text-white font-bold">Order ID</TableHead>
+                        <TableHead className="text-white font-bold">Order date</TableHead>
+                        <TableHead className="text-white font-bold">Weight/ Quantity</TableHead>
+                        <TableHead className="text-white font-bold">Wash Type</TableHead>
+                        <TableHead className="text-white font-bold">Service Type</TableHead>
+                        <TableHead className="text-white font-bold">Price (₹)</TableHead>
+                        <TableHead className="text-white font-bold">Status</TableHead>
+                        <TableHead className="text-white font-bold">Action</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {currentOrders.filter(order => order.status === "Order collected").length > 0 ? (
+                        currentOrders
+                          .filter(order => order.status === "Order collected")
+                          .map((order, index) => (
+                            <TableRow key={order.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                              <TableCell>{index + 1}</TableCell>
+                              <TableCell className="font-medium">
+                                {order.orderId}
+                              </TableCell>
+                              <TableCell>{order.orderDate}</TableCell>
+                              <TableCell>{order.weightQuantity}</TableCell>
+                              <TableCell>{order.washType}</TableCell>
+                              <TableCell
+                                quickWash={order.serviceType === "Quick"}
+                                standardWash={order.serviceType === "Standard"}
+                              >
+                                {order.serviceType}
+                              </TableCell>
+                              <TableCell>₹{order.price}</TableCell>
+                              <TableCell>
+                                <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                  {order.status}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <TooltipProvider>
+                                  <Tooltip>
+                                    <TooltipTrigger asChild>
+                                      <Button 
+                                        variant="outline" 
+                                        className="rounded-full bg-black text-white w-8 h-8 p-0"
+                                        onClick={() => handleViewOrderDetails(order.orderId)}
+                                      >
+                                        <Info className="h-4 w-4" />
+                                      </Button>
+                                    </TooltipTrigger>
+                                    <TooltipContent>
+                                      <p>View order details</p>
+                                    </TooltipContent>
+                                  </Tooltip>
+                                </TooltipProvider>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                      ) : (
+                        <TableRow>
+                          <TableCell colSpan={9} className="text-center py-4">
+                            No orders found in history
+                          </TableCell>
+                        </TableRow>
+                      )}
+                    </TableBody>
+                  </Table>
+                </div>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
