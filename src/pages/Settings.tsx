@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon,
@@ -6,6 +7,7 @@ import {
   Plus,
   ChevronRight,
   ChevronDown,
+  ChevronUp,
   Save,
   X,
   ArrowLeft,
