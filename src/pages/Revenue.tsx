@@ -1,4 +1,3 @@
-<lov-code>
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -370,7 +369,7 @@ const Revenue = () => {
       service: "Wash & Fold",
       washType: "Quick Wash",
       totalAmount: 395,
-      orderStatus: "Delivered" // Changed from "In Process" to "Delivered"
+      orderStatus: "In Process"
     },
     {
       id: 2,
@@ -380,7 +379,7 @@ const Revenue = () => {
       service: "Dry clean",
       washType: "Standard Wash",
       totalAmount: 300,
-      orderStatus: "Delivered" // Already was "Delivered"
+      orderStatus: "Delivered"
     },
     {
       id: 3,
@@ -390,7 +389,7 @@ const Revenue = () => {
       service: "Wash & Iron",
       washType: "Quick Wash",
       totalAmount: 182,
-      orderStatus: "Delivered" // Changed from "Ready for Pickup" to "Delivered"
+      orderStatus: "Ready for Pickup"
     },
     {
       id: 4,
@@ -400,7 +399,7 @@ const Revenue = () => {
       service: "Wash & Fold",
       washType: "Premium Wash",
       totalAmount: 450,
-      orderStatus: "Delivered" // Changed from "In Process" to "Delivered"
+      orderStatus: "In Process"
     },
     {
       id: 5,
@@ -410,7 +409,7 @@ const Revenue = () => {
       service: "Wash & Iron",
       washType: "Standard & Quick Wash",
       totalAmount: 320,
-      orderStatus: "Delivered" // Already was "Delivered"
+      orderStatus: "Delivered"
     }
   ]);
 
@@ -514,10 +513,7 @@ const Revenue = () => {
   useEffect(() => {
     switch(dateFilter) {
       case "today":
-        setPendingPaymentsData(todayPendingPayments.map(item => ({
-          ...item,
-          orderStatus: "Delivered" // Set all to Delivered
-        })));
+        setPendingPaymentsData(todayPendingPayments);
         setPaymentHistoryData(todayPaymentHistory);
         setRevenueSummary({
           todayEarnings: 1500,
@@ -531,10 +527,7 @@ const Revenue = () => {
         toast.info("Showing today's data");
         break;
       case "yesterday":
-        setPendingPaymentsData(yesterdayPendingPayments.map(item => ({
-          ...item,
-          orderStatus: "Delivered" // Set all to Delivered
-        })));
+        setPendingPaymentsData(yesterdayPendingPayments);
         setPaymentHistoryData(yesterdayPaymentHistory);
         setRevenueSummary({
           todayEarnings: 0,
@@ -548,10 +541,7 @@ const Revenue = () => {
         toast.info("Showing yesterday's data");
         break;
       case "thisWeek":
-        setPendingPaymentsData(thisWeekPendingPayments.map(item => ({
-          ...item,
-          orderStatus: "Delivered" // Set all to Delivered
-        })));
+        setPendingPaymentsData(thisWeekPendingPayments);
         setPaymentHistoryData(thisWeekPaymentHistory);
         setRevenueSummary({
           todayEarnings: 1500,
@@ -565,10 +555,7 @@ const Revenue = () => {
         toast.info("Showing this week's data");
         break;
       case "thisMonth":
-        setPendingPaymentsData(thisMonthPendingPayments.map(item => ({
-          ...item,
-          orderStatus: "Delivered" // Set all to Delivered
-        })));
+        setPendingPaymentsData(thisMonthPendingPayments);
         setPaymentHistoryData(thisMonthPaymentHistory);
         setRevenueSummary({
           todayEarnings: 1500,
@@ -583,10 +570,7 @@ const Revenue = () => {
         break;
       case "customRange":
         if (dateRange?.from && dateRange?.to) {
-          setPendingPaymentsData(thisMonthPendingPayments.map(item => ({
-            ...item,
-            orderStatus: "Delivered" // Set all to Delivered
-          })));
+          setPendingPaymentsData(thisMonthPendingPayments);
           setPaymentHistoryData(thisMonthPaymentHistory);
           setRevenueSummary({
             todayEarnings: 0,
@@ -610,7 +594,7 @@ const Revenue = () => {
             service: "Wash & Fold",
             washType: "Quick Wash",
             totalAmount: 395,
-            orderStatus: "Delivered" // Changed from "In Process" to "Delivered"
+            orderStatus: "In Process"
           },
           {
             id: 2,
@@ -620,7 +604,7 @@ const Revenue = () => {
             service: "Dry clean",
             washType: "Standard Wash",
             totalAmount: 300,
-            orderStatus: "Delivered" // Already was "Delivered"
+            orderStatus: "Delivered"
           },
           {
             id: 3,
@@ -630,7 +614,7 @@ const Revenue = () => {
             service: "Wash & Iron",
             washType: "Quick Wash",
             totalAmount: 182,
-            orderStatus: "Delivered" // Changed from "Ready for Pickup" to "Delivered"
+            orderStatus: "Ready for Pickup"
           },
           {
             id: 4,
@@ -640,7 +624,7 @@ const Revenue = () => {
             service: "Wash & Fold",
             washType: "Premium Wash",
             totalAmount: 450,
-            orderStatus: "Delivered" // Changed from "In Process" to "Delivered"
+            orderStatus: "In Process"
           },
           {
             id: 5,
@@ -650,7 +634,7 @@ const Revenue = () => {
             service: "Wash & Iron",
             washType: "Standard & Quick Wash",
             totalAmount: 320,
-            orderStatus: "Delivered" // Already was "Delivered"
+            orderStatus: "Delivered"
           }
         ]);
         setPaymentHistoryData([
@@ -871,4 +855,224 @@ const Revenue = () => {
                     </div>
                   )}
                 </div>
-              </PopoverContent
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+
+        {revenueSummaryTiles}
+        
+        <div className="mb-6">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 mb-4">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Input
+                placeholder="Search by order ID or customer name"
+                className="pl-10 w-full max-w-xs bg-[#D3E4FD] border-[#A3C4FD] placeholder-[#6B7A99]"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <button 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  onClick={() => setSearchQuery("")}
+                >
+                  <X size={16} />
+                </button>
+              )}
+            </div>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
+            <TabsList className="w-full sm:w-[400px] bg-[#D3E4FD] border border-[#A3C4FD]">
+              <TabsTrigger value="pending" className="flex-1 data-[state=active]:bg-[#8B5CF6] data-[state=active]:text-white">Unpaid Payments</TabsTrigger>
+              <TabsTrigger value="history" className="flex-1 data-[state=active]:bg-[#8B5CF6] data-[state=active]:text-white">Payment History</TabsTrigger>
+            </TabsList>
+          
+            <div className="mt-4 mb-4">
+              <ToggleGroup 
+                type="single" 
+                value={washTypeFilter} 
+                onValueChange={(value) => value && setWashTypeFilter(value)}
+                className="bg-[#D3E4FD] border-[#A3C4FD]"
+              >
+                {washTypeOptions.map((option) => (
+                  <ToggleGroupItem 
+                    key={option.id} 
+                    value={option.id}
+                    className="data-[state=on]:bg-[#8B5CF6] data-[state=on]:text-white"
+                  >
+                    {option.label}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </div>
+
+            <TabsContent value="pending">
+              <div className="border rounded-lg overflow-hidden bg-[#F2FCE2]">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-[#0F7EA3] border-none">
+                      <TableHead className="text-white font-bold">S.No</TableHead>
+                      <TableHead className="text-white font-bold">Order ID</TableHead>
+                      <TableHead className="text-white font-bold">Customer</TableHead>
+                      <TableHead className="text-white font-bold">Delivered Date</TableHead>
+                      <TableHead className="text-white font-bold">Service</TableHead>
+                      <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Amount</TableHead>
+                      <TableHead className="text-white font-bold">Status</TableHead>
+                      <TableHead className="text-white font-bold text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {getFilteredPendingPayments().map((payment, index) => (
+                      <TableRow key={payment.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{payment.orderId}</TableCell>
+                        <TableCell>{payment.customerName}</TableCell>
+                        <TableCell>{payment.deliveredDate}</TableCell>
+                        <TableCell>{payment.service}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            payment.washType.includes("Quick") ? "bg-amber-50 text-amber-600" : 
+                            payment.washType.includes("Standard") ? "bg-blue-50 text-blue-600" : 
+                            "bg-purple-50 text-purple-600"
+                          }`}>
+                            {payment.washType}
+                          </span>
+                        </TableCell>
+                        <TableCell>₹{payment.totalAmount}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            payment.orderStatus === "In Process" ? "bg-yellow-50 text-yellow-600" : 
+                            payment.orderStatus === "Delivered" ? "bg-green-50 text-green-600" : 
+                            "bg-blue-50 text-blue-600"
+                          }`}>
+                            {payment.orderStatus}
+                          </span>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleViewOrderDetails(payment.orderId)}
+                                  className="bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white"
+                                >
+                                  <ExternalLink className="h-4 w-4 mr-2" />
+                                  Order Detail
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>View order details</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="history">
+              <div className="flex justify-end mb-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3]">
+                      <FileDown className="h-4 w-4 mr-2" />
+                      Export
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-[#F1F0FB]">
+                    <DropdownMenuItem onClick={() => handleExport('pdf')}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as PDF
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('excel')}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as Excel
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleExport('csv')}>
+                      <FileText className="h-4 w-4 mr-2" />
+                      Export as CSV
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => {
+                      toast.success('Print layout prepared');
+                      window.print();
+                    }}>
+                      <Printer className="h-4 w-4 mr-2" />
+                      Print
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="border rounded-lg overflow-hidden bg-[#F2FCE2]">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-[#0F7EA3] border-none">
+                      <TableHead className="text-white font-bold">S.No</TableHead>
+                      <TableHead className="text-white font-bold">Order ID</TableHead>
+                      <TableHead className="text-white font-bold">Customer</TableHead>
+                      <TableHead className="text-white font-bold">Payment Date</TableHead>
+                      <TableHead className="text-white font-bold">Service</TableHead>
+                      <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Amount</TableHead>
+                      <TableHead className="text-white font-bold text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {getFilteredPaymentHistory().map((payment, index) => (
+                      <TableRow key={payment.id} className={index % 2 === 0 ? 'bg-[#E6EFF2]' : 'bg-[#F8FBFC]'}>
+                        <TableCell>{index + 1}</TableCell>
+                        <TableCell>{payment.orderId}</TableCell>
+                        <TableCell>{payment.customerName}</TableCell>
+                        <TableCell>{payment.paymentDate}</TableCell>
+                        <TableCell>{payment.service}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            payment.washType.includes("Quick") ? "bg-amber-50 text-amber-600" : 
+                            payment.washType.includes("Standard") ? "bg-blue-50 text-blue-600" : 
+                            "bg-purple-50 text-purple-600"
+                          }`}>
+                            {payment.washType}
+                          </span>
+                        </TableCell>
+                        <TableCell>₹{payment.amount}</TableCell>
+                        <TableCell className="text-right">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={() => handleViewOrderDetails(payment.orderId)}
+                                  className="bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white"
+                                >
+                                  <ExternalLink className="h-4 w-4 mr-2" />
+                                  Order Detail
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>View order details</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Revenue;
