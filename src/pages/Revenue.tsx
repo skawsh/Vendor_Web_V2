@@ -54,7 +54,7 @@ const todayPendingPayments = [
     service: "Wash & Fold",
     washType: "Quick Wash",
     totalAmount: 450,
-    orderStatus: "In Process"
+    orderStatus: "Delivered"
   },
   {
     id: 2,
@@ -64,7 +64,7 @@ const todayPendingPayments = [
     service: "Dry Clean",
     washType: "Premium Wash",
     totalAmount: 780,
-    orderStatus: "Ready for Pickup"
+    orderStatus: "Delivered"
   }
 ];
 
@@ -87,7 +87,7 @@ const yesterdayPendingPayments = [
     service: "Wash & Fold",
     washType: "Quick Wash",
     totalAmount: 350,
-    orderStatus: "In Process"
+    orderStatus: "Delivered"
   },
   {
     id: 3,
@@ -97,7 +97,7 @@ const yesterdayPendingPayments = [
     service: "Dry Clean",
     washType: "Standard Wash",
     totalAmount: 620,
-    orderStatus: "Ready for Pickup"
+    orderStatus: "Delivered"
   }
 ];
 
@@ -110,7 +110,7 @@ const thisWeekPendingPayments = [
     service: "Wash & Fold",
     washType: "Quick Wash",
     totalAmount: 395,
-    orderStatus: "In Process"
+    orderStatus: "Delivered"
   },
   {
     id: 2,
@@ -130,7 +130,7 @@ const thisWeekPendingPayments = [
     service: "Wash & Iron",
     washType: "Quick Wash",
     totalAmount: 182,
-    orderStatus: "Ready for Pickup"
+    orderStatus: "Delivered"
   },
   {
     id: 4,
@@ -140,7 +140,7 @@ const thisWeekPendingPayments = [
     service: "Wash & Fold",
     washType: "Premium Wash",
     totalAmount: 450,
-    orderStatus: "In Process"
+    orderStatus: "Delivered"
   },
   {
     id: 5,
@@ -173,7 +173,7 @@ const thisMonthPendingPayments = [
     service: "Dry Clean",
     washType: "Premium Wash",
     totalAmount: 1250,
-    orderStatus: "In Process"
+    orderStatus: "Delivered"
   },
   {
     id: 3,
@@ -183,7 +183,7 @@ const thisMonthPendingPayments = [
     service: "Wash & Iron",
     washType: "Quick Wash",
     totalAmount: 480,
-    orderStatus: "Ready for Pickup"
+    orderStatus: "Delivered"
   },
   {
     id: 4,
@@ -193,7 +193,7 @@ const thisMonthPendingPayments = [
     service: "Wash & Fold",
     washType: "Standard Wash",
     totalAmount: 560,
-    orderStatus: "In Process"
+    orderStatus: "Delivered"
   }
 ];
 
@@ -369,7 +369,7 @@ const Revenue = () => {
       service: "Wash & Fold",
       washType: "Quick Wash",
       totalAmount: 395,
-      orderStatus: "In Process"
+      orderStatus: "Delivered"
     },
     {
       id: 2,
@@ -389,7 +389,7 @@ const Revenue = () => {
       service: "Wash & Iron",
       washType: "Quick Wash",
       totalAmount: 182,
-      orderStatus: "Ready for Pickup"
+      orderStatus: "Delivered"
     },
     {
       id: 4,
@@ -399,7 +399,7 @@ const Revenue = () => {
       service: "Wash & Fold",
       washType: "Premium Wash",
       totalAmount: 450,
-      orderStatus: "In Process"
+      orderStatus: "Delivered"
     },
     {
       id: 5,
@@ -594,7 +594,7 @@ const Revenue = () => {
             service: "Wash & Fold",
             washType: "Quick Wash",
             totalAmount: 395,
-            orderStatus: "In Process"
+            orderStatus: "Delivered"
           },
           {
             id: 2,
@@ -614,7 +614,7 @@ const Revenue = () => {
             service: "Wash & Iron",
             washType: "Quick Wash",
             totalAmount: 182,
-            orderStatus: "Ready for Pickup"
+            orderStatus: "Delivered"
           },
           {
             id: 4,
@@ -624,7 +624,7 @@ const Revenue = () => {
             service: "Wash & Fold",
             washType: "Premium Wash",
             totalAmount: 450,
-            orderStatus: "In Process"
+            orderStatus: "Delivered"
           },
           {
             id: 5,
@@ -943,11 +943,7 @@ const Revenue = () => {
                         </TableCell>
                         <TableCell>₹{payment.totalAmount}</TableCell>
                         <TableCell>
-                          <span className={`px-2 py-1 rounded-full text-xs ${
-                            payment.orderStatus === "In Process" ? "bg-yellow-50 text-yellow-600" : 
-                            payment.orderStatus === "Delivered" ? "bg-green-50 text-green-600" : 
-                            "bg-blue-50 text-blue-600"
-                          }`}>
+                          <span className="px-2 py-1 rounded-full text-xs bg-green-50 text-green-600">
                             {payment.orderStatus}
                           </span>
                         </TableCell>
