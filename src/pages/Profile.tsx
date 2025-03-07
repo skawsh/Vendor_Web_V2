@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, 
@@ -30,34 +31,47 @@ const Profile = () => {
   // Studio information state
   const [studioInfo, setStudioInfo] = useState({
     basic: {
-      ownerName: 'Saiteja Reddy',
-      contactPhone: '+91 9876543210',
-      emailAddress: 'saiteja@example.com',
+      ownerName: 'Saiteja Samala',
+      studioName: 'Saiteja Laundry',
+      emailAddress: 'saitejasamala0808@gmail.com',
+      primaryNumber: '8099830308',
+      secondaryNumber: '9000135876',
       isEditing: false
     },
     address: {
-      streetAddress: '123 Laundry Street',
+      streetAddress: '1-23/45, Main Street',
       city: 'Hyderabad',
       state: 'Telangana',
       zipCode: '500081',
+      latitude: '17.3850',
+      longitude: '78.4867',
       isEditing: false
     },
     business: {
       businessName: 'Saiteja Laundry Services',
-      gstNumber: '22AAAAA0000A1Z5',
-      businessType: 'Sole Proprietorship',
+      businessRegistrationNumber: 'UADJFDFJ4427287',
+      gstNumber: 'GST9876541',
+      panNumber: 'ABCDE1234F',
+      openingTime: '09:00 AM',
+      closingTime: '09:00 PM',
+      priceAdjustment: '10%',
       isEditing: false
     },
     studio: {
-      capacity: '500 kg per day',
-      operatingHours: '9:00 AM to 8:00 PM',
-      serviceArea: '10 km radius',
+      numberOfEmployees: '2',
+      dailyCapacity: '100',
+      specialEquipment: 'Special dry cleaning',
+      selectedWashCategory: 'Standard Wash, Express Wash',
       isEditing: false
     },
     payment: {
-      bankName: 'Indian Bank',
-      accountNumber: 'XXXX XXXX XXXX 4321',
-      upiId: 'saiteja@upi',
+      accountHolderName: 'Saiteja Samala',
+      bankName: 'HDFC',
+      accountNumber: '50107846646453',
+      ifscCode: 'HDFC00236898',
+      branchName: 'Gachibowli Phase-2',
+      upiId: 'saitejasamala@upi',
+      selectedPaymentSchedule: 'Daily Payment',
       isEditing: false
     }
   });
@@ -334,19 +348,19 @@ const Profile = () => {
                         )}
                       </div>
                       <div>
-                        <Label>Contact Phone</Label>
+                        <Label>Studio Name</Label>
                         {studioInfo.basic.isEditing ? (
                           <Input 
-                            value={studioInfo.basic.contactPhone} 
-                            onChange={(e) => handleInfoChange('basic', 'contactPhone', e.target.value)}
+                            value={studioInfo.basic.studioName} 
+                            onChange={(e) => handleInfoChange('basic', 'studioName', e.target.value)}
                             className="mt-1"
                           />
                         ) : (
-                          <p className="text-sm font-medium">{studioInfo.basic.contactPhone}</p>
+                          <p className="text-sm font-medium">{studioInfo.basic.studioName}</p>
                         )}
                       </div>
                       <div>
-                        <Label>Email Address</Label>
+                        <Label>Email</Label>
                         {studioInfo.basic.isEditing ? (
                           <Input 
                             value={studioInfo.basic.emailAddress} 
@@ -355,6 +369,30 @@ const Profile = () => {
                           />
                         ) : (
                           <p className="text-sm font-medium">{studioInfo.basic.emailAddress}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Primary Number</Label>
+                        {studioInfo.basic.isEditing ? (
+                          <Input 
+                            value={studioInfo.basic.primaryNumber} 
+                            onChange={(e) => handleInfoChange('basic', 'primaryNumber', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.basic.primaryNumber}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Secondary Number</Label>
+                        {studioInfo.basic.isEditing ? (
+                          <Input 
+                            value={studioInfo.basic.secondaryNumber} 
+                            onChange={(e) => handleInfoChange('basic', 'secondaryNumber', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.basic.secondaryNumber}</p>
                         )}
                       </div>
                     </div>
@@ -418,7 +456,7 @@ const Profile = () => {
                   <div className="p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Street Address</Label>
+                        <Label>Street</Label>
                         {studioInfo.address.isEditing ? (
                           <Input 
                             value={studioInfo.address.streetAddress} 
@@ -454,7 +492,7 @@ const Profile = () => {
                         )}
                       </div>
                       <div>
-                        <Label>Zip Code</Label>
+                        <Label>Postal Code</Label>
                         {studioInfo.address.isEditing ? (
                           <Input 
                             value={studioInfo.address.zipCode} 
@@ -463,6 +501,30 @@ const Profile = () => {
                           />
                         ) : (
                           <p className="text-sm font-medium">{studioInfo.address.zipCode}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Latitude</Label>
+                        {studioInfo.address.isEditing ? (
+                          <Input 
+                            value={studioInfo.address.latitude} 
+                            onChange={(e) => handleInfoChange('address', 'latitude', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.address.latitude}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Longitude</Label>
+                        {studioInfo.address.isEditing ? (
+                          <Input 
+                            value={studioInfo.address.longitude} 
+                            onChange={(e) => handleInfoChange('address', 'longitude', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.address.longitude}</p>
                         )}
                       </div>
                     </div>
@@ -526,19 +588,19 @@ const Profile = () => {
                   <div className="p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Business Name</Label>
+                        <Label>Business Registration Number</Label>
                         {studioInfo.business.isEditing ? (
                           <Input 
-                            value={studioInfo.business.businessName} 
-                            onChange={(e) => handleInfoChange('business', 'businessName', e.target.value)}
+                            value={studioInfo.business.businessRegistrationNumber} 
+                            onChange={(e) => handleInfoChange('business', 'businessRegistrationNumber', e.target.value)}
                             className="mt-1"
                           />
                         ) : (
-                          <p className="text-sm font-medium">{studioInfo.business.businessName}</p>
+                          <p className="text-sm font-medium">{studioInfo.business.businessRegistrationNumber}</p>
                         )}
                       </div>
                       <div>
-                        <Label>GST Number</Label>
+                        <Label>GST/VAT Number</Label>
                         {studioInfo.business.isEditing ? (
                           <Input 
                             value={studioInfo.business.gstNumber} 
@@ -550,15 +612,51 @@ const Profile = () => {
                         )}
                       </div>
                       <div>
-                        <Label>Business Type</Label>
+                        <Label>PAN Number</Label>
                         {studioInfo.business.isEditing ? (
                           <Input 
-                            value={studioInfo.business.businessType} 
-                            onChange={(e) => handleInfoChange('business', 'businessType', e.target.value)}
+                            value={studioInfo.business.panNumber} 
+                            onChange={(e) => handleInfoChange('business', 'panNumber', e.target.value)}
                             className="mt-1"
                           />
                         ) : (
-                          <p className="text-sm font-medium">{studioInfo.business.businessType}</p>
+                          <p className="text-sm font-medium">{studioInfo.business.panNumber}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Opening Time</Label>
+                        {studioInfo.business.isEditing ? (
+                          <Input 
+                            value={studioInfo.business.openingTime} 
+                            onChange={(e) => handleInfoChange('business', 'openingTime', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.business.openingTime}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Closing Time</Label>
+                        {studioInfo.business.isEditing ? (
+                          <Input 
+                            value={studioInfo.business.closingTime} 
+                            onChange={(e) => handleInfoChange('business', 'closingTime', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.business.closingTime}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Price Adjustment %</Label>
+                        {studioInfo.business.isEditing ? (
+                          <Input 
+                            value={studioInfo.business.priceAdjustment} 
+                            onChange={(e) => handleInfoChange('business', 'priceAdjustment', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.business.priceAdjustment}</p>
                         )}
                       </div>
                     </div>
@@ -622,39 +720,51 @@ const Profile = () => {
                   <div className="p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <Label>Capacity</Label>
+                        <Label>Number of Employees</Label>
                         {studioInfo.studio.isEditing ? (
                           <Input 
-                            value={studioInfo.studio.capacity} 
-                            onChange={(e) => handleInfoChange('studio', 'capacity', e.target.value)}
+                            value={studioInfo.studio.numberOfEmployees} 
+                            onChange={(e) => handleInfoChange('studio', 'numberOfEmployees', e.target.value)}
                             className="mt-1"
                           />
                         ) : (
-                          <p className="text-sm font-medium">{studioInfo.studio.capacity}</p>
+                          <p className="text-sm font-medium">{studioInfo.studio.numberOfEmployees}</p>
                         )}
                       </div>
                       <div>
-                        <Label>Operating Hours</Label>
+                        <Label>Daily Capacity (In KG's)</Label>
                         {studioInfo.studio.isEditing ? (
                           <Input 
-                            value={studioInfo.studio.operatingHours} 
-                            onChange={(e) => handleInfoChange('studio', 'operatingHours', e.target.value)}
+                            value={studioInfo.studio.dailyCapacity} 
+                            onChange={(e) => handleInfoChange('studio', 'dailyCapacity', e.target.value)}
                             className="mt-1"
                           />
                         ) : (
-                          <p className="text-sm font-medium">{studioInfo.studio.operatingHours}</p>
+                          <p className="text-sm font-medium">{studioInfo.studio.dailyCapacity}</p>
                         )}
                       </div>
                       <div>
-                        <Label>Service Area</Label>
+                        <Label>Special Equipment</Label>
                         {studioInfo.studio.isEditing ? (
                           <Input 
-                            value={studioInfo.studio.serviceArea} 
-                            onChange={(e) => handleInfoChange('studio', 'serviceArea', e.target.value)}
+                            value={studioInfo.studio.specialEquipment} 
+                            onChange={(e) => handleInfoChange('studio', 'specialEquipment', e.target.value)}
                             className="mt-1"
                           />
                         ) : (
-                          <p className="text-sm font-medium">{studioInfo.studio.serviceArea}</p>
+                          <p className="text-sm font-medium">{studioInfo.studio.specialEquipment}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Selected Wash Category</Label>
+                        {studioInfo.studio.isEditing ? (
+                          <Input 
+                            value={studioInfo.studio.selectedWashCategory} 
+                            onChange={(e) => handleInfoChange('studio', 'selectedWashCategory', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.studio.selectedWashCategory}</p>
                         )}
                       </div>
                     </div>
@@ -718,6 +828,18 @@ const Profile = () => {
                   <div className="p-4 space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
+                        <Label>Account Holder Name</Label>
+                        {studioInfo.payment.isEditing ? (
+                          <Input 
+                            value={studioInfo.payment.accountHolderName} 
+                            onChange={(e) => handleInfoChange('payment', 'accountHolderName', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.payment.accountHolderName}</p>
+                        )}
+                      </div>
+                      <div>
                         <Label>Bank Name</Label>
                         {studioInfo.payment.isEditing ? (
                           <Input 
@@ -742,6 +864,30 @@ const Profile = () => {
                         )}
                       </div>
                       <div>
+                        <Label>IFSC Code</Label>
+                        {studioInfo.payment.isEditing ? (
+                          <Input 
+                            value={studioInfo.payment.ifscCode} 
+                            onChange={(e) => handleInfoChange('payment', 'ifscCode', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.payment.ifscCode}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Branch Name</Label>
+                        {studioInfo.payment.isEditing ? (
+                          <Input 
+                            value={studioInfo.payment.branchName} 
+                            onChange={(e) => handleInfoChange('payment', 'branchName', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.payment.branchName}</p>
+                        )}
+                      </div>
+                      <div>
                         <Label>UPI ID</Label>
                         {studioInfo.payment.isEditing ? (
                           <Input 
@@ -751,6 +897,18 @@ const Profile = () => {
                           />
                         ) : (
                           <p className="text-sm font-medium">{studioInfo.payment.upiId}</p>
+                        )}
+                      </div>
+                      <div>
+                        <Label>Selected Payment Schedule</Label>
+                        {studioInfo.payment.isEditing ? (
+                          <Input 
+                            value={studioInfo.payment.selectedPaymentSchedule} 
+                            onChange={(e) => handleInfoChange('payment', 'selectedPaymentSchedule', e.target.value)}
+                            className="mt-1"
+                          />
+                        ) : (
+                          <p className="text-sm font-medium">{studioInfo.payment.selectedPaymentSchedule}</p>
                         )}
                       </div>
                     </div>
