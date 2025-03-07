@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, 
@@ -26,7 +25,6 @@ const Profile = () => {
     address: '123 Laundry Lane, Mumbai, Maharashtra',
     studio: 'Skawsh Laundry Studio',
     joinDate: 'January 15, 2023',
-    bio: 'Owner of Skawsh Laundry Studio with over 5 years of experience in the laundry industry.',
   });
 
   // Studio information state
@@ -264,17 +262,6 @@ const Profile = () => {
                   value={profileData.address}
                   onChange={handleInputChange}
                   disabled={!isEditing}
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="bio">Bio</Label>
-                <Input
-                  id="bio"
-                  name="bio"
-                  value={profileData.bio}
-                  onChange={handleInputChange}
-                  disabled={!isEditing}
-                  className="h-20"
                 />
               </div>
             </div>
