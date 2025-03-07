@@ -917,8 +917,8 @@ const Revenue = () => {
                       <TableHead className="text-white font-bold">Order ID</TableHead>
                       <TableHead className="text-white font-bold">Customer</TableHead>
                       <TableHead className="text-white font-bold">Delivered Date</TableHead>
-                      <TableHead className="text-white font-bold">Service</TableHead>
                       <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Service</TableHead>
                       <TableHead className="text-white font-bold">Amount</TableHead>
                       <TableHead className="text-white font-bold">Status</TableHead>
                       <TableHead className="text-white font-bold text-right">Actions</TableHead>
@@ -1018,8 +1018,8 @@ const Revenue = () => {
                       <TableHead className="text-white font-bold">Order ID</TableHead>
                       <TableHead className="text-white font-bold">Customer</TableHead>
                       <TableHead className="text-white font-bold">Payment Date</TableHead>
-                      <TableHead className="text-white font-bold">Service</TableHead>
                       <TableHead className="text-white font-bold">Wash Type</TableHead>
+                      <TableHead className="text-white font-bold">Service</TableHead>
                       <TableHead className="text-white font-bold">Amount</TableHead>
                       <TableHead className="text-white font-bold text-right">Actions</TableHead>
                     </TableRow>
