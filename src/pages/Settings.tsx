@@ -1,4 +1,5 @@
-import React, { useState, useRef } from 'react';
+
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +10,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Settings = () => {
   // State for services
   const [services, setServices] = useState([{
@@ -149,12 +151,13 @@ const Settings = () => {
   const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
 
-  // New service form state
+  // New service form state with sub-services
   const [newService, setNewService] = useState({
     name: '',
     description: '',
     price: '',
-    unit: 'kg'
+    unit: 'kg',
+    subServices: [{ name: '', id: '0' }]
   });
 
   // New subservice form state
@@ -238,7 +241,8 @@ const Settings = () => {
       name: '',
       description: '',
       price: '',
-      unit: 'kg'
+      unit: 'kg',
+      subServices: [{ name: '', id: '0' }]
     });
     setIsAddServiceDialogOpen(true);
   };
@@ -251,24 +255,68 @@ const Settings = () => {
     }));
   };
 
-  // Add a new service
-  const addNewService = () => {
-    // Validate fields
-    if (!newService.name || !newService.description || !newService.price) {
-      toast.error('Please fill all required fields');
+  // Add a subservice to the new service form
+  const addSubServiceToForm = () => {
+    setNewService(prev => ({
+      ...prev,
+      subServices: [...prev.subServices, { name: '', id: String(prev.subServices.length) }]
+    }));
+  };
+
+  // Remove a subservice from the new service form
+  const removeSubServiceFromForm = (id) => {
+    if (newService.subServices.length <= 1) {
+      toast.error("You need at least one sub-service");
       return;
     }
+    setNewService(prev => ({
+      ...prev,
+      subServices: prev.subServices.filter(ss => ss.id !== id)
+    }));
+  };
+
+  // Handle change in subservice form
+  const handleSubServiceChange = (id, value) => {
+    setNewService(prev => ({
+      ...prev,
+      subServices: prev.subServices.map(ss => ss.id === id ? { ...ss, name: value } : ss)
+    }));
+  };
+
+  // Add a new service with subservices
+  const addNewService = () => {
+    // Validate fields
+    if (!newService.name) {
+      toast.error('Please enter a service name');
+      return;
+    }
+
+    // Check if at least one subservice has a name
+    if (!newService.subServices.some(ss => ss.name.trim())) {
+      toast.error('Please enter at least one sub-service name');
+      return;
+    }
+
     const newId = (services.length + 1).toString();
+    
     setServices(prev => [...prev, {
       id: newId,
       name: newService.name,
-      description: newService.description,
-      price: parseFloat(newService.price),
+      description: newService.description || 'New service',
+      price: parseFloat(newService.price) || 0,
       unit: newService.unit,
       isOpen: false,
       isEditing: false,
-      subServices: []
+      subServices: newService.subServices
+        .filter(ss => ss.name.trim()) // Only include subservices with names
+        .map((ss, index) => ({
+          id: `${newId}-${index + 1}`,
+          name: ss.name,
+          isOpen: false,
+          items: []
+        }))
     }]);
+    
     setIsAddServiceDialogOpen(false);
     toast.success('Service added successfully');
   };
@@ -644,45 +692,64 @@ const Settings = () => {
         </CardContent>
       </Card>
 
-      {/* Add Service Dialog */}
+      {/* Redesigned Add Service Dialog */}
       <Dialog open={isAddServiceDialogOpen} onOpenChange={setIsAddServiceDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add New Service</DialogTitle>
-            <DialogDescription>
-              Create a new service for your laundry business
-            </DialogDescription>
+            <DialogTitle className="text-center text-blue-600 text-2xl font-medium">Add Service</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-4">
+          <div className="space-y-6 py-4">
             <div className="space-y-2">
               <Label htmlFor="new-service-name">Service Name</Label>
-              <Input id="new-service-name" value={newService.name} onChange={e => handleNewServiceChange('name', e.target.value)} />
+              <Input 
+                id="new-service-name" 
+                value={newService.name} 
+                onChange={e => handleNewServiceChange('name', e.target.value)} 
+                placeholder="Service Name"
+              />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-service-desc">Sub-Service</Label>
-              <Input id="new-service-desc" value={newService.description} onChange={e => handleNewServiceChange('description', e.target.value)} />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="new-service-price">Price</Label>
-                <Input id="new-service-price" type="number" value={newService.price} onChange={e => handleNewServiceChange('price', e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="new-service-unit">Unit</Label>
-                <select id="new-service-unit" value={newService.unit} onChange={e => handleNewServiceChange('unit', e.target.value)} className="w-full p-2 border rounded-md">
-                  <option value="kg">per kg</option>
-                  <option value="piece">per piece</option>
-                  <option value="meter">per meter</option>
-                </select>
+            
+            <div className="space-y-4">
+              <Label>Sub Services</Label>
+              <div className="space-y-4 border rounded-md p-4">
+                {newService.subServices.map((subService, index) => (
+                  <div key={subService.id} className="space-y-2">
+                    <Label htmlFor={`sub-service-${subService.id}`}>Sub Service Name</Label>
+                    <div className="flex gap-2">
+                      <Input 
+                        id={`sub-service-${subService.id}`} 
+                        value={subService.name} 
+                        onChange={e => handleSubServiceChange(subService.id, e.target.value)} 
+                        placeholder="Sub service name"
+                        className="flex-1"
+                      />
+                      <Button 
+                        variant="removeSubServiceBtn" 
+                        onClick={() => removeSubServiceFromForm(subService.id)}
+                        className="whitespace-nowrap"
+                      >
+                        Remove Sub Service
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <Button 
+                  variant="addSubServiceBtn" 
+                  onClick={addSubServiceToForm} 
+                  className="mt-2"
+                >
+                  Add Sub Service
+                </Button>
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddServiceDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={addNewService}>
-              Add Service
+          <DialogFooter className="sm:justify-start">
+            <Button 
+              variant="saveService" 
+              onClick={addNewService}
+              className="w-full sm:w-auto"
+            >
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>

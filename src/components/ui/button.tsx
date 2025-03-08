@@ -38,6 +38,9 @@ const buttonVariants = cva(
         filter: "bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white",
         selected: "bg-[#8B5CF6] text-white hover:bg-[#7C4FE7]",
         tableAction: "bg-[#D3E4FD] border-[#A3C4FD] text-[#0F7EA3] hover:bg-[#8B5CF6] hover:text-white",
+        removeSubServiceBtn: "border border-red-500 text-red-500 hover:bg-red-50 w-full rounded-md",
+        saveService: "bg-blue-600 text-white hover:bg-blue-700",
+        addSubServiceBtn: "bg-blue-600 text-white hover:bg-blue-700",
       },
       size: {
         default: "h-10 px-4 py-2",
