@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -694,13 +693,13 @@ const Settings = () => {
 
       {/* Redesigned Add Service Dialog */}
       <Dialog open={isAddServiceDialogOpen} onOpenChange={setIsAddServiceDialogOpen}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-md p-8 rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-center text-blue-600 text-2xl font-medium">Add Service</DialogTitle>
+            <DialogTitle className="text-center text-blue-500 text-2xl font-medium">Add Service</DialogTitle>
           </DialogHeader>
           <div className="space-y-6 py-4">
             <div className="space-y-2">
-              <Label htmlFor="new-service-name">Service Name</Label>
+              <Label htmlFor="new-service-name" className="text-gray-700 font-medium">Service Name</Label>
               <Input 
                 id="new-service-name" 
                 value={newService.name} 
@@ -710,48 +709,46 @@ const Settings = () => {
             </div>
             
             <div className="space-y-4">
-              <Label>Sub Services</Label>
-              <div className="space-y-4 border rounded-md p-4">
+              <Label className="text-gray-700 font-medium">Sub Services</Label>
+              <div className="space-y-6 border rounded-md p-6 bg-gray-50">
                 {newService.subServices.map((subService, index) => (
                   <div key={subService.id} className="space-y-2">
-                    <Label htmlFor={`sub-service-${subService.id}`}>Sub Service Name</Label>
-                    <div className="flex gap-2">
-                      <Input 
-                        id={`sub-service-${subService.id}`} 
-                        value={subService.name} 
-                        onChange={e => handleSubServiceChange(subService.id, e.target.value)} 
-                        placeholder="Sub service name"
-                        className="flex-1 bg-white border-gray-300 shadow-sm"
-                      />
-                      <Button 
-                        variant="removeSubServiceBtn" 
-                        onClick={() => removeSubServiceFromForm(subService.id)}
-                        className="whitespace-nowrap"
-                      >
-                        Remove Sub Service
-                      </Button>
-                    </div>
+                    <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700">Sub Service Name</Label>
+                    <Input 
+                      id={`sub-service-${subService.id}`} 
+                      value={subService.name} 
+                      onChange={e => handleSubServiceChange(subService.id, e.target.value)} 
+                      placeholder="Sub service name"
+                      className="flex-1 bg-white border-gray-200 shadow-sm"
+                    />
+                    <Button 
+                      variant="removeSubService" 
+                      onClick={() => removeSubServiceFromForm(subService.id)}
+                      className="mt-2 py-2 px-4 h-auto"
+                    >
+                      Remove Sub Service
+                    </Button>
                   </div>
                 ))}
                 <Button 
-                  variant="addSubServiceBtn" 
+                  variant="addSubService" 
                   onClick={addSubServiceToForm} 
-                  className="mt-2"
+                  className="mt-4 py-2 px-4 h-auto"
                 >
                   Add Sub Service
                 </Button>
               </div>
             </div>
           </div>
-          <DialogFooter className="sm:justify-start">
+          <div className="pt-4 flex justify-start">
             <Button 
               variant="saveService" 
               onClick={addNewService}
-              className="w-full sm:w-auto"
+              className="w-24 py-2 px-4 h-auto"
             >
               Save
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
