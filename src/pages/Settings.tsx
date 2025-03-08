@@ -11,7 +11,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 const Settings = () => {
-  // State for services
   const [services, setServices] = useState([{
     id: '1',
     name: 'Wash & Fold',
@@ -143,36 +142,31 @@ const Settings = () => {
     }]
   }]);
 
-  // Dialog states
   const [isAddServiceDialogOpen, setIsAddServiceDialogOpen] = useState(false);
   const [isAddSubserviceDialogOpen, setIsAddSubserviceDialogOpen] = useState(false);
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
 
-  // New service form state with sub-services
   const [newService, setNewService] = useState({
     name: '',
     description: '',
     price: '',
     unit: 'kg',
-    subServices: [{ name: '', id: '0' }]
+    subServices: [{ name: '', price: '', id: '0' }]
   });
 
-  // New subservice form state
   const [newSubservice, setNewSubservice] = useState({
     name: '',
     parentServiceId: ''
   });
 
-  // Edit subservice form state
   const [editSubservice, setEditSubservice] = useState({
     id: '',
     name: '',
     parentServiceId: ''
   });
 
-  // New item form state
   const [newItem, setNewItem] = useState({
     name: '',
     price: '',
@@ -182,7 +176,6 @@ const Settings = () => {
     parentSubserviceId: ''
   });
 
-  // Edit item form state
   const [editItem, setEditItem] = useState({
     id: '',
     name: '',
@@ -193,7 +186,6 @@ const Settings = () => {
     parentSubserviceId: ''
   });
 
-  // Toggle open/close state for a service
   const toggleService = serviceId => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
@@ -201,7 +193,6 @@ const Settings = () => {
     } : service));
   };
 
-  // Toggle open/close state for a subservice
   const toggleSubservice = (serviceId, subserviceId) => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
@@ -212,7 +203,6 @@ const Settings = () => {
     } : service));
   };
 
-  // Toggle edit mode for a service
   const toggleEditService = serviceId => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
@@ -220,7 +210,6 @@ const Settings = () => {
     } : service));
   };
 
-  // Handle change in service form fields
   const handleServiceChange = (serviceId, field, value) => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
@@ -228,25 +217,22 @@ const Settings = () => {
     } : service));
   };
 
-  // Save service changes
   const saveServiceChanges = serviceId => {
     toggleEditService(serviceId);
     toast.success('Service updated successfully');
   };
 
-  // Open dialog to add a new service
   const openAddServiceDialog = () => {
     setNewService({
       name: '',
       description: '',
       price: '',
       unit: 'kg',
-      subServices: [{ name: '', id: '0' }]
+      subServices: [{ name: '', price: '', id: '0' }]
     });
     setIsAddServiceDialogOpen(true);
   };
 
-  // Handle change in new service form
   const handleNewServiceChange = (field, value) => {
     setNewService(prev => ({
       ...prev,
@@ -254,15 +240,13 @@ const Settings = () => {
     }));
   };
 
-  // Add a subservice to the new service form
   const addSubServiceToForm = () => {
     setNewService(prev => ({
       ...prev,
-      subServices: [...prev.subServices, { name: '', id: String(prev.subServices.length) }]
+      subServices: [...prev.subServices, { name: '', price: '', id: String(prev.subServices.length) }]
     }));
   };
 
-  // Remove a subservice from the new service form
   const removeSubServiceFromForm = (id) => {
     if (newService.subServices.length <= 1) {
       toast.error("You need at least one sub-service");
@@ -274,23 +258,19 @@ const Settings = () => {
     }));
   };
 
-  // Handle change in subservice form
-  const handleSubServiceChange = (id, value) => {
+  const handleSubServiceChange = (id, field, value) => {
     setNewService(prev => ({
       ...prev,
-      subServices: prev.subServices.map(ss => ss.id === id ? { ...ss, name: value } : ss)
+      subServices: prev.subServices.map(ss => ss.id === id ? { ...ss, [field]: value } : ss)
     }));
   };
 
-  // Add a new service with subservices
   const addNewService = () => {
-    // Validate fields
     if (!newService.name) {
       toast.error('Please enter a service name');
       return;
     }
 
-    // Check if at least one subservice has a name
     if (!newService.subServices.some(ss => ss.name.trim())) {
       toast.error('Please enter at least one sub-service name');
       return;
@@ -307,10 +287,11 @@ const Settings = () => {
       isOpen: false,
       isEditing: false,
       subServices: newService.subServices
-        .filter(ss => ss.name.trim()) // Only include subservices with names
+        .filter(ss => ss.name.trim())
         .map((ss, index) => ({
           id: `${newId}-${index + 1}`,
           name: ss.name,
+          price: parseFloat(ss.price) || 0,
           isOpen: false,
           items: []
         }))
@@ -320,7 +301,6 @@ const Settings = () => {
     toast.success('Service added successfully');
   };
 
-  // Open dialog to add a new subservice
   const openAddSubserviceDialog = serviceId => {
     setNewSubservice({
       name: '',
@@ -329,7 +309,6 @@ const Settings = () => {
     setIsAddSubserviceDialogOpen(true);
   };
 
-  // Handle change in new subservice form
   const handleNewSubserviceChange = (field, value) => {
     setNewSubservice(prev => ({
       ...prev,
@@ -337,9 +316,7 @@ const Settings = () => {
     }));
   };
 
-  // Add a new subservice
   const addNewSubservice = () => {
-    // Validate fields
     if (!newSubservice.name) {
       toast.error('Please fill all required fields');
       return;
@@ -357,7 +334,6 @@ const Settings = () => {
     toast.success('Subservice added successfully');
   };
 
-  // Open dialog to edit a subservice
   const openEditSubserviceDialog = (serviceId, subservice) => {
     setEditSubservice({
       id: subservice.id,
@@ -367,7 +343,6 @@ const Settings = () => {
     setIsEditSubserviceDialogOpen(true);
   };
 
-  // Handle change in edit subservice form
   const handleEditSubserviceChange = (field, value) => {
     setEditSubservice(prev => ({
       ...prev,
@@ -375,9 +350,7 @@ const Settings = () => {
     }));
   };
 
-  // Save subservice changes
   const saveSubserviceChanges = () => {
-    // Validate fields
     if (!editSubservice.name) {
       toast.error('Please fill all required fields');
       return;
@@ -393,7 +366,6 @@ const Settings = () => {
     toast.success('Subservice updated successfully');
   };
 
-  // Open dialog to add a new item to a subservice
   const openAddItemDialog = (serviceId, subserviceId) => {
     setNewItem({
       name: '',
@@ -406,7 +378,6 @@ const Settings = () => {
     setIsAddItemDialogOpen(true);
   };
 
-  // Handle change in new item form
   const handleNewItemChange = (field, value) => {
     setNewItem(prev => ({
       ...prev,
@@ -414,9 +385,7 @@ const Settings = () => {
     }));
   };
 
-  // Add a new item to a subservice
   const addNewItem = () => {
-    // Validate fields
     if (!newItem.name || !newItem.price || !newItem.standardPrice || !newItem.expressPrice) {
       toast.error('Please fill all required fields');
       return;
@@ -438,7 +407,6 @@ const Settings = () => {
     toast.success('Item added successfully');
   };
 
-  // Open dialog to edit an item
   const openEditItemDialog = (serviceId, subserviceId, item) => {
     setEditItem({
       id: item.id,
@@ -452,7 +420,6 @@ const Settings = () => {
     setIsEditItemDialogOpen(true);
   };
 
-  // Handle change in edit item form
   const handleEditItemChange = (field, value) => {
     setEditItem(prev => ({
       ...prev,
@@ -460,9 +427,7 @@ const Settings = () => {
     }));
   };
 
-  // Save item changes
   const saveItemChanges = () => {
-    // Validate fields
     if (!editItem.name || !editItem.price || !editItem.standardPrice || !editItem.expressPrice) {
       toast.error('Please fill all required fields');
       return;
@@ -484,7 +449,6 @@ const Settings = () => {
     toast.success('Item updated successfully');
   };
 
-  // Delete a service
   const deleteService = serviceId => {
     if (confirm('Are you sure you want to delete this service?')) {
       setServices(prev => prev.filter(service => service.id !== serviceId));
@@ -492,7 +456,6 @@ const Settings = () => {
     }
   };
 
-  // Delete a subservice
   const deleteSubservice = (serviceId, subserviceId) => {
     if (confirm('Are you sure you want to delete this subservice?')) {
       setServices(prev => prev.map(service => service.id === serviceId ? {
@@ -503,7 +466,6 @@ const Settings = () => {
     }
   };
 
-  // Delete an item
   const deleteItem = (serviceId, subserviceId, itemId) => {
     if (confirm('Are you sure you want to delete this item?')) {
       setServices(prev => prev.map(service => service.id === serviceId ? {
@@ -517,10 +479,10 @@ const Settings = () => {
     }
   };
 
-  // Save all changes
   const saveAllChanges = () => {
     toast.success('All changes saved successfully');
   };
+
   return <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Settings</h1>
@@ -691,7 +653,6 @@ const Settings = () => {
         </CardContent>
       </Card>
 
-      {/* Redesigned Add Service Dialog */}
       <Dialog open={isAddServiceDialogOpen} onOpenChange={setIsAddServiceDialogOpen}>
         <DialogContent className="sm:max-w-md p-8 rounded-2xl">
           <DialogHeader>
@@ -717,10 +678,21 @@ const Settings = () => {
                     <Input 
                       id={`sub-service-${subService.id}`} 
                       value={subService.name} 
-                      onChange={e => handleSubServiceChange(subService.id, e.target.value)} 
+                      onChange={e => handleSubServiceChange(subService.id, 'name', e.target.value)} 
                       placeholder="Sub service name"
                       className="flex-1 bg-white border-gray-200 shadow-sm"
                     />
+                    
+                    <Label htmlFor={`sub-service-price-${subService.id}`} className="text-gray-700 mt-2">Price (Optional)</Label>
+                    <Input 
+                      id={`sub-service-price-${subService.id}`} 
+                      value={subService.price} 
+                      onChange={e => handleSubServiceChange(subService.id, 'price', e.target.value)} 
+                      placeholder="Enter price"
+                      type="number"
+                      className="flex-1 bg-white border-gray-200 shadow-sm"
+                    />
+                    
                     <Button 
                       variant="removeSubService" 
                       onClick={() => removeSubServiceFromForm(subService.id)}
@@ -752,7 +724,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Add Subservice Dialog */}
       <Dialog open={isAddSubserviceDialogOpen} onOpenChange={setIsAddSubserviceDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -778,7 +749,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Subservice Dialog */}
       <Dialog open={isEditSubserviceDialogOpen} onOpenChange={setIsEditSubserviceDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -804,7 +774,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Add Item Dialog */}
       <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -842,7 +811,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Edit Item Dialog */}
       <Dialog open={isEditItemDialogOpen} onOpenChange={setIsEditItemDialogOpen}>
         <DialogContent>
           <DialogHeader>
