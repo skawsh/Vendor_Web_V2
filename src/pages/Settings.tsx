@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,48 +11,8 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-interface Item {
-  id: string;
-  name: string;
-  price: number;
-  standardPrice: number;
-  expressPrice: number;
-}
-
-interface Subservice {
-  id: string;
-  name: string;
-  isOpen: boolean;
-  price?: number;
-  items: Item[];
-}
-
-interface Service {
-  id: string;
-  name: string;
-  isOpen: boolean;
-  description: string;
-  price: number;
-  unit: string;
-  isEditing: boolean;
-  subServices: Subservice[];
-}
-
-interface NewSubservice {
-  name: string;
-  parentServiceId: string;
-  price?: string;
-}
-
-interface EditSubservice {
-  id: string;
-  name: string;
-  parentServiceId: string;
-  price?: string;
-}
-
 const Settings = () => {
-  const [services, setServices] = useState<Service[]>([{
+  const [services, setServices] = useState([{
     id: '1',
     name: 'Wash & Fold',
     isOpen: false,
@@ -181,33 +142,32 @@ const Settings = () => {
       }]
     }]
   }]);
+
   const [isAddServiceDialogOpen, setIsAddServiceDialogOpen] = useState(false);
   const [isAddSubserviceDialogOpen, setIsAddSubserviceDialogOpen] = useState(false);
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
+
   const [newService, setNewService] = useState({
     name: '',
     description: '',
     price: '',
     unit: 'kg',
-    subServices: [{
-      name: '',
-      price: '',
-      id: '0'
-    }]
+    subServices: [{ name: '', price: '', id: '0' }]
   });
-  const [newSubservice, setNewSubservice] = useState<NewSubservice>({
+
+  const [newSubservice, setNewSubservice] = useState({
     name: '',
-    parentServiceId: '',
-    price: ''
+    parentServiceId: ''
   });
-  const [editSubservice, setEditSubservice] = useState<EditSubservice>({
+
+  const [editSubservice, setEditSubservice] = useState({
     id: '',
     name: '',
-    parentServiceId: '',
-    price: ''
+    parentServiceId: ''
   });
+
   const [newItem, setNewItem] = useState({
     name: '',
     price: '',
@@ -216,6 +176,7 @@ const Settings = () => {
     parentServiceId: '',
     parentSubserviceId: ''
   });
+
   const [editItem, setEditItem] = useState({
     id: '',
     name: '',
@@ -268,11 +229,7 @@ const Settings = () => {
       description: '',
       price: '',
       unit: 'kg',
-      subServices: [{
-        name: '',
-        price: '',
-        id: '0'
-      }]
+      subServices: [{ name: '', price: '', id: '0' }]
     });
     setIsAddServiceDialogOpen(true);
   };
@@ -287,15 +244,11 @@ const Settings = () => {
   const addSubServiceToForm = () => {
     setNewService(prev => ({
       ...prev,
-      subServices: [...prev.subServices, {
-        name: '',
-        price: '',
-        id: String(prev.subServices.length)
-      }]
+      subServices: [...prev.subServices, { name: '', price: '', id: String(prev.subServices.length) }]
     }));
   };
 
-  const removeSubServiceFromForm = id => {
+  const removeSubServiceFromForm = (id) => {
     if (newService.subServices.length <= 1) {
       toast.error("You need at least one sub-service");
       return;
@@ -309,10 +262,7 @@ const Settings = () => {
   const handleSubServiceChange = (id, field, value) => {
     setNewService(prev => ({
       ...prev,
-      subServices: prev.subServices.map(ss => ss.id === id ? {
-        ...ss,
-        [field]: value
-      } : ss)
+      subServices: prev.subServices.map(ss => ss.id === id ? { ...ss, [field]: value } : ss)
     }));
   };
 
@@ -321,11 +271,14 @@ const Settings = () => {
       toast.error('Please enter a service name');
       return;
     }
+
     if (!newService.subServices.some(ss => ss.name.trim())) {
       toast.error('Please enter at least one sub-service name');
       return;
     }
+
     const newId = (services.length + 1).toString();
+    
     setServices(prev => [...prev, {
       id: newId,
       name: newService.name,
@@ -334,14 +287,17 @@ const Settings = () => {
       unit: newService.unit,
       isOpen: false,
       isEditing: false,
-      subServices: newService.subServices.filter(ss => ss.name.trim()).map((ss, index) => ({
-        id: `${newId}-${index + 1}`,
-        name: ss.name,
-        price: parseFloat(ss.price) || 0,
-        isOpen: false,
-        items: []
-      }))
+      subServices: newService.subServices
+        .filter(ss => ss.name.trim())
+        .map((ss, index) => ({
+          id: `${newId}-${index + 1}`,
+          name: ss.name,
+          price: parseFloat(ss.price) || 0,
+          isOpen: false,
+          items: []
+        }))
     }]);
+    
     setIsAddServiceDialogOpen(false);
     toast.success('Service added successfully');
   };
@@ -349,8 +305,7 @@ const Settings = () => {
   const openAddSubserviceDialog = serviceId => {
     setNewSubservice({
       name: '',
-      parentServiceId: serviceId,
-      price: ''
+      parentServiceId: serviceId
     });
     setIsAddSubserviceDialogOpen(true);
   };
@@ -373,7 +328,6 @@ const Settings = () => {
         id: `${service.id}-${service.subServices.length + 1}`,
         name: newSubservice.name,
         isOpen: false,
-        price: newSubservice.price ? parseFloat(newSubservice.price) : undefined,
         items: []
       }]
     } : service));
@@ -385,8 +339,7 @@ const Settings = () => {
     setEditSubservice({
       id: subservice.id,
       name: subservice.name,
-      parentServiceId: serviceId,
-      price: subservice.price ? String(subservice.price) : ''
+      parentServiceId: serviceId
     });
     setIsEditSubserviceDialogOpen(true);
   };
@@ -407,8 +360,7 @@ const Settings = () => {
       ...service,
       subServices: service.subServices.map(subservice => subservice.id === editSubservice.id ? {
         ...subservice,
-        name: editSubservice.name,
-        price: editSubservice.price ? parseFloat(editSubservice.price) : undefined
+        name: editSubservice.name
       } : subservice)
     } : service));
     setIsEditSubserviceDialogOpen(false);
@@ -532,368 +484,271 @@ const Settings = () => {
     toast.success('All changes saved successfully');
   };
 
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold">Services & Pricing</h1>
-          <p className="text-gray-500">Manage your laundry services and pricing</p>
-        </div>
-        <div className="flex gap-4">
-          <Button onClick={openAddServiceDialog} className="flex items-center gap-2">
-            <Plus size={16} /> Add Service
-          </Button>
-          <Button onClick={saveAllChanges} variant="outline" className="flex items-center gap-2">
-            <Save size={16} /> Save All Changes
-          </Button>
-        </div>
+  return <div className="container mx-auto p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Settings</h1>
+        <Button onClick={saveAllChanges}>Save All Changes</Button>
       </div>
 
-      <div className="space-y-6">
-        {services.map(service => (
-          <Card key={service.id} className="overflow-hidden">
-            <CardHeader className="bg-gray-50 p-4">
-              <div className="flex justify-between items-center">
-                <div className="flex-1">
-                  {service.isEditing ? (
-                    <div className="space-y-2">
-                      <div>
-                        <Label htmlFor={`service-name-${service.id}`}>Service Name</Label>
-                        <Input
-                          id={`service-name-${service.id}`}
-                          value={service.name}
-                          onChange={e => handleServiceChange(service.id, 'name', e.target.value)}
-                          className="max-w-md"
-                        />
-                      </div>
-                      <div>
-                        <Label htmlFor={`service-desc-${service.id}`}>Description</Label>
-                        <Input
-                          id={`service-desc-${service.id}`}
-                          value={service.description}
-                          onChange={e => handleServiceChange(service.id, 'description', e.target.value)}
-                          className="max-w-md"
-                        />
-                      </div>
-                      <div className="flex gap-4">
-                        <div className="w-32">
-                          <Label htmlFor={`service-price-${service.id}`}>Price</Label>
-                          <Input
-                            id={`service-price-${service.id}`}
-                            value={service.price}
-                            onChange={e => handleServiceChange(service.id, 'price', parseFloat(e.target.value) || 0)}
-                            type="number"
-                          />
-                        </div>
-                        <div className="w-32">
-                          <Label htmlFor={`service-unit-${service.id}`}>Unit</Label>
-                          <Input
-                            id={`service-unit-${service.id}`}
-                            value={service.unit}
-                            onChange={e => handleServiceChange(service.id, 'unit', e.target.value)}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Service Management</CardTitle>
+            <CardDescription>
+              Manage your services, subservices, and item details
+            </CardDescription>
+          </div>
+          <Button onClick={openAddServiceDialog} className="flex items-center gap-1">
+            <Plus className="h-4 w-4" /> Add Service
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {services.map(service => <Card key={service.id} className="border">
+                <div className="p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleService(service.id)}>
+                  <div className="flex items-center gap-2">
+                    {service.isOpen ? <ChevronDown className="h-5 w-5 text-gray-500" /> : <ChevronRight className="h-5 w-5 text-gray-500" />}
                     <div>
-                      <CardTitle className="text-xl">{service.name}</CardTitle>
-                      <CardDescription>{service.description}</CardDescription>
-                      <div className="mt-1 text-sm">
-                        <span className="font-medium">₹{service.price}</span> per {service.unit}
-                      </div>
+                      <h3 className="font-medium">{service.name}</h3>
+                      <p className="text-xs text-gray-500">{service.subServices.length} subservice{service.subServices.length !== 1 ? 's' : ''}</p>
                     </div>
-                  )}
-                </div>
-                <div className="flex items-center gap-2">
-                  {service.isEditing ? (
-                    <Button onClick={() => saveServiceChanges(service.id)}>
-                      <Save size={16} className="mr-2" /> Save
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" onClick={e => {
+                  e.stopPropagation();
+                  toggleEditService(service.id);
+                }}>
+                      <Edit className="h-4 w-4" />
                     </Button>
-                  ) : (
-                    <>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => toggleEditService(service.id)}
-                        className="h-8 w-8"
-                      >
-                        <Edit size={16} />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => deleteService(service.id)}
-                        className="h-8 w-8 text-red-500 hover:text-red-700"
-                      >
-                        <Trash2 size={16} />
-                      </Button>
-                    </>
-                  )}
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => toggleService(service.id)}
-                    className="h-8 w-8"
-                  >
-                    {service.isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <Collapsible open={service.isOpen}>
-              <CardContent className="p-0">
-                <div className="p-4 border-t">
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-lg font-medium">Sub-services</h3>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => openAddSubserviceDialog(service.id)}
-                      className="flex items-center gap-1 text-xs"
-                    >
-                      <Plus size={14} /> Add Sub-service
+                    <Button variant="ghost" size="icon" className="text-red-500" onClick={e => {
+                  e.stopPropagation();
+                  deleteService(service.id);
+                }}>
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                  <div className="space-y-4">
-                    {service.subServices.map(subservice => (
-                      <Card key={subservice.id} className="overflow-hidden border shadow-sm">
-                        <div className="flex justify-between items-center p-3 bg-gray-50">
-                          <div className="flex items-center gap-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => toggleSubservice(service.id, subservice.id)}
-                              className="h-6 w-6"
-                            >
-                              {subservice.isOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-                            </Button>
-                            <h4 className="font-medium text-sm">
-                              {subservice.name}
-                              {subservice.price && <span className="ml-2 text-gray-500">₹{subservice.price}</span>}
-                            </h4>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-7 w-7">
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                  >
-                                    <circle cx="12" cy="12" r="1" />
-                                    <circle cx="12" cy="5" r="1" />
-                                    <circle cx="12" cy="19" r="1" />
-                                  </svg>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-40">
-                                <DropdownMenuItem onClick={() => openEditSubserviceDialog(service.id, subservice)}>
-                                  <Edit size={14} className="mr-2" /> Edit Subservice
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  onClick={() => deleteSubservice(service.id, subservice.id)}
-                                  className="text-red-500 hover:text-red-600"
-                                >
-                                  <Trash2 size={14} className="mr-2" /> Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </div>
-                        <Collapsible open={subservice.isOpen}>
-                          <CardContent className="p-3 pt-0">
-                            <div className="pt-3 border-t">
-                              <div className="flex justify-between items-center mb-2">
-                                <h5 className="text-xs font-medium text-gray-500">ITEMS</h5>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => openAddItemDialog(service.id, subservice.id)}
-                                  className="h-6 flex items-center gap-1 text-xs"
-                                >
-                                  <Plus size={12} /> Add Item
-                                </Button>
+                </div>
+                
+                <Collapsible open={service.isOpen}>
+                  <CollapsibleContent>
+                    <div className="p-4 border-t">
+                      {service.isEditing ? <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor={`service-name-${service.id}`}>Service Name</Label>
+                              <Input id={`service-name-${service.id}`} value={service.name} onChange={e => handleServiceChange(service.id, 'name', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor={`service-price-${service.id}`}>Price</Label>
+                              <div className="flex gap-2">
+                                <Input id={`service-price-${service.id}`} type="number" value={service.price} onChange={e => handleServiceChange(service.id, 'price', e.target.value)} />
+                                <select value={service.unit} onChange={e => handleServiceChange(service.id, 'unit', e.target.value)} className="px-2 py-1 border rounded-md w-24">
+                                  <option value="kg">per kg</option>
+                                  <option value="piece">per piece</option>
+                                  <option value="meter">per meter</option>
+                                </select>
                               </div>
-                              <div className="space-y-2">
-                                {subservice.items.length === 0 && (
-                                  <p className="text-sm text-gray-500">No items added yet</p>
-                                )}
-                                {subservice.items.map(item => (
-                                  <div
-                                    key={item.id}
-                                    className="flex justify-between items-center p-2 rounded-md hover:bg-gray-50"
-                                  >
-                                    <div>
-                                      <p className="text-sm font-medium">{item.name}</p>
-                                      <p className="text-xs text-gray-500">
-                                        Standard: ₹{item.standardPrice} | Express: ₹{item.expressPrice}
-                                      </p>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`service-desc-${service.id}`}>Description</Label>
+                            <Input id={`service-desc-${service.id}`} value={service.description} onChange={e => handleServiceChange(service.id, 'description', e.target.value)} />
+                          </div>
+                          <div className="flex justify-end gap-2">
+                            <Button variant="outline" onClick={() => toggleEditService(service.id)}>
+                              <X className="h-4 w-4 mr-1" /> Cancel
+                            </Button>
+                            <Button onClick={() => saveServiceChanges(service.id)}>
+                              <Save className="h-4 w-4 mr-1" /> Save
+                            </Button>
+                          </div>
+                        </div> : <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              
+                              
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 mx-0 my-0 px-0 py-0">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-medium">Subservices</h4>
+                              <Button variant="outline" size="sm" onClick={() => openAddSubserviceDialog(service.id)}>
+                                <Plus className="h-4 w-4 mr-1" /> Add Subservice
+                              </Button>
+                            </div>
+                            
+                            <div className="space-y-3 ml-4">
+                              {service.subServices.map(subservice => <Card key={subservice.id} className="border">
+                                  <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleSubservice(service.id, subservice.id)}>
+                                    <div className="flex items-center gap-2">
+                                      {subservice.isOpen ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
+                                      <div>
+                                        <p className="font-medium text-sm">{subservice.name}</p>
+                                        <div className="flex items-center gap-2">
+                                          <p className="text-xs text-gray-500">{subservice.items.length} item{subservice.items.length !== 1 ? 's' : ''}</p>
+                                          {subservice.price && <p className="text-xs text-blue-600">₹{subservice.price}</p>}
+                                        </div>
+                                      </div>
                                     </div>
                                     <div className="flex items-center gap-1">
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => openEditItemDialog(service.id, subservice.id, item)}
-                                        className="h-6 w-6"
-                                      >
-                                        <Edit size={12} />
+                                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => {
+                                e.stopPropagation();
+                                openEditSubserviceDialog(service.id, subservice);
+                              }}>
+                                        <Edit className="h-3 w-3" />
                                       </Button>
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={() => deleteItem(service.id, subservice.id, item.id)}
-                                        className="h-6 w-6 text-red-500 hover:text-red-700"
-                                      >
-                                        <Trash2 size={12} />
+                                      <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={e => {
+                                e.stopPropagation();
+                                deleteSubservice(service.id, subservice.id);
+                              }}>
+                                        <Trash2 className="h-3 w-3" />
                                       </Button>
                                     </div>
                                   </div>
-                                ))}
-                              </div>
+                                  
+                                  <Collapsible open={subservice.isOpen}>
+                                    <CollapsibleContent className="p-3 pt-0 border-t mt-2">                                          
+                                      <div className="flex justify-between items-center mb-2 mt-2">
+                                        <h5 className="text-sm font-medium">Items</h5>
+                                        <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openAddItemDialog(service.id, subservice.id)}>
+                                          <Plus className="h-3 w-3 mr-1" /> Add Item
+                                        </Button>
+                                      </div>
+                                      
+                                      {subservice.items.length > 0 ? <div className="space-y-2">
+                                          <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
+                                            <div>Name</div>
+                                            
+                                            <div className="text-right">Standard Price</div>
+                                            <div className="text-right">Express Price</div>
+                                          </div>
+                                          
+                                          {subservice.items.map(item => <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
+                                              <div className="flex items-center">
+                                                {item.name}
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={() => openEditItemDialog(service.id, subservice.id, item)}>
+                                                  <Edit className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                              <div className="text-right">₹{item.price}</div>
+                                              <div className="text-right">₹{item.standardPrice || item.price}</div>
+                                              <div className="text-right flex justify-end items-center gap-2">
+                                                ₹{item.expressPrice || (item.price * 1.5).toFixed(0)}
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
+                                                  <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                            </div>)}
+                                        </div> : <p className="text-sm text-gray-500 italic">No items added yet</p>}
+                                    </CollapsibleContent>
+                                  </Collapsible>
+                                </Card>)}
+                              
+                              {service.subServices.length === 0 && <p className="text-sm text-gray-500 italic">No subservices added yet</p>}
                             </div>
-                          </CardContent>
-                        </Collapsible>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              </CardContent>
-            </Collapsible>
-          </Card>
-        ))}
-      </div>
+                          </div>
+                        </div>}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </Card>)}
+          </div>
+        </CardContent>
+      </Card>
 
       <Dialog open={isAddServiceDialogOpen} onOpenChange={setIsAddServiceDialogOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md p-8 rounded-2xl">
           <DialogHeader>
-            <DialogTitle>Add New Service</DialogTitle>
-            <DialogDescription>Create a new laundry service with sub-services</DialogDescription>
+            <DialogTitle className="text-center text-blue-500 text-2xl font-medium">Add Service</DialogTitle>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-6 py-4">
             <div className="space-y-2">
-              <Label htmlFor="service-name">Service Name *</Label>
-              <Input
-                id="service-name"
-                value={newService.name}
-                onChange={e => handleNewServiceChange('name', e.target.value)}
-                placeholder="e.g. Dry Cleaning"
+              <Label htmlFor="new-service-name" className="text-gray-700 font-medium">Service Name</Label>
+              <Input 
+                id="new-service-name" 
+                value={newService.name} 
+                onChange={e => handleNewServiceChange('name', e.target.value)} 
+                placeholder="Service Name"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="service-description">Description</Label>
-              <Input
-                id="service-description"
-                value={newService.description}
-                onChange={e => handleNewServiceChange('description', e.target.value)}
-                placeholder="Brief description of service"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="service-price">Base Price</Label>
-                <Input
-                  id="service-price"
-                  type="number"
-                  value={newService.price}
-                  onChange={e => handleNewServiceChange('price', e.target.value)}
-                  placeholder="0.00"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="service-unit">Unit</Label>
-                <Input
-                  id="service-unit"
-                  value={newService.unit}
-                  onChange={e => handleNewServiceChange('unit', e.target.value)}
-                  placeholder="kg, piece, etc."
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex justify-between items-center">
-                <Label>Sub-services *</Label>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={addSubServiceToForm}
-                  className="h-6 flex items-center gap-1 text-xs"
-                >
-                  <Plus size={12} /> Add Another
-                </Button>
-              </div>
-              <div className="space-y-3">
-                {newService.subServices.map((ss, index) => (
-                  <div key={ss.id} className="flex gap-2 items-start">
-                    <div className="flex-1">
-                      <Input
-                        value={ss.name}
-                        onChange={e => handleSubServiceChange(ss.id, 'name', e.target.value)}
-                        placeholder={`Sub-service name ${index + 1}`}
-                      />
-                    </div>
-                    <div className="w-1/3">
-                      <Input
-                        type="number"
-                        value={ss.price}
-                        onChange={e => handleSubServiceChange(ss.id, 'price', e.target.value)}
-                        placeholder="Price (optional)"
-                      />
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => removeSubServiceFromForm(ss.id)}
-                      className="h-8 w-8 text-red-500 mt-1"
+            
+            <div className="space-y-4">
+              <Label className="text-gray-700 font-medium">Sub Services</Label>
+              <div className="space-y-6 border rounded-md p-6 bg-gray-50">
+                {newService.subServices.map((subService, index) => (
+                  <div key={subService.id} className="space-y-2">
+                    <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700">Sub Service Name</Label>
+                    <Input 
+                      id={`sub-service-${subService.id}`} 
+                      value={subService.name} 
+                      onChange={e => handleSubServiceChange(subService.id, 'name', e.target.value)} 
+                      placeholder="Sub service name"
+                      className="flex-1 bg-white border-gray-200 shadow-sm"
+                    />
+                    
+                    <Label htmlFor={`sub-service-price-${subService.id}`} className="text-gray-700 mt-2">Price (Optional)</Label>
+                    <Input 
+                      id={`sub-service-price-${subService.id}`} 
+                      value={subService.price} 
+                      onChange={e => handleSubServiceChange(subService.id, 'price', e.target.value)} 
+                      placeholder="Enter price"
+                      type="number"
+                      className="flex-1 bg-white border-gray-200 shadow-sm"
+                    />
+                    
+                    <Button 
+                      variant="removeSubService" 
+                      onClick={() => removeSubServiceFromForm(subService.id)}
+                      className="mt-2 py-2 px-4 h-auto"
                     >
-                      <X size={14} />
+                      Remove Sub Service
                     </Button>
                   </div>
                 ))}
+                <Button 
+                  variant="addSubService" 
+                  onClick={addSubServiceToForm} 
+                  className="mt-4 py-2 px-4 h-auto"
+                >
+                  Add Sub Service
+                </Button>
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsAddServiceDialogOpen(false)}>
-              Cancel
+          <div className="pt-4 flex justify-start">
+            <Button 
+              variant="saveService" 
+              onClick={addNewService}
+              className="w-24 py-2 px-4 h-auto"
+            >
+              Save
             </Button>
-            <Button onClick={addNewService}>Add Service</Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
       <Dialog open={isAddSubserviceDialogOpen} onOpenChange={setIsAddSubserviceDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New Sub-service</DialogTitle>
-            <DialogDescription>Create a new sub-service for the selected service</DialogDescription>
+            <DialogTitle>Add New Subservice</DialogTitle>
+            <DialogDescription>
+              Create a new subservice for the selected service
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="subservice-name">Sub-service Name *</Label>
-              <Input
-                id="subservice-name"
-                value={newSubservice.name}
-                onChange={e => handleNewSubserviceChange('name', e.target.value)}
-                placeholder="e.g. Premium Service"
-              />
+              <Label htmlFor="new-subservice-name">Subservice Name</Label>
+              <Input id="new-subservice-name" value={newSubservice.name} onChange={e => handleNewSubserviceChange('name', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="subservice-price">Price (Optional)</Label>
-              <Input
-                id="subservice-price"
-                type="number"
-                value={newSubservice.price}
-                onChange={e => handleNewSubserviceChange('price', e.target.value)}
-                placeholder="0.00"
+              <Label htmlFor="new-subservice-price">Price (Optional)</Label>
+              <Input 
+                id="new-subservice-price" 
+                type="number" 
+                value={newSubservice.price || ''} 
+                onChange={e => handleNewSubserviceChange('price', e.target.value)} 
+                placeholder="Enter price (optional)"
               />
             </div>
           </div>
@@ -901,7 +756,9 @@ const Settings = () => {
             <Button variant="outline" onClick={() => setIsAddSubserviceDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={addNewSubservice}>Add Sub-service</Button>
+            <Button onClick={addNewSubservice}>
+              Add Subservice
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -909,27 +766,24 @@ const Settings = () => {
       <Dialog open={isEditSubserviceDialogOpen} onOpenChange={setIsEditSubserviceDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Edit Sub-service</DialogTitle>
-            <DialogDescription>Update the sub-service details</DialogDescription>
+            <DialogTitle>Edit Subservice</DialogTitle>
+            <DialogDescription>
+              Update the subservice name
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-subservice-name">Sub-service Name *</Label>
-              <Input
-                id="edit-subservice-name"
-                value={editSubservice.name}
-                onChange={e => handleEditSubserviceChange('name', e.target.value)}
-                placeholder="e.g. Premium Service"
-              />
+              <Label htmlFor="edit-subservice-name">Subservice Name</Label>
+              <Input id="edit-subservice-name" value={editSubservice.name} onChange={e => handleEditSubserviceChange('name', e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-subservice-price">Price (Optional)</Label>
-              <Input
-                id="edit-subservice-price"
-                type="number"
-                value={editSubservice.price}
-                onChange={e => handleEditSubserviceChange('price', e.target.value)}
-                placeholder="0.00"
+              <Input 
+                id="edit-subservice-price" 
+                type="number" 
+                value={editSubservice.price || ''} 
+                onChange={e => handleEditSubserviceChange('price', e.target.value)} 
+                placeholder="Enter price (optional)"
               />
             </div>
           </div>
@@ -937,7 +791,9 @@ const Settings = () => {
             <Button variant="outline" onClick={() => setIsEditSubserviceDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={saveSubserviceChanges}>Save Changes</Button>
+            <Button onClick={saveSubserviceChanges}>
+              Save Changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -946,56 +802,35 @@ const Settings = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Add New Item</DialogTitle>
-            <DialogDescription>Create a new item for the selected sub-service</DialogDescription>
+            <DialogDescription>
+              Create a new item for the selected subservice
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="item-name">Item Name *</Label>
-              <Input
-                id="item-name"
-                value={newItem.name}
-                onChange={e => handleNewItemChange('name', e.target.value)}
-                placeholder="e.g. Shirt"
-              />
+              <Label htmlFor="new-item-name">Item Name</Label>
+              <Input id="new-item-name" value={newItem.name} onChange={e => handleNewItemChange('name', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="item-price">Default Price *</Label>
-              <Input
-                id="item-price"
-                type="number"
-                value={newItem.price}
-                onChange={e => handleNewItemChange('price', e.target.value)}
-                placeholder="0.00"
-              />
+              <Label htmlFor="new-item-price">Regular Price</Label>
+              <Input id="new-item-price" type="number" value={newItem.price} onChange={e => handleNewItemChange('price', e.target.value)} />
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="item-standard-price">Standard Price *</Label>
-                <Input
-                  id="item-standard-price"
-                  type="number"
-                  value={newItem.standardPrice}
-                  onChange={e => handleNewItemChange('standardPrice', e.target.value)}
-                  placeholder="0.00"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="item-express-price">Express Price *</Label>
-                <Input
-                  id="item-express-price"
-                  type="number"
-                  value={newItem.expressPrice}
-                  onChange={e => handleNewItemChange('expressPrice', e.target.value)}
-                  placeholder="0.00"
-                />
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-item-standard-price">Standard Price</Label>
+              <Input id="new-item-standard-price" type="number" value={newItem.standardPrice} onChange={e => handleNewItemChange('standardPrice', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-item-express-price">Express Price</Label>
+              <Input id="new-item-express-price" type="number" value={newItem.expressPrice} onChange={e => handleNewItemChange('expressPrice', e.target.value)} />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddItemDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={addNewItem}>Add Item</Button>
+            <Button onClick={addNewItem}>
+              Add Item
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1004,61 +839,35 @@ const Settings = () => {
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Item</DialogTitle>
-            <DialogDescription>Update the item details</DialogDescription>
+            <DialogDescription>
+              Update the item details
+            </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-item-name">Item Name *</Label>
-              <Input
-                id="edit-item-name"
-                value={editItem.name}
-                onChange={e => handleEditItemChange('name', e.target.value)}
-                placeholder="e.g. Shirt"
-              />
+              <Label htmlFor="edit-item-name" className="rounded-md">Item Name</Label>
+              <Input id="edit-item-name" value={editItem.name} onChange={e => handleEditItemChange('name', e.target.value)} />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="edit-item-standard-price">Standard Price</Label>
+              <Input id="edit-item-standard-price" type="number" value={editItem.standardPrice} onChange={e => handleEditItemChange('standardPrice', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-item-price">Default Price *</Label>
-              <Input
-                id="edit-item-price"
-                type="number"
-                value={editItem.price}
-                onChange={e => handleEditItemChange('price', e.target.value)}
-                placeholder="0.00"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="edit-item-standard-price">Standard Price *</Label>
-                <Input
-                  id="edit-item-standard-price"
-                  type="number"
-                  value={editItem.standardPrice}
-                  onChange={e => handleEditItemChange('standardPrice', e.target.value)}
-                  placeholder="0.00"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-item-express-price">Express Price *</Label>
-                <Input
-                  id="edit-item-express-price"
-                  type="number"
-                  value={editItem.expressPrice}
-                  onChange={e => handleEditItemChange('expressPrice', e.target.value)}
-                  placeholder="0.00"
-                />
-              </div>
+              <Label htmlFor="edit-item-express-price">Express Price</Label>
+              <Input id="edit-item-express-price" type="number" value={editItem.expressPrice} onChange={e => handleEditItemChange('expressPrice', e.target.value)} />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsEditItemDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={saveItemChanges}>Save Changes</Button>
+            <Button onClick={saveItemChanges}>
+              Save Changes
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
-  );
+    </div>;
 };
-
 export default Settings;
