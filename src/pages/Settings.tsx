@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 const Settings = () => {
   // State for services
   const [services, setServices] = useState([{
@@ -877,13 +876,10 @@ const Settings = () => {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-item-name">Item Name</Label>
+              <Label htmlFor="edit-item-name" className="rounded-md">Item Name</Label>
               <Input id="edit-item-name" value={editItem.name} onChange={e => handleEditItemChange('name', e.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-item-price">Regular Price</Label>
-              <Input id="edit-item-price" type="number" value={editItem.price} onChange={e => handleEditItemChange('price', e.target.value)} />
-            </div>
+            
             <div className="space-y-2">
               <Label htmlFor="edit-item-standard-price">Standard Price</Label>
               <Input id="edit-item-standard-price" type="number" value={editItem.standardPrice} onChange={e => handleEditItemChange('standardPrice', e.target.value)} />
