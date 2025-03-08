@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -584,7 +585,10 @@ const Settings = () => {
                                       {subservice.isOpen ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
                                       <div>
                                         <p className="font-medium text-sm">{subservice.name}</p>
-                                        <p className="text-xs text-gray-500">{subservice.items.length} item{subservice.items.length !== 1 ? 's' : ''}</p>
+                                        <div className="flex items-center gap-2">
+                                          <p className="text-xs text-gray-500">{subservice.items.length} item{subservice.items.length !== 1 ? 's' : ''}</p>
+                                          {subservice.price && <p className="text-xs text-blue-600">₹{subservice.price}</p>}
+                                        </div>
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-1">
@@ -737,6 +741,16 @@ const Settings = () => {
               <Label htmlFor="new-subservice-name">Subservice Name</Label>
               <Input id="new-subservice-name" value={newSubservice.name} onChange={e => handleNewSubserviceChange('name', e.target.value)} />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-subservice-price">Price (Optional)</Label>
+              <Input 
+                id="new-subservice-price" 
+                type="number" 
+                value={newSubservice.price || ''} 
+                onChange={e => handleNewSubserviceChange('price', e.target.value)} 
+                placeholder="Enter price (optional)"
+              />
+            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddSubserviceDialogOpen(false)}>
@@ -761,6 +775,16 @@ const Settings = () => {
             <div className="space-y-2">
               <Label htmlFor="edit-subservice-name">Subservice Name</Label>
               <Input id="edit-subservice-name" value={editSubservice.name} onChange={e => handleEditSubserviceChange('name', e.target.value)} />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-subservice-price">Price (Optional)</Label>
+              <Input 
+                id="edit-subservice-price" 
+                type="number" 
+                value={editSubservice.price || ''} 
+                onChange={e => handleEditSubserviceChange('price', e.target.value)} 
+                placeholder="Enter price (optional)"
+              />
             </div>
           </div>
           <DialogFooter>
