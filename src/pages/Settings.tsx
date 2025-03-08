@@ -29,10 +29,42 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+
+// Interface definitions for better type safety
+interface SubServiceItem {
+  id: number;
+  name: string;
+  quickWashPrice: string;
+  standardWashPrice: string;
+  unit: string;
+}
+
+interface SubService {
+  id: number;
+  name: string;
+  price: string;
+  unit: string;
+  items?: SubServiceItem[];
+}
+
+interface Service {
+  id: number;
+  name: string;
+  icon: React.ReactNode;
+  subserviceCount: number;
+  subservices: SubService[];
+}
+
+interface NewSubService {
+  id: number;
+  name: string;
+  basePrice: string;
+  priceUnit: string;
+}
 
 const Settings = () => {
   const [searchServiceQuery, setSearchServiceQuery] = useState('');
@@ -40,12 +72,9 @@ const Settings = () => {
   const [expandedSubservices, setExpandedSubservices] = useState<Record<number, boolean>>({});
   const [addServiceDialogOpen, setAddServiceDialogOpen] = useState(false);
   const [newServiceName, setNewServiceName] = useState('');
-  const [subServices, setSubServices] = useState<{
-    id: number;
-    name: string;
-    basePrice: string;
-    priceUnit: string;
-  }[]>([
+  const [nextServiceId, setNextServiceId] = useState(6); // Start after the last existing service ID
+  const [nextSubserviceId, setNextSubserviceId] = useState(600); // Start with a higher number to avoid conflicts
+  const [subServices, setSubServices] = useState<NewSubService[]>([
     { id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }
   ]);
 
@@ -76,109 +105,9 @@ const Settings = () => {
   });
 
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
-
-  const toggleServiceExpand = (serviceId: number) => {
-    setExpandedServices(prev => ({
-      ...prev,
-      [serviceId]: !prev[serviceId]
-    }));
-  };
-
-  const toggleSubserviceExpand = (subserviceId: number) => {
-    setExpandedSubservices(prev => ({
-      ...prev,
-      [subserviceId]: !prev[subserviceId]
-    }));
-  };
-
-  const toggleItemsExpand = (subserviceId: number) => {
-    setExpandedSubservices(prev => ({
-      ...prev,
-      [subserviceId]: !prev[subserviceId]
-    }));
-  };
-
-  const toggleServiceStatus = (serviceId: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setServiceStatus(prev => {
-      const newStatus = !prev[serviceId];
-      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} service`);
-      return {
-        ...prev,
-        [serviceId]: newStatus
-      };
-    });
-  };
-
-  const toggleSubserviceStatus = (subserviceId: number, event: React.MouseEvent) => {
-    event.stopPropagation();
-    setSubserviceStatus(prev => {
-      const newStatus = !prev[subserviceId];
-      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} subservice`);
-      return {
-        ...prev,
-        [subserviceId]: newStatus
-      };
-    });
-  };
-
-  const handleAddSubService = () => {
-    setSubServices([...subServices, { 
-      id: subServices.length + 1, 
-      name: '', 
-      basePrice: '0', 
-      priceUnit: 'per piece' 
-    }]);
-  };
-
-  const handleRemoveSubService = (id: number) => {
-    if (subServices.length > 1) {
-      setSubServices(subServices.filter(service => service.id !== id));
-    } else {
-      toast.error("You need at least one sub-service");
-    }
-  };
-
-  const handleSubServiceNameChange = (id: number, value: string) => {
-    setSubServices(subServices.map(service => 
-      service.id === id ? { ...service, name: value } : service
-    ));
-  };
-
-  const handleSubServiceBasePriceChange = (id: number, value: string) => {
-    setSubServices(subServices.map(service => 
-      service.id === id ? { ...service, basePrice: value } : service
-    ));
-  };
-
-  const handleSubServicePriceUnitChange = (id: number, value: string) => {
-    setSubServices(subServices.map(service => 
-      service.id === id ? { ...service, priceUnit: value } : service
-    ));
-  };
-
-  const handleSaveNewService = () => {
-    if (!newServiceName.trim()) {
-      toast.error("Service name is required");
-      return;
-    }
-
-    if (subServices.some(service => !service.name.trim())) {
-      toast.error("All sub-service names are required");
-      return;
-    }
-
-    toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services`);
-    setNewServiceName('');
-    setSubServices([{ id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }]);
-    setAddServiceDialogOpen(false);
-  };
-
-  const handleEditItem = (id: number, type: 'service' | 'subservice' | 'item') => {
-    toast.info(`Editing ${type} with ID: ${id}`);
-  };
-
-  const services = [
+  
+  // Initial services data state
+  const [services, setServices] = useState<Service[]>([
     { 
       id: 1, 
       name: 'Regular Laundry',
@@ -660,7 +589,159 @@ const Settings = () => {
         }
       ]
     }
-  ];
+  ]);
+
+  const toggleServiceExpand = (serviceId: number) => {
+    setExpandedServices(prev => ({
+      ...prev,
+      [serviceId]: !prev[serviceId]
+    }));
+  };
+
+  const toggleSubserviceExpand = (subserviceId: number) => {
+    setExpandedSubservices(prev => ({
+      ...prev,
+      [subserviceId]: !prev[subserviceId]
+    }));
+  };
+
+  const toggleItemsExpand = (subserviceId: number) => {
+    setExpandedSubservices(prev => ({
+      ...prev,
+      [subserviceId]: !prev[subserviceId]
+    }));
+  };
+
+  const toggleServiceStatus = (serviceId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setServiceStatus(prev => {
+      const newStatus = !prev[serviceId];
+      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} service`);
+      return {
+        ...prev,
+        [serviceId]: newStatus
+      };
+    });
+  };
+
+  const toggleSubserviceStatus = (subserviceId: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSubserviceStatus(prev => {
+      const newStatus = !prev[subserviceId];
+      toast.success(`${newStatus ? 'Enabled' : 'Disabled'} subservice`);
+      return {
+        ...prev,
+        [subserviceId]: newStatus
+      };
+    });
+  };
+
+  const handleAddSubService = () => {
+    setSubServices([...subServices, { 
+      id: subServices.length + 1, 
+      name: '', 
+      basePrice: '0', 
+      priceUnit: 'per piece' 
+    }]);
+  };
+
+  const handleRemoveSubService = (id: number) => {
+    if (subServices.length > 1) {
+      setSubServices(subServices.filter(service => service.id !== id));
+    } else {
+      toast.error("You need at least one sub-service");
+    }
+  };
+
+  const handleSubServiceNameChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, name: value } : service
+    ));
+  };
+
+  const handleSubServiceBasePriceChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, basePrice: value } : service
+    ));
+  };
+
+  const handleSubServicePriceUnitChange = (id: number, value: string) => {
+    setSubServices(subServices.map(service => 
+      service.id === id ? { ...service, priceUnit: value } : service
+    ));
+  };
+
+  const handleSaveNewService = () => {
+    if (!newServiceName.trim()) {
+      toast.error("Service name is required");
+      return;
+    }
+
+    if (subServices.some(service => !service.name.trim())) {
+      toast.error("All sub-service names are required");
+      return;
+    }
+
+    // Create new service with subservices
+    const newServiceId = nextServiceId;
+    
+    // Create subservices for the new service
+    const newSubservices = subServices.map((subService, index) => {
+      const subServiceId = nextSubserviceId + index;
+      
+      // Update subservice status state
+      setSubserviceStatus(prev => ({
+        ...prev,
+        [subServiceId]: true
+      }));
+      
+      return {
+        id: subServiceId,
+        name: subService.name,
+        price: `₹${subService.basePrice}`,
+        unit: subService.priceUnit,
+        items: [] // Initially empty items array
+      };
+    });
+    
+    // Update services state with the new service
+    const newService: Service = {
+      id: newServiceId,
+      name: newServiceName,
+      icon: <ShoppingBag className="h-5 w-5 text-blue-500" />, // Default icon
+      subserviceCount: subServices.length,
+      subservices: newSubservices
+    };
+    
+    setServices([...services, newService]);
+    
+    // Update service status
+    setServiceStatus(prev => ({
+      ...prev,
+      [newServiceId]: true
+    }));
+    
+    // Auto-expand the new service
+    setExpandedServices(prev => ({
+      ...prev,
+      [newServiceId]: true
+    }));
+    
+    // Increment IDs for next service
+    setNextServiceId(prevId => prevId + 1);
+    setNextSubserviceId(prevId => prevId + subServices.length);
+    
+    // Reset form
+    setNewServiceName('');
+    setSubServices([{ id: 1, name: '', basePrice: '0', priceUnit: 'per piece' }]);
+    setAddServiceDialogOpen(false);
+    
+    toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services`);
+  };
+
+  const handleEditItem = (id: number, type: 'service' | 'subservice' | 'item') => {
+    toast.info(`Editing ${type} with ID: ${id}`);
+  };
 
   return (
     <div className="container mx-auto py-6 px-4 md:px-6 space-y-8">
@@ -846,178 +927,4 @@ const Settings = () => {
                                       <TableCell className="text-center">
                                         <div className="flex justify-center">
                                           <Button variant="quickWash" className="pointer-events-none">
-                                            {item.quickWashPrice} <span className="opacity-70 ml-1">{item.unit}</span>
-                                          </Button>
-                                        </div>
-                                      </TableCell>
-                                      <TableCell className="text-center">
-                                        <div className="flex justify-center">
-                                          <Button variant="standardWash" className="pointer-events-none">
-                                            {item.standardWashPrice} <span className="opacity-70 ml-1">{item.unit}</span>
-                                          </Button>
-                                        </div>
-                                      </TableCell>
-                                      <TableCell>
-                                        <div className="flex justify-center gap-2">
-                                          <Button 
-                                            variant="editIcon" 
-                                            size="icon"
-                                            className="h-7 w-7"
-                                            onClick={() => toast.info(`Editing ${item.name}`)}
-                                          >
-                                            <Pencil className="h-3 w-3" />
-                                          </Button>
-                                          <Button 
-                                            variant="deleteIcon" 
-                                            size="icon"
-                                            className="h-7 w-7"
-                                            onClick={() => toast.error(`This would delete item: ${item.name}`)}
-                                          >
-                                            <Trash2 className="h-3 w-3" />
-                                          </Button>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                              
-                              <div className="p-3 border-t border-gray-100">
-                                <Button 
-                                  variant="addSubService"
-                                  className="text-xs w-full py-1"
-                                  onClick={() => toast.info(`Add new item to ${subservice.name}`)}
-                                >
-                                  <Plus className="h-3 w-3" />
-                                  Add New Item
-                                </Button>
-                              </div>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                  
-                  <div className="mt-2">
-                    <Button 
-                      variant="addSubService"
-                      className="w-full py-2"
-                      onClick={() => {
-                        toast.info(`Add new subservice to ${service.name}`);
-                      }}
-                    >
-                      <Plus className="h-4 w-4" />
-                      Add New Subservice
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
-        <DialogContent className="sm:max-w-[550px]">
-          <DialogHeader>
-            <DialogTitle className="text-center text-xl font-semibold text-blue-600 mb-4">Add Service</DialogTitle>
-          </DialogHeader>
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="service-name" className="text-base">Service Name</Label>
-              <Input 
-                id="service-name" 
-                placeholder="Service Name" 
-                value={newServiceName}
-                onChange={(e) => setNewServiceName(e.target.value)}
-                className="border-2 rounded-md"
-              />
-            </div>
-            
-            <div className="space-y-3">
-              <Label className="text-base">Sub Services</Label>
-              <div className="space-y-4">
-                {subServices.map((service) => (
-                  <div key={service.id} className="p-4 border rounded-md bg-gray-50">
-                    <div className="space-y-4">
-                      <div>
-                        <Label htmlFor={`sub-service-${service.id}`}>Sub Service Name</Label>
-                        <Input 
-                          id={`sub-service-${service.id}`} 
-                          placeholder="Sub service name" 
-                          value={service.name}
-                          onChange={(e) => handleSubServiceNameChange(service.id, e.target.value)}
-                          className="mt-1"
-                        />
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <Label htmlFor={`base-price-${service.id}`}>Base Price</Label>
-                          <Input 
-                            id={`base-price-${service.id}`} 
-                            type="number"
-                            min="0"
-                            placeholder="0" 
-                            value={service.basePrice}
-                            onChange={(e) => handleSubServiceBasePriceChange(service.id, e.target.value)}
-                            className="mt-1"
-                          />
-                        </div>
-                        <div>
-                          <Label htmlFor={`price-unit-${service.id}`}>Price Unit</Label>
-                          <Input 
-                            id={`price-unit-${service.id}`} 
-                            placeholder="per piece" 
-                            value={service.priceUnit}
-                            onChange={(e) => handleSubServicePriceUnitChange(service.id, e.target.value)}
-                            className="mt-1"
-                          />
-                        </div>
-                      </div>
-                      
-                      <Button 
-                        variant="removeSubService"
-                        onClick={() => handleRemoveSubService(service.id)}
-                        className="flex items-center justify-center gap-2"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                        Remove Sub Service
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            
-            <Button 
-              variant="addSubService" 
-              onClick={handleAddSubService}
-              className="flex items-center justify-center gap-1 w-full"
-            >
-              <Plus className="h-4 w-4" />
-              Add Sub Service
-            </Button>
-            
-            <div className="flex justify-end gap-3 mt-6">
-              <Button 
-                variant="cancel" 
-                onClick={() => setAddServiceDialogOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleSaveNewService}
-              >
-                Save
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-};
-
-export default Settings;
+                                            {item.quickWashPrice}
