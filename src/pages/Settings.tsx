@@ -562,12 +562,12 @@ const Settings = () => {
                               <div className="grid grid-cols-2 gap-4">
                                 
                                 <div>
-                                  <Label className="text-sm text-gray-500 mx-0">Price</Label>
-                                  <p>₹{service.price} per {service.unit}</p>
+                                  
+                                  
                                 </div>
                               </div>
                               
-                              <div className="mt-4">
+                              <div className="mt-4 mx-0 my-0 px-0 py-0">
                                 <div className="flex items-center justify-between mb-2">
                                   <h4 className="font-medium">Subservices</h4>
                                   <Button variant="outline" size="sm" onClick={() => openAddSubserviceDialog(service.id)}>
