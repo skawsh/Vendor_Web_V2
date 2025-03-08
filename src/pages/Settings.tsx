@@ -560,12 +560,9 @@ const Settings = () => {
                               </div>
                             </div> : <div className="space-y-4">
                               <div className="grid grid-cols-2 gap-4">
+                                
                                 <div>
-                                  
-                                  
-                                </div>
-                                <div>
-                                  <Label className="text-sm text-gray-500">Price</Label>
+                                  <Label className="text-sm text-gray-500 mx-0">Price</Label>
                                   <p>₹{service.price} per {service.unit}</p>
                                 </div>
                               </div>
