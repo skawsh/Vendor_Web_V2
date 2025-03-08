@@ -43,22 +43,18 @@ const Settings = () => {
           id: '1-1',
           name: 'Regular Wash',
           isOpen: false,
-          standardPrice: 40,
-          expressPrice: 60,
           items: [
-            { id: '1-1-1', name: 'T-shirt', price: 40 },
-            { id: '1-1-2', name: 'Jeans', price: 50 },
+            { id: '1-1-1', name: 'T-shirt', price: 40, standardPrice: 40, expressPrice: 60 },
+            { id: '1-1-2', name: 'Jeans', price: 50, standardPrice: 50, expressPrice: 70 },
           ]
         },
         {
           id: '1-2',
           name: 'Premium Wash',
           isOpen: false,
-          standardPrice: 60,
-          expressPrice: 90,
           items: [
-            { id: '1-2-1', name: 'Dress Shirt', price: 60 },
-            { id: '1-2-2', name: 'Trousers', price: 70 },
+            { id: '1-2-1', name: 'Dress Shirt', price: 60, standardPrice: 60, expressPrice: 90 },
+            { id: '1-2-2', name: 'Trousers', price: 70, standardPrice: 70, expressPrice: 100 },
           ]
         }
       ]
@@ -76,22 +72,18 @@ const Settings = () => {
           id: '2-1',
           name: 'Regular Service',
           isOpen: false,
-          standardPrice: 55,
-          expressPrice: 75,
           items: [
-            { id: '2-1-1', name: 'Shirt', price: 55 },
-            { id: '2-1-2', name: 'Pants', price: 65 },
+            { id: '2-1-1', name: 'Shirt', price: 55, standardPrice: 55, expressPrice: 75 },
+            { id: '2-1-2', name: 'Pants', price: 65, standardPrice: 65, expressPrice: 85 },
           ]
         },
         {
           id: '2-2',
           name: 'Premium Service',
           isOpen: false,
-          standardPrice: 120,
-          expressPrice: 160,
           items: [
-            { id: '2-2-1', name: 'Blazer', price: 120 },
-            { id: '2-2-2', name: 'Suit', price: 200 },
+            { id: '2-2-1', name: 'Blazer', price: 120, standardPrice: 120, expressPrice: 160 },
+            { id: '2-2-2', name: 'Suit', price: 200, standardPrice: 200, expressPrice: 260 },
           ]
         }
       ]
@@ -109,22 +101,18 @@ const Settings = () => {
           id: '3-1',
           name: 'Basic Dry Clean',
           isOpen: false,
-          standardPrice: 180,
-          expressPrice: 250,
           items: [
-            { id: '3-1-1', name: 'Sweater', price: 180 },
-            { id: '3-1-2', name: 'Winter Jacket', price: 350 },
+            { id: '3-1-1', name: 'Sweater', price: 180, standardPrice: 180, expressPrice: 250 },
+            { id: '3-1-2', name: 'Winter Jacket', price: 350, standardPrice: 350, expressPrice: 450 },
           ]
         },
         {
           id: '3-2',
           name: 'Premium Dry Clean',
           isOpen: false,
-          standardPrice: 800,
-          expressPrice: 1200,
           items: [
-            { id: '3-2-1', name: 'Wedding Dress', price: 1200 },
-            { id: '3-2-2', name: 'Formal Suit', price: 800 },
+            { id: '3-2-1', name: 'Wedding Dress', price: 1200, standardPrice: 1200, expressPrice: 1500 },
+            { id: '3-2-2', name: 'Formal Suit', price: 800, standardPrice: 800, expressPrice: 1000 },
           ]
         }
       ]
@@ -136,6 +124,7 @@ const Settings = () => {
   const [isAddSubserviceDialogOpen, setIsAddSubserviceDialogOpen] = useState(false);
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
+  const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
 
   // New service form state
   const [newService, setNewService] = useState({
@@ -148,8 +137,6 @@ const Settings = () => {
   // New subservice form state
   const [newSubservice, setNewSubservice] = useState({
     name: '',
-    standardPrice: '',
-    expressPrice: '',
     parentServiceId: ''
   });
 
@@ -157,8 +144,6 @@ const Settings = () => {
   const [editSubservice, setEditSubservice] = useState({
     id: '',
     name: '',
-    standardPrice: '',
-    expressPrice: '',
     parentServiceId: ''
   });
 
@@ -166,6 +151,19 @@ const Settings = () => {
   const [newItem, setNewItem] = useState({
     name: '',
     price: '',
+    standardPrice: '',
+    expressPrice: '',
+    parentServiceId: '',
+    parentSubserviceId: ''
+  });
+
+  // Edit item form state
+  const [editItem, setEditItem] = useState({
+    id: '',
+    name: '',
+    price: '',
+    standardPrice: '',
+    expressPrice: '',
     parentServiceId: '',
     parentSubserviceId: ''
   });
@@ -278,8 +276,6 @@ const Settings = () => {
   const openAddSubserviceDialog = (serviceId) => {
     setNewSubservice({
       name: '',
-      standardPrice: '',
-      expressPrice: '',
       parentServiceId: serviceId
     });
     setIsAddSubserviceDialogOpen(true);
@@ -296,7 +292,7 @@ const Settings = () => {
   // Add a new subservice
   const addNewSubservice = () => {
     // Validate fields
-    if (!newSubservice.name || !newSubservice.standardPrice || !newSubservice.expressPrice) {
+    if (!newSubservice.name) {
       toast.error('Please fill all required fields');
       return;
     }
@@ -311,8 +307,6 @@ const Settings = () => {
                 {
                   id: `${service.id}-${service.subServices.length + 1}`,
                   name: newSubservice.name,
-                  standardPrice: parseFloat(newSubservice.standardPrice),
-                  expressPrice: parseFloat(newSubservice.expressPrice),
                   isOpen: false,
                   items: []
                 }
@@ -331,8 +325,6 @@ const Settings = () => {
     setEditSubservice({
       id: subservice.id,
       name: subservice.name,
-      standardPrice: subservice.standardPrice || '',
-      expressPrice: subservice.expressPrice || '',
       parentServiceId: serviceId
     });
     setIsEditSubserviceDialogOpen(true);
@@ -349,7 +341,7 @@ const Settings = () => {
   // Save subservice changes
   const saveSubserviceChanges = () => {
     // Validate fields
-    if (!editSubservice.name || !editSubservice.standardPrice || !editSubservice.expressPrice) {
+    if (!editSubservice.name) {
       toast.error('Please fill all required fields');
       return;
     }
@@ -363,9 +355,7 @@ const Settings = () => {
                 subservice.id === editSubservice.id
                   ? { 
                       ...subservice, 
-                      name: editSubservice.name,
-                      standardPrice: parseFloat(editSubservice.standardPrice),
-                      expressPrice: parseFloat(editSubservice.expressPrice)
+                      name: editSubservice.name
                     }
                   : subservice
               )
@@ -383,6 +373,8 @@ const Settings = () => {
     setNewItem({
       name: '',
       price: '',
+      standardPrice: '',
+      expressPrice: '',
       parentServiceId: serviceId,
       parentSubserviceId: subserviceId
     });
@@ -400,7 +392,7 @@ const Settings = () => {
   // Add a new item to a subservice
   const addNewItem = () => {
     // Validate fields
-    if (!newItem.name || !newItem.price) {
+    if (!newItem.name || !newItem.price || !newItem.standardPrice || !newItem.expressPrice) {
       toast.error('Please fill all required fields');
       return;
     }
@@ -419,7 +411,9 @@ const Settings = () => {
                         {
                           id: `${subservice.id}-${subservice.items.length + 1}`,
                           name: newItem.name,
-                          price: parseFloat(newItem.price)
+                          price: parseFloat(newItem.price),
+                          standardPrice: parseFloat(newItem.standardPrice),
+                          expressPrice: parseFloat(newItem.expressPrice)
                         }
                       ]
                     }
@@ -432,6 +426,68 @@ const Settings = () => {
     
     setIsAddItemDialogOpen(false);
     toast.success('Item added successfully');
+  };
+
+  // Open dialog to edit an item
+  const openEditItemDialog = (serviceId, subserviceId, item) => {
+    setEditItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      standardPrice: item.standardPrice || item.price,
+      expressPrice: item.expressPrice || item.price * 1.5,
+      parentServiceId: serviceId,
+      parentSubserviceId: subserviceId
+    });
+    setIsEditItemDialogOpen(true);
+  };
+
+  // Handle change in edit item form
+  const handleEditItemChange = (field, value) => {
+    setEditItem(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  // Save item changes
+  const saveItemChanges = () => {
+    // Validate fields
+    if (!editItem.name || !editItem.price || !editItem.standardPrice || !editItem.expressPrice) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+
+    setServices(prev => 
+      prev.map(service => 
+        service.id === editItem.parentServiceId
+          ? {
+              ...service,
+              subServices: service.subServices.map(subservice =>
+                subservice.id === editItem.parentSubserviceId
+                  ? {
+                      ...subservice,
+                      items: subservice.items.map(item =>
+                        item.id === editItem.id
+                          ? {
+                              ...item,
+                              name: editItem.name,
+                              price: parseFloat(editItem.price),
+                              standardPrice: parseFloat(editItem.standardPrice),
+                              expressPrice: parseFloat(editItem.expressPrice)
+                            }
+                          : item
+                      )
+                    }
+                  : subservice
+              )
+            }
+          : service
+      )
+    );
+    
+    setIsEditItemDialogOpen(false);
+    toast.success('Item updated successfully');
   };
 
   // Delete a service
@@ -680,18 +736,7 @@ const Settings = () => {
                                       </div>
                                       
                                       <Collapsible open={subservice.isOpen}>
-                                        <CollapsibleContent className="p-3 pt-0 border-t mt-2">
-                                          <div className="grid grid-cols-2 gap-4 py-2">
-                                            <div>
-                                              <Label className="text-sm text-gray-500">Standard Price</Label>
-                                              <p>₹{subservice.standardPrice}</p>
-                                            </div>
-                                            <div>
-                                              <Label className="text-sm text-gray-500">Express Price</Label>
-                                              <p>₹{subservice.expressPrice}</p>
-                                            </div>
-                                          </div>
-                                          
+                                        <CollapsibleContent className="p-3 pt-0 border-t mt-2">                                          
                                           <div className="flex justify-between items-center mb-2 mt-2">
                                             <h5 className="text-sm font-medium">Items</h5>
                                             <Button
@@ -706,16 +751,30 @@ const Settings = () => {
                                           
                                           {subservice.items.length > 0 ? (
                                             <div className="space-y-2">
-                                              <div className="grid grid-cols-2 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
+                                              <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
                                                 <div>Name</div>
                                                 <div className="text-right">Price</div>
+                                                <div className="text-right">Standard Price</div>
+                                                <div className="text-right">Express Price</div>
                                               </div>
                                               
                                               {subservice.items.map((item) => (
-                                                <div key={item.id} className="grid grid-cols-2 gap-2 px-2 py-2 border-b text-sm">
-                                                  <div>{item.name}</div>
+                                                <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
+                                                  <div className="flex items-center">
+                                                    {item.name}
+                                                    <Button
+                                                      variant="ghost"
+                                                      size="icon"
+                                                      className="h-6 w-6 ml-2"
+                                                      onClick={() => openEditItemDialog(service.id, subservice.id, item)}
+                                                    >
+                                                      <Edit className="h-3 w-3" />
+                                                    </Button>
+                                                  </div>
+                                                  <div className="text-right">₹{item.price}</div>
+                                                  <div className="text-right">₹{item.standardPrice || item.price}</div>
                                                   <div className="text-right flex justify-end items-center gap-2">
-                                                    ₹{item.price}
+                                                    ₹{item.expressPrice || (item.price * 1.5).toFixed(0)}
                                                     <Button
                                                       variant="ghost"
                                                       size="icon"
@@ -910,24 +969,6 @@ const Settings = () => {
                 onChange={(e) => handleNewSubserviceChange('name', e.target.value)}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-subservice-standard-price">Standard Price</Label>
-              <Input
-                id="new-subservice-standard-price"
-                type="number"
-                value={newSubservice.standardPrice}
-                onChange={(e) => handleNewSubserviceChange('standardPrice', e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-subservice-express-price">Express Price</Label>
-              <Input
-                id="new-subservice-express-price"
-                type="number"
-                value={newSubservice.expressPrice}
-                onChange={(e) => handleNewSubserviceChange('expressPrice', e.target.value)}
-              />
-            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddSubserviceDialogOpen(false)}>
@@ -946,7 +987,7 @@ const Settings = () => {
           <DialogHeader>
             <DialogTitle>Edit Subservice</DialogTitle>
             <DialogDescription>
-              Update the subservice details
+              Update the subservice name
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -956,24 +997,6 @@ const Settings = () => {
                 id="edit-subservice-name"
                 value={editSubservice.name}
                 onChange={(e) => handleEditSubserviceChange('name', e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-subservice-standard-price">Standard Price</Label>
-              <Input
-                id="edit-subservice-standard-price"
-                type="number"
-                value={editSubservice.standardPrice}
-                onChange={(e) => handleEditSubserviceChange('standardPrice', e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-subservice-express-price">Express Price</Label>
-              <Input
-                id="edit-subservice-express-price"
-                type="number"
-                value={editSubservice.expressPrice}
-                onChange={(e) => handleEditSubserviceChange('expressPrice', e.target.value)}
               />
             </div>
           </div>
@@ -1007,12 +1030,30 @@ const Settings = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-item-price">Price</Label>
+              <Label htmlFor="new-item-price">Regular Price</Label>
               <Input
                 id="new-item-price"
                 type="number"
                 value={newItem.price}
                 onChange={(e) => handleNewItemChange('price', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-item-standard-price">Standard Price</Label>
+              <Input
+                id="new-item-standard-price"
+                type="number"
+                value={newItem.standardPrice}
+                onChange={(e) => handleNewItemChange('standardPrice', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="new-item-express-price">Express Price</Label>
+              <Input
+                id="new-item-express-price"
+                type="number"
+                value={newItem.expressPrice}
+                onChange={(e) => handleNewItemChange('expressPrice', e.target.value)}
               />
             </div>
           </div>
@@ -1022,6 +1063,63 @@ const Settings = () => {
             </Button>
             <Button onClick={addNewItem}>
               Add Item
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Item Dialog */}
+      <Dialog open={isEditItemDialogOpen} onOpenChange={setIsEditItemDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Item</DialogTitle>
+            <DialogDescription>
+              Update the item details
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="edit-item-name">Item Name</Label>
+              <Input
+                id="edit-item-name"
+                value={editItem.name}
+                onChange={(e) => handleEditItemChange('name', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-item-price">Regular Price</Label>
+              <Input
+                id="edit-item-price"
+                type="number"
+                value={editItem.price}
+                onChange={(e) => handleEditItemChange('price', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-item-standard-price">Standard Price</Label>
+              <Input
+                id="edit-item-standard-price"
+                type="number"
+                value={editItem.standardPrice}
+                onChange={(e) => handleEditItemChange('standardPrice', e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-item-express-price">Express Price</Label>
+              <Input
+                id="edit-item-express-price"
+                type="number"
+                value={editItem.expressPrice}
+                onChange={(e) => handleEditItemChange('expressPrice', e.target.value)}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsEditItemDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={saveItemChanges}>
+              Save Changes
             </Button>
           </DialogFooter>
         </DialogContent>
