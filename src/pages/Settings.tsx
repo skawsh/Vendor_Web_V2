@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon,
@@ -36,7 +35,6 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
-// Interface definitions for better type safety
 interface SubServiceItem {
   id: number;
   name: string;
@@ -83,11 +81,10 @@ const Settings = () => {
   const [expandedSubservices, setExpandedSubservices] = useState<Record<number, boolean>>({});
   const [addServiceDialogOpen, setAddServiceDialogOpen] = useState(false);
   const [newServiceName, setNewServiceName] = useState('');
-  const [nextServiceId, setNextServiceId] = useState(6); // Start after the last existing service ID
-  const [nextSubserviceId, setNextSubserviceId] = useState(600); // Start with a higher number to avoid conflicts
-  const [nextItemId, setNextItemId] = useState(10000); // Start with a high number for new items
-  
-  // For adding items to existing subservices
+  const [nextServiceId, setNextServiceId] = useState(6);
+  const [nextSubserviceId, setNextSubserviceId] = useState(600);
+  const [nextItemId, setNextItemId] = useState(10000);
+
   const [addItemDialogOpen, setAddItemDialogOpen] = useState(false);
   const [selectedSubserviceId, setSelectedSubserviceId] = useState<number | null>(null);
   const [newItem, setNewItem] = useState<NewItem>({
@@ -108,7 +105,6 @@ const Settings = () => {
     }
   ]);
 
-  // For adding/viewing items in new service dialog
   const [expandedSubServiceItems, setExpandedSubServiceItems] = useState<Record<number, boolean>>({});
 
   const [serviceStatus, setServiceStatus] = useState<Record<number, boolean>>({
@@ -139,7 +135,6 @@ const Settings = () => {
 
   const [expandedItems, setExpandedItems] = useState<Record<number, boolean>>({});
   
-  // Initial services data state
   const [services, setServices] = useState<Service[]>([
     { 
       id: 1, 
@@ -712,7 +707,6 @@ const Settings = () => {
     ));
   };
 
-  // Functions for handling items in new service dialog
   const handleAddItemToSubservice = (subServiceId: number) => {
     const newItemId = Math.max(0, ...subServices.flatMap(s => s.items.map(i => i.id))) + 1;
     
@@ -809,20 +803,35 @@ const Settings = () => {
       return;
     }
 
-    // Create new service with subservices
+    const invalidPricingSubServices = subServices.filter(subService => {
+      const basePrice = parseFloat(subService.basePrice);
+      const hasValidBasePrice = basePrice > 0;
+      
+      const hasValidItemPrices = subService.items && subService.items.some(item => {
+        const quickWashPrice = parseFloat(item.quickWashPrice);
+        const standardWashPrice = parseFloat(item.standardWashPrice);
+        return quickWashPrice > 0 || standardWashPrice > 0;
+      });
+      
+      return !hasValidBasePrice && !hasValidItemPrices;
+    });
+
+    if (invalidPricingSubServices.length > 0) {
+      const subServiceNames = invalidPricingSubServices.map(s => s.name.trim() || 'Unnamed sub-service').join(', ');
+      toast.error(`Please add a price for these sub-services or their items: ${subServiceNames}`);
+      return;
+    }
+
     const newServiceId = nextServiceId;
     
-    // Create subservices for the new service
     const newSubservices = subServices.map((subService, index) => {
       const subServiceId = nextSubserviceId + index;
       
-      // Update subservice status state
       setSubserviceStatus(prev => ({
         ...prev,
         [subServiceId]: true
       }));
       
-      // Map the items
       const itemsList = subService.items.map((item, itemIndex) => {
         const newItemId = nextItemId + itemIndex;
         return {
@@ -843,38 +852,32 @@ const Settings = () => {
       };
     });
     
-    // Update services state with the new service
     const newService: Service = {
       id: newServiceId,
       name: newServiceName,
-      icon: <ShoppingBag className="h-5 w-5 text-blue-500" />, // Default icon
+      icon: <ShoppingBag className="h-5 w-5 text-blue-500" />,
       subserviceCount: subServices.length,
       subservices: newSubservices
     };
     
     setServices([...services, newService]);
     
-    // Update service status
     setServiceStatus(prev => ({
       ...prev,
       [newServiceId]: true
     }));
     
-    // Auto-expand the new service
     setExpandedServices(prev => ({
       ...prev,
       [newServiceId]: true
     }));
     
-    // Calculate total number of items added
     const totalItems = subServices.reduce((total, subService) => total + subService.items.length, 0);
     
-    // Increment IDs for next service
     setNextServiceId(prevId => prevId + 1);
     setNextSubserviceId(prevId => prevId + subServices.length);
     setNextItemId(prevId => prevId + totalItems);
     
-    // Reset form
     setNewServiceName('');
     setSubServices([{ id: 1, name: '', basePrice: '0', priceUnit: 'per piece', items: [] }]);
     setAddServiceDialogOpen(false);
@@ -882,7 +885,6 @@ const Settings = () => {
     toast.success(`Service "${newServiceName}" added with ${subServices.length} sub-services and ${totalItems} items`);
   };
 
-  // Handle adding a new item to an existing subservice
   const handleOpenAddItemDialog = (subserviceId: number) => {
     setSelectedSubserviceId(subserviceId);
     setNewItem({
@@ -903,14 +905,12 @@ const Settings = () => {
 
     if (!selectedSubserviceId) return;
 
-    // Find the service that contains this subservice
     const serviceWithSubservice = services.find(service => 
       service.subservices.some(subservice => subservice.id === selectedSubserviceId)
     );
 
     if (!serviceWithSubservice) return;
 
-    // Create a formatted copy of the new item
     const formattedItem: SubServiceItem = {
       id: newItem.id,
       name: newItem.name,
@@ -919,7 +919,6 @@ const Settings = () => {
       unit: newItem.unit
     };
 
-    // Update the services state with the new item
     const updatedServices = services.map(service => {
       if (service.id === serviceWithSubservice.id) {
         return {
@@ -942,7 +941,6 @@ const Settings = () => {
     setNextItemId(prevId => prevId + 1);
     setAddItemDialogOpen(false);
     
-    // Auto-expand to show the new item
     setExpandedSubservices(prev => ({
       ...prev,
       [selectedSubserviceId]: true
@@ -1203,7 +1201,6 @@ const Settings = () => {
         </div>
       </div>
       
-      {/* Dialog for adding a new service */}
       <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
         <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -1269,7 +1266,6 @@ const Settings = () => {
                       </div>
                     </div>
                     
-                    {/* Items for this subservice */}
                     <div className="pl-2 pt-2">
                       <div className="flex items-center justify-between">
                         <Label className="text-sm flex items-center">
@@ -1393,7 +1389,6 @@ const Settings = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Dialog for adding a new item to an existing subservice */}
       <Dialog open={addItemDialogOpen} onOpenChange={setAddItemDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
