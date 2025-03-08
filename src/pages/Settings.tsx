@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,6 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 const Settings = () => {
   const [services, setServices] = useState([{
     id: '1',
@@ -142,32 +140,31 @@ const Settings = () => {
       }]
     }]
   }]);
-
   const [isAddServiceDialogOpen, setIsAddServiceDialogOpen] = useState(false);
   const [isAddSubserviceDialogOpen, setIsAddSubserviceDialogOpen] = useState(false);
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
-
   const [newService, setNewService] = useState({
     name: '',
     description: '',
     price: '',
     unit: 'kg',
-    subServices: [{ name: '', price: '', id: '0' }]
+    subServices: [{
+      name: '',
+      price: '',
+      id: '0'
+    }]
   });
-
   const [newSubservice, setNewSubservice] = useState({
     name: '',
     parentServiceId: ''
   });
-
   const [editSubservice, setEditSubservice] = useState({
     id: '',
     name: '',
     parentServiceId: ''
   });
-
   const [newItem, setNewItem] = useState({
     name: '',
     price: '',
@@ -176,7 +173,6 @@ const Settings = () => {
     parentServiceId: '',
     parentSubserviceId: ''
   });
-
   const [editItem, setEditItem] = useState({
     id: '',
     name: '',
@@ -186,14 +182,12 @@ const Settings = () => {
     parentServiceId: '',
     parentSubserviceId: ''
   });
-
   const toggleService = serviceId => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
       isOpen: !service.isOpen
     } : service));
   };
-
   const toggleSubservice = (serviceId, subserviceId) => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
@@ -203,52 +197,53 @@ const Settings = () => {
       } : subservice)
     } : service));
   };
-
   const toggleEditService = serviceId => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
       isEditing: !service.isEditing
     } : service));
   };
-
   const handleServiceChange = (serviceId, field, value) => {
     setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
       ...service,
       [field]: value
     } : service));
   };
-
   const saveServiceChanges = serviceId => {
     toggleEditService(serviceId);
     toast.success('Service updated successfully');
   };
-
   const openAddServiceDialog = () => {
     setNewService({
       name: '',
       description: '',
       price: '',
       unit: 'kg',
-      subServices: [{ name: '', price: '', id: '0' }]
+      subServices: [{
+        name: '',
+        price: '',
+        id: '0'
+      }]
     });
     setIsAddServiceDialogOpen(true);
   };
-
   const handleNewServiceChange = (field, value) => {
     setNewService(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const addSubServiceToForm = () => {
     setNewService(prev => ({
       ...prev,
-      subServices: [...prev.subServices, { name: '', price: '', id: String(prev.subServices.length) }]
+      subServices: [...prev.subServices, {
+        name: '',
+        price: '',
+        id: String(prev.subServices.length)
+      }]
     }));
   };
-
-  const removeSubServiceFromForm = (id) => {
+  const removeSubServiceFromForm = id => {
     if (newService.subServices.length <= 1) {
       toast.error("You need at least one sub-service");
       return;
@@ -258,27 +253,25 @@ const Settings = () => {
       subServices: prev.subServices.filter(ss => ss.id !== id)
     }));
   };
-
   const handleSubServiceChange = (id, field, value) => {
     setNewService(prev => ({
       ...prev,
-      subServices: prev.subServices.map(ss => ss.id === id ? { ...ss, [field]: value } : ss)
+      subServices: prev.subServices.map(ss => ss.id === id ? {
+        ...ss,
+        [field]: value
+      } : ss)
     }));
   };
-
   const addNewService = () => {
     if (!newService.name) {
       toast.error('Please enter a service name');
       return;
     }
-
     if (!newService.subServices.some(ss => ss.name.trim())) {
       toast.error('Please enter at least one sub-service name');
       return;
     }
-
     const newId = (services.length + 1).toString();
-    
     setServices(prev => [...prev, {
       id: newId,
       name: newService.name,
@@ -287,21 +280,17 @@ const Settings = () => {
       unit: newService.unit,
       isOpen: false,
       isEditing: false,
-      subServices: newService.subServices
-        .filter(ss => ss.name.trim())
-        .map((ss, index) => ({
-          id: `${newId}-${index + 1}`,
-          name: ss.name,
-          price: parseFloat(ss.price) || 0,
-          isOpen: false,
-          items: []
-        }))
+      subServices: newService.subServices.filter(ss => ss.name.trim()).map((ss, index) => ({
+        id: `${newId}-${index + 1}`,
+        name: ss.name,
+        price: parseFloat(ss.price) || 0,
+        isOpen: false,
+        items: []
+      }))
     }]);
-    
     setIsAddServiceDialogOpen(false);
     toast.success('Service added successfully');
   };
-
   const openAddSubserviceDialog = serviceId => {
     setNewSubservice({
       name: '',
@@ -309,14 +298,12 @@ const Settings = () => {
     });
     setIsAddSubserviceDialogOpen(true);
   };
-
   const handleNewSubserviceChange = (field, value) => {
     setNewSubservice(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const addNewSubservice = () => {
     if (!newSubservice.name) {
       toast.error('Please fill all required fields');
@@ -334,7 +321,6 @@ const Settings = () => {
     setIsAddSubserviceDialogOpen(false);
     toast.success('Subservice added successfully');
   };
-
   const openEditSubserviceDialog = (serviceId, subservice) => {
     setEditSubservice({
       id: subservice.id,
@@ -343,14 +329,12 @@ const Settings = () => {
     });
     setIsEditSubserviceDialogOpen(true);
   };
-
   const handleEditSubserviceChange = (field, value) => {
     setEditSubservice(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const saveSubserviceChanges = () => {
     if (!editSubservice.name) {
       toast.error('Please fill all required fields');
@@ -366,7 +350,6 @@ const Settings = () => {
     setIsEditSubserviceDialogOpen(false);
     toast.success('Subservice updated successfully');
   };
-
   const openAddItemDialog = (serviceId, subserviceId) => {
     setNewItem({
       name: '',
@@ -378,14 +361,12 @@ const Settings = () => {
     });
     setIsAddItemDialogOpen(true);
   };
-
   const handleNewItemChange = (field, value) => {
     setNewItem(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const addNewItem = () => {
     if (!newItem.name || !newItem.price || !newItem.standardPrice || !newItem.expressPrice) {
       toast.error('Please fill all required fields');
@@ -407,7 +388,6 @@ const Settings = () => {
     setIsAddItemDialogOpen(false);
     toast.success('Item added successfully');
   };
-
   const openEditItemDialog = (serviceId, subserviceId, item) => {
     setEditItem({
       id: item.id,
@@ -420,14 +400,12 @@ const Settings = () => {
     });
     setIsEditItemDialogOpen(true);
   };
-
   const handleEditItemChange = (field, value) => {
     setEditItem(prev => ({
       ...prev,
       [field]: value
     }));
   };
-
   const saveItemChanges = () => {
     if (!editItem.name || !editItem.price || !editItem.standardPrice || !editItem.expressPrice) {
       toast.error('Please fill all required fields');
@@ -449,14 +427,12 @@ const Settings = () => {
     setIsEditItemDialogOpen(false);
     toast.success('Item updated successfully');
   };
-
   const deleteService = serviceId => {
     if (confirm('Are you sure you want to delete this service?')) {
       setServices(prev => prev.filter(service => service.id !== serviceId));
       toast.success('Service deleted successfully');
     }
   };
-
   const deleteSubservice = (serviceId, subserviceId) => {
     if (confirm('Are you sure you want to delete this subservice?')) {
       setServices(prev => prev.map(service => service.id === serviceId ? {
@@ -466,7 +442,6 @@ const Settings = () => {
       toast.success('Subservice deleted successfully');
     }
   };
-
   const deleteItem = (serviceId, subserviceId, itemId) => {
     if (confirm('Are you sure you want to delete this item?')) {
       setServices(prev => prev.map(service => service.id === serviceId ? {
@@ -479,15 +454,13 @@ const Settings = () => {
       toast.success('Item deleted successfully');
     }
   };
-
   const saveAllChanges = () => {
     toast.success('All changes saved successfully');
   };
-
   return <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Settings</h1>
-        <Button onClick={saveAllChanges}>Save All Changes</Button>
+        
       </div>
 
       <Card>
@@ -665,63 +638,31 @@ const Settings = () => {
           <div className="space-y-6 py-4">
             <div className="space-y-2">
               <Label htmlFor="new-service-name" className="text-gray-700 font-medium">Service Name</Label>
-              <Input 
-                id="new-service-name" 
-                value={newService.name} 
-                onChange={e => handleNewServiceChange('name', e.target.value)} 
-                placeholder="Service Name"
-              />
+              <Input id="new-service-name" value={newService.name} onChange={e => handleNewServiceChange('name', e.target.value)} placeholder="Service Name" />
             </div>
             
             <div className="space-y-4">
               <Label className="text-gray-700 font-medium">Sub Services</Label>
               <div className="space-y-6 border rounded-md p-6 bg-gray-50">
-                {newService.subServices.map((subService, index) => (
-                  <div key={subService.id} className="space-y-2">
+                {newService.subServices.map((subService, index) => <div key={subService.id} className="space-y-2">
                     <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700">Sub Service Name</Label>
-                    <Input 
-                      id={`sub-service-${subService.id}`} 
-                      value={subService.name} 
-                      onChange={e => handleSubServiceChange(subService.id, 'name', e.target.value)} 
-                      placeholder="Sub service name"
-                      className="flex-1 bg-white border-gray-200 shadow-sm"
-                    />
+                    <Input id={`sub-service-${subService.id}`} value={subService.name} onChange={e => handleSubServiceChange(subService.id, 'name', e.target.value)} placeholder="Sub service name" className="flex-1 bg-white border-gray-200 shadow-sm" />
                     
                     <Label htmlFor={`sub-service-price-${subService.id}`} className="text-gray-700 mt-2">Price (Optional)</Label>
-                    <Input 
-                      id={`sub-service-price-${subService.id}`} 
-                      value={subService.price} 
-                      onChange={e => handleSubServiceChange(subService.id, 'price', e.target.value)} 
-                      placeholder="Enter price"
-                      type="number"
-                      className="flex-1 bg-white border-gray-200 shadow-sm"
-                    />
+                    <Input id={`sub-service-price-${subService.id}`} value={subService.price} onChange={e => handleSubServiceChange(subService.id, 'price', e.target.value)} placeholder="Enter price" type="number" className="flex-1 bg-white border-gray-200 shadow-sm" />
                     
-                    <Button 
-                      variant="removeSubService" 
-                      onClick={() => removeSubServiceFromForm(subService.id)}
-                      className="mt-2 py-2 px-4 h-auto"
-                    >
+                    <Button variant="removeSubService" onClick={() => removeSubServiceFromForm(subService.id)} className="mt-2 py-2 px-4 h-auto">
                       Remove Sub Service
                     </Button>
-                  </div>
-                ))}
-                <Button 
-                  variant="addSubService" 
-                  onClick={addSubServiceToForm} 
-                  className="mt-4 py-2 px-4 h-auto"
-                >
+                  </div>)}
+                <Button variant="addSubService" onClick={addSubServiceToForm} className="mt-4 py-2 px-4 h-auto">
                   Add Sub Service
                 </Button>
               </div>
             </div>
           </div>
           <div className="pt-4 flex justify-start">
-            <Button 
-              variant="saveService" 
-              onClick={addNewService}
-              className="w-24 py-2 px-4 h-auto"
-            >
+            <Button variant="saveService" onClick={addNewService} className="w-24 py-2 px-4 h-auto">
               Save
             </Button>
           </div>
@@ -743,13 +684,7 @@ const Settings = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="new-subservice-price">Price (Optional)</Label>
-              <Input 
-                id="new-subservice-price" 
-                type="number" 
-                value={newSubservice.price || ''} 
-                onChange={e => handleNewSubserviceChange('price', e.target.value)} 
-                placeholder="Enter price (optional)"
-              />
+              <Input id="new-subservice-price" type="number" value={newSubservice.price || ''} onChange={e => handleNewSubserviceChange('price', e.target.value)} placeholder="Enter price (optional)" />
             </div>
           </div>
           <DialogFooter>
@@ -778,13 +713,7 @@ const Settings = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-subservice-price">Price (Optional)</Label>
-              <Input 
-                id="edit-subservice-price" 
-                type="number" 
-                value={editSubservice.price || ''} 
-                onChange={e => handleEditSubserviceChange('price', e.target.value)} 
-                placeholder="Enter price (optional)"
-              />
+              <Input id="edit-subservice-price" type="number" value={editSubservice.price || ''} onChange={e => handleEditSubserviceChange('price', e.target.value)} placeholder="Enter price (optional)" />
             </div>
           </div>
           <DialogFooter>
@@ -811,10 +740,7 @@ const Settings = () => {
               <Label htmlFor="new-item-name">Item Name</Label>
               <Input id="new-item-name" value={newItem.name} onChange={e => handleNewItemChange('name', e.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-item-price">Regular Price</Label>
-              <Input id="new-item-price" type="number" value={newItem.price} onChange={e => handleNewItemChange('price', e.target.value)} />
-            </div>
+            
             <div className="space-y-2">
               <Label htmlFor="new-item-standard-price">Standard Price</Label>
               <Input id="new-item-standard-price" type="number" value={newItem.standardPrice} onChange={e => handleNewItemChange('standardPrice', e.target.value)} />
