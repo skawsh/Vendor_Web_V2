@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Settings = () => {
   // State for services
   const [services, setServices] = useState([{
@@ -507,7 +508,10 @@ const Settings = () => {
                     <div className="p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleService(service.id)}>
                       <div className="flex items-center gap-2">
                         {service.isOpen ? <ChevronDown className="h-5 w-5 text-gray-500" /> : <ChevronRight className="h-5 w-5 text-gray-500" />}
-                        <h3 className="font-medium">{service.name}</h3>
+                        <div>
+                          <h3 className="font-medium">{service.name}</h3>
+                          <p className="text-xs text-gray-500">{service.subServices.length} subservice{service.subServices.length !== 1 ? 's' : ''}</p>
+                        </div>
                       </div>
                       <div className="flex items-center gap-2">
                         <Button variant="ghost" size="icon" onClick={e => {
@@ -560,7 +564,6 @@ const Settings = () => {
                               </div>
                             </div> : <div className="space-y-4">
                               <div className="grid grid-cols-2 gap-4">
-                                
                                 <div>
                                   
                                   
@@ -580,7 +583,10 @@ const Settings = () => {
                                       <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleSubservice(service.id, subservice.id)}>
                                         <div className="flex items-center gap-2">
                                           {subservice.isOpen ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
-                                          <p className="font-medium text-sm">{subservice.name}</p>
+                                          <div>
+                                            <p className="font-medium text-sm">{subservice.name}</p>
+                                            <p className="text-xs text-gray-500">{subservice.items.length} item{subservice.items.length !== 1 ? 's' : ''}</p>
+                                          </div>
                                         </div>
                                         <div className="flex items-center gap-1">
                                           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => {
