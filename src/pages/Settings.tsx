@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,6 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-
 const Settings = () => {
   // State for services
   const [services, setServices] = useState([{
@@ -476,7 +474,6 @@ const Settings = () => {
   const saveAllChanges = () => {
     toast.success('All changes saved successfully');
   };
-  
   return <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Settings</h1>
@@ -662,7 +659,7 @@ const Settings = () => {
               <Input id="new-service-name" value={newService.name} onChange={e => handleNewServiceChange('name', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-service-desc">Description</Label>
+              <Label htmlFor="new-service-desc">Sub-Service</Label>
               <Input id="new-service-desc" value={newService.description} onChange={e => handleNewServiceChange('description', e.target.value)} />
             </div>
             <div className="grid grid-cols-2 gap-4">
