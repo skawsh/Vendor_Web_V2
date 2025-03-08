@@ -1,6 +1,6 @@
+
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+
 const Settings = () => {
   // State for services
   const [services, setServices] = useState([{
@@ -475,261 +476,176 @@ const Settings = () => {
   const saveAllChanges = () => {
     toast.success('All changes saved successfully');
   };
+  
   return <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-3xl font-bold">Settings</h1>
         <Button onClick={saveAllChanges}>Save All Changes</Button>
       </div>
 
-      <Tabs defaultValue="services" className="w-full">
-        <TabsList className="grid grid-cols-3 w-full max-w-md mb-4">
-          <TabsTrigger value="services">Services</TabsTrigger>
-          <TabsTrigger value="account">Account</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="services" className="space-y-4">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <div>
-                <CardTitle>Service Management</CardTitle>
-                <CardDescription>
-                  Manage your services, subservices, and item details
-                </CardDescription>
-              </div>
-              <Button onClick={openAddServiceDialog} className="flex items-center gap-1">
-                <Plus className="h-4 w-4" /> Add Service
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {services.map(service => <Card key={service.id} className="border">
-                    <div className="p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleService(service.id)}>
-                      <div className="flex items-center gap-2">
-                        {service.isOpen ? <ChevronDown className="h-5 w-5 text-gray-500" /> : <ChevronRight className="h-5 w-5 text-gray-500" />}
-                        <div>
-                          <h3 className="font-medium">{service.name}</h3>
-                          <p className="text-xs text-gray-500">{service.subServices.length} subservice{service.subServices.length !== 1 ? 's' : ''}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="icon" onClick={e => {
-                      e.stopPropagation();
-                      toggleEditService(service.id);
-                    }}>
-                          <Edit className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="text-red-500" onClick={e => {
-                      e.stopPropagation();
-                      deleteService(service.id);
-                    }}>
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Service Management</CardTitle>
+            <CardDescription>
+              Manage your services, subservices, and item details
+            </CardDescription>
+          </div>
+          <Button onClick={openAddServiceDialog} className="flex items-center gap-1">
+            <Plus className="h-4 w-4" /> Add Service
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {services.map(service => <Card key={service.id} className="border">
+                <div className="p-3 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleService(service.id)}>
+                  <div className="flex items-center gap-2">
+                    {service.isOpen ? <ChevronDown className="h-5 w-5 text-gray-500" /> : <ChevronRight className="h-5 w-5 text-gray-500" />}
+                    <div>
+                      <h3 className="font-medium">{service.name}</h3>
+                      <p className="text-xs text-gray-500">{service.subServices.length} subservice{service.subServices.length !== 1 ? 's' : ''}</p>
                     </div>
-                    
-                    <Collapsible open={service.isOpen}>
-                      <CollapsibleContent>
-                        <div className="p-4 border-t">
-                          {service.isEditing ? <div className="space-y-4">
-                              <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                  <Label htmlFor={`service-name-${service.id}`}>Service Name</Label>
-                                  <Input id={`service-name-${service.id}`} value={service.name} onChange={e => handleServiceChange(service.id, 'name', e.target.value)} />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor={`service-price-${service.id}`}>Price</Label>
-                                  <div className="flex gap-2">
-                                    <Input id={`service-price-${service.id}`} type="number" value={service.price} onChange={e => handleServiceChange(service.id, 'price', e.target.value)} />
-                                    <select value={service.unit} onChange={e => handleServiceChange(service.id, 'unit', e.target.value)} className="px-2 py-1 border rounded-md w-24">
-                                      <option value="kg">per kg</option>
-                                      <option value="piece">per piece</option>
-                                      <option value="meter">per meter</option>
-                                    </select>
-                                  </div>
-                                </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button variant="ghost" size="icon" onClick={e => {
+                  e.stopPropagation();
+                  toggleEditService(service.id);
+                }}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                    <Button variant="ghost" size="icon" className="text-red-500" onClick={e => {
+                  e.stopPropagation();
+                  deleteService(service.id);
+                }}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                <Collapsible open={service.isOpen}>
+                  <CollapsibleContent>
+                    <div className="p-4 border-t">
+                      {service.isEditing ? <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div className="space-y-2">
+                              <Label htmlFor={`service-name-${service.id}`}>Service Name</Label>
+                              <Input id={`service-name-${service.id}`} value={service.name} onChange={e => handleServiceChange(service.id, 'name', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor={`service-price-${service.id}`}>Price</Label>
+                              <div className="flex gap-2">
+                                <Input id={`service-price-${service.id}`} type="number" value={service.price} onChange={e => handleServiceChange(service.id, 'price', e.target.value)} />
+                                <select value={service.unit} onChange={e => handleServiceChange(service.id, 'unit', e.target.value)} className="px-2 py-1 border rounded-md w-24">
+                                  <option value="kg">per kg</option>
+                                  <option value="piece">per piece</option>
+                                  <option value="meter">per meter</option>
+                                </select>
                               </div>
-                              <div className="space-y-2">
-                                <Label htmlFor={`service-desc-${service.id}`}>Description</Label>
-                                <Input id={`service-desc-${service.id}`} value={service.description} onChange={e => handleServiceChange(service.id, 'description', e.target.value)} />
-                              </div>
-                              <div className="flex justify-end gap-2">
-                                <Button variant="outline" onClick={() => toggleEditService(service.id)}>
-                                  <X className="h-4 w-4 mr-1" /> Cancel
-                                </Button>
-                                <Button onClick={() => saveServiceChanges(service.id)}>
-                                  <Save className="h-4 w-4 mr-1" /> Save
-                                </Button>
-                              </div>
-                            </div> : <div className="space-y-4">
-                              <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                  
-                                  
-                                </div>
-                              </div>
+                            </div>
+                          </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`service-desc-${service.id}`}>Description</Label>
+                            <Input id={`service-desc-${service.id}`} value={service.description} onChange={e => handleServiceChange(service.id, 'description', e.target.value)} />
+                          </div>
+                          <div className="flex justify-end gap-2">
+                            <Button variant="outline" onClick={() => toggleEditService(service.id)}>
+                              <X className="h-4 w-4 mr-1" /> Cancel
+                            </Button>
+                            <Button onClick={() => saveServiceChanges(service.id)}>
+                              <Save className="h-4 w-4 mr-1" /> Save
+                            </Button>
+                          </div>
+                        </div> : <div className="space-y-4">
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
                               
-                              <div className="mt-4 mx-0 my-0 px-0 py-0">
-                                <div className="flex items-center justify-between mb-2">
-                                  <h4 className="font-medium">Subservices</h4>
-                                  <Button variant="outline" size="sm" onClick={() => openAddSubserviceDialog(service.id)}>
-                                    <Plus className="h-4 w-4 mr-1" /> Add Subservice
-                                  </Button>
-                                </div>
-                                
-                                <div className="space-y-3 ml-4">
-                                  {service.subServices.map(subservice => <Card key={subservice.id} className="border">
-                                      <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleSubservice(service.id, subservice.id)}>
-                                        <div className="flex items-center gap-2">
-                                          {subservice.isOpen ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
-                                          <div>
-                                            <p className="font-medium text-sm">{subservice.name}</p>
-                                            <p className="text-xs text-gray-500">{subservice.items.length} item{subservice.items.length !== 1 ? 's' : ''}</p>
-                                          </div>
-                                        </div>
-                                        <div className="flex items-center gap-1">
-                                          <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => {
-                                    e.stopPropagation();
-                                    openEditSubserviceDialog(service.id, subservice);
-                                  }}>
-                                            <Edit className="h-3 w-3" />
-                                          </Button>
-                                          <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={e => {
-                                    e.stopPropagation();
-                                    deleteSubservice(service.id, subservice.id);
-                                  }}>
-                                            <Trash2 className="h-3 w-3" />
-                                          </Button>
-                                        </div>
+                              
+                            </div>
+                          </div>
+                          
+                          <div className="mt-4 mx-0 my-0 px-0 py-0">
+                            <div className="flex items-center justify-between mb-2">
+                              <h4 className="font-medium">Subservices</h4>
+                              <Button variant="outline" size="sm" onClick={() => openAddSubserviceDialog(service.id)}>
+                                <Plus className="h-4 w-4 mr-1" /> Add Subservice
+                              </Button>
+                            </div>
+                            
+                            <div className="space-y-3 ml-4">
+                              {service.subServices.map(subservice => <Card key={subservice.id} className="border">
+                                  <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleSubservice(service.id, subservice.id)}>
+                                    <div className="flex items-center gap-2">
+                                      {subservice.isOpen ? <ChevronDown className="h-4 w-4 text-gray-500" /> : <ChevronRight className="h-4 w-4 text-gray-500" />}
+                                      <div>
+                                        <p className="font-medium text-sm">{subservice.name}</p>
+                                        <p className="text-xs text-gray-500">{subservice.items.length} item{subservice.items.length !== 1 ? 's' : ''}</p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                      <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => {
+                                e.stopPropagation();
+                                openEditSubserviceDialog(service.id, subservice);
+                              }}>
+                                        <Edit className="h-3 w-3" />
+                                      </Button>
+                                      <Button variant="ghost" size="icon" className="h-7 w-7 text-red-500" onClick={e => {
+                                e.stopPropagation();
+                                deleteSubservice(service.id, subservice.id);
+                              }}>
+                                        <Trash2 className="h-3 w-3" />
+                                      </Button>
+                                    </div>
+                                  </div>
+                                  
+                                  <Collapsible open={subservice.isOpen}>
+                                    <CollapsibleContent className="p-3 pt-0 border-t mt-2">                                          
+                                      <div className="flex justify-between items-center mb-2 mt-2">
+                                        <h5 className="text-sm font-medium">Items</h5>
+                                        <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openAddItemDialog(service.id, subservice.id)}>
+                                          <Plus className="h-3 w-3 mr-1" /> Add Item
+                                        </Button>
                                       </div>
                                       
-                                      <Collapsible open={subservice.isOpen}>
-                                        <CollapsibleContent className="p-3 pt-0 border-t mt-2">                                          
-                                          <div className="flex justify-between items-center mb-2 mt-2">
-                                            <h5 className="text-sm font-medium">Items</h5>
-                                            <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openAddItemDialog(service.id, subservice.id)}>
-                                              <Plus className="h-3 w-3 mr-1" /> Add Item
-                                            </Button>
+                                      {subservice.items.length > 0 ? <div className="space-y-2">
+                                          <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
+                                            <div>Name</div>
+                                            
+                                            <div className="text-right">Standard Price</div>
+                                            <div className="text-right">Express Price</div>
                                           </div>
                                           
-                                          {subservice.items.length > 0 ? <div className="space-y-2">
-                                              <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
-                                                <div>Name</div>
-                                                
-                                                <div className="text-right">Standard Price</div>
-                                                <div className="text-right">Express Price</div>
+                                          {subservice.items.map(item => <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
+                                              <div className="flex items-center">
+                                                {item.name}
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={() => openEditItemDialog(service.id, subservice.id, item)}>
+                                                  <Edit className="h-3 w-3" />
+                                                </Button>
                                               </div>
-                                              
-                                              {subservice.items.map(item => <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
-                                                  <div className="flex items-center">
-                                                    {item.name}
-                                                    <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={() => openEditItemDialog(service.id, subservice.id, item)}>
-                                                      <Edit className="h-3 w-3" />
-                                                    </Button>
-                                                  </div>
-                                                  <div className="text-right">₹{item.price}</div>
-                                                  <div className="text-right">₹{item.standardPrice || item.price}</div>
-                                                  <div className="text-right flex justify-end items-center gap-2">
-                                                    ₹{item.expressPrice || (item.price * 1.5).toFixed(0)}
-                                                    <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
-                                                      <Trash2 className="h-3 w-3" />
-                                                    </Button>
-                                                  </div>
-                                                </div>)}
-                                            </div> : <p className="text-sm text-gray-500 italic">No items added yet</p>}
-                                        </CollapsibleContent>
-                                      </Collapsible>
-                                    </Card>)}
-                                  
-                                  {service.subServices.length === 0 && <p className="text-sm text-gray-500 italic">No subservices added yet</p>}
-                                </div>
-                              </div>
-                            </div>}
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  </Card>)}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="account">
-          <Card>
-            <CardHeader>
-              <CardTitle>Account Settings</CardTitle>
-              <CardDescription>
-                Manage your account settings and preferences
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Display Name</Label>
-                <Input id="name" defaultValue="Skawsh Laundry Admin" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" defaultValue="admin@skawsh.com" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="timezone">Time Zone</Label>
-                <select id="timezone" className="w-full p-2 border rounded-md">
-                  <option value="IST">(GMT+5:30) India Standard Time</option>
-                  <option value="GMT">(GMT+0:00) Greenwich Mean Time</option>
-                  <option value="EST">(GMT-5:00) Eastern Standard Time</option>
-                </select>
-              </div>
-              <Separator className="my-4" />
-              <Button>Save Changes</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="notifications">
-          <Card>
-            <CardHeader>
-              <CardTitle>Notification Preferences</CardTitle>
-              <CardDescription>
-                Manage how you receive notifications
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="font-medium">Email Notifications</h3>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium">New Order Alerts</h4>
-                    <p className="text-sm text-gray-500">Receive notifications for new orders</p>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="new-order" defaultChecked className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium">Order Status Updates</h4>
-                    <p className="text-sm text-gray-500">Receive notifications when order status changes</p>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="status-update" defaultChecked className="h-4 w-4" />
-                  </div>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium">Customer Messages</h4>
-                    <p className="text-sm text-gray-500">Receive notifications for new customer inquiries</p>
-                  </div>
-                  <div>
-                    <input type="checkbox" id="customer-messages" defaultChecked className="h-4 w-4" />
-                  </div>
-                </div>
-              </div>
-              <Separator className="my-4" />
-              <Button>Save Preferences</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+                                              <div className="text-right">₹{item.price}</div>
+                                              <div className="text-right">₹{item.standardPrice || item.price}</div>
+                                              <div className="text-right flex justify-end items-center gap-2">
+                                                ₹{item.expressPrice || (item.price * 1.5).toFixed(0)}
+                                                <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
+                                                  <Trash2 className="h-3 w-3" />
+                                                </Button>
+                                              </div>
+                                            </div>)}
+                                        </div> : <p className="text-sm text-gray-500 italic">No items added yet</p>}
+                                    </CollapsibleContent>
+                                  </Collapsible>
+                                </Card>)}
+                              
+                              {service.subServices.length === 0 && <p className="text-sm text-gray-500 italic">No subservices added yet</p>}
+                            </div>
+                          </div>
+                        </div>}
+                    </div>
+                  </CollapsibleContent>
+                </Collapsible>
+              </Card>)}
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Add Service Dialog */}
       <Dialog open={isAddServiceDialogOpen} onOpenChange={setIsAddServiceDialogOpen}>
