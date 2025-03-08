@@ -928,3 +928,140 @@ const Settings = () => {
                                         <div className="flex justify-center">
                                           <Button variant="quickWash" className="pointer-events-none">
                                             {item.quickWashPrice}
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                      <TableCell className="text-center">
+                                        <div className="flex justify-center">
+                                          <Button variant="standardWash" className="pointer-events-none">
+                                            {item.standardWashPrice}
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                      <TableCell className="text-center">
+                                        <div className="flex justify-center gap-1">
+                                          <Button 
+                                            variant="editIcon" 
+                                            size="icon"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              handleEditItem(item.id, 'item');
+                                            }}
+                                          >
+                                            <Pencil className="h-3 w-3" />
+                                          </Button>
+                                          <Button 
+                                            variant="deleteIcon" 
+                                            size="icon"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              toast.error(`This would delete item: ${item.name}`);
+                                            }}
+                                          >
+                                            <Trash2 className="h-3 w-3" />
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
+        <DialogContent className="sm:max-w-[500px]">
+          <DialogHeader>
+            <DialogTitle>Add New Service</DialogTitle>
+            <DialogDescription>
+              Create a new service and add sub-services to it
+            </DialogDescription>
+          </DialogHeader>
+          <div className="p-6 space-y-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="serviceName">Service Name</Label>
+                <Input 
+                  id="serviceName" 
+                  value={newServiceName} 
+                  onChange={(e) => setNewServiceName(e.target.value)} 
+                  placeholder="E.g., Premium Laundry"
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Sub Services</Label>
+                {subServices.map((subService, index) => (
+                  <div key={subService.id} className="grid grid-cols-12 gap-3 items-center">
+                    <div className="col-span-5">
+                      <Input 
+                        value={subService.name} 
+                        onChange={(e) => handleSubServiceNameChange(subService.id, e.target.value)} 
+                        placeholder="Sub-service name"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <Input 
+                        value={subService.basePrice} 
+                        onChange={(e) => handleSubServiceBasePriceChange(subService.id, e.target.value)} 
+                        placeholder="Price"
+                        type="number"
+                      />
+                    </div>
+                    <div className="col-span-3">
+                      <Input 
+                        value={subService.priceUnit} 
+                        onChange={(e) => handleSubServicePriceUnitChange(subService.id, e.target.value)} 
+                        placeholder="Unit"
+                      />
+                    </div>
+                    <div className="col-span-1">
+                      <Button 
+                        variant="deleteIcon"
+                        size="icon"
+                        onClick={() => handleRemoveSubService(subService.id)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+                <Button 
+                  variant="outline" 
+                  onClick={handleAddSubService}
+                  className="w-full mt-2"
+                >
+                  <Plus className="h-4 w-4 mr-2" /> Add Sub-service
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-end gap-2 p-6 pt-0">
+            <Button 
+              variant="outline" 
+              onClick={() => setAddServiceDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSaveNewService}>
+              Save Service
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Settings;
+
