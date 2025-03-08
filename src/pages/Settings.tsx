@@ -708,14 +708,14 @@ const Settings = () => {
   };
 
   const handleAddItemToSubservice = (subServiceId: number) => {
-    const newItemId = Math.max(0, ...subServices.flatMap(s => s.items.map(i => i.id))) + 1;
+    const newItemId = Math.max(0, ...subServices.flatMap(s => s.items ? s.items.map(i => i.id) : [0])) + 1;
     
     setSubServices(subServices.map(subService => 
       subService.id === subServiceId 
         ? { 
             ...subService, 
             items: [
-              ...subService.items, 
+              ...(subService.items || []), 
               { 
                 id: newItemId, 
                 name: '', 
@@ -734,7 +734,7 @@ const Settings = () => {
       subService.id === subServiceId 
         ? { 
             ...subService, 
-            items: subService.items.filter(item => item.id !== itemId) 
+            items: (subService.items || []).filter(item => item.id !== itemId) 
           } 
         : subService
     ));
@@ -745,7 +745,7 @@ const Settings = () => {
       subService.id === subServiceId 
         ? { 
             ...subService, 
-            items: subService.items.map(item => 
+            items: (subService.items || []).map(item => 
               item.id === itemId ? { ...item, name: value } : item
             ) 
           } 
@@ -758,7 +758,7 @@ const Settings = () => {
       subService.id === subServiceId 
         ? { 
             ...subService, 
-            items: subService.items.map(item => 
+            items: (subService.items || []).map(item => 
               item.id === itemId ? { ...item, quickWashPrice: value } : item
             ) 
           } 
@@ -771,7 +771,7 @@ const Settings = () => {
       subService.id === subServiceId 
         ? { 
             ...subService, 
-            items: subService.items.map(item => 
+            items: (subService.items || []).map(item => 
               item.id === itemId ? { ...item, standardWashPrice: value } : item
             ) 
           } 
@@ -784,7 +784,7 @@ const Settings = () => {
       subService.id === subServiceId 
         ? { 
             ...subService, 
-            items: subService.items.map(item => 
+            items: (subService.items || []).map(item => 
               item.id === itemId ? { ...item, unit: value } : item
             ) 
           } 
@@ -1293,7 +1293,7 @@ const Settings = () => {
                       
                       {expandedSubServiceItems[subService.id] && (
                         <div className="space-y-2 mt-2">
-                          {subService.items.length === 0 ? (
+                          {(!subService.items || subService.items.length === 0) ? (
                             <p className="text-sm text-gray-500 italic">No items added yet</p>
                           ) : (
                             <div className="bg-white rounded-md border border-gray-200 overflow-hidden">
@@ -1308,7 +1308,7 @@ const Settings = () => {
                                   </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                  {subService.items.map(item => (
+                                  {subService.items && subService.items.map(item => (
                                     <TableRow key={item.id}>
                                       <TableCell className="py-1.5">
                                         <Input 
