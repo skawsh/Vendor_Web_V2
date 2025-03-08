@@ -721,7 +721,7 @@ const Settings = () => {
                         value={subService.name} 
                         onChange={e => handleSubServiceChange(subService.id, e.target.value)} 
                         placeholder="Sub service name"
-                        className="flex-1"
+                        className="flex-1 bg-white border-gray-300 shadow-sm"
                       />
                       <Button 
                         variant="removeSubServiceBtn" 
