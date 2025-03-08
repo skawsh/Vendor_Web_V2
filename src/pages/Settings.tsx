@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Settings as SettingsIcon,
@@ -922,4 +923,773 @@ const Settings = () => {
 
     if (!selectedSubserviceId) return;
 
-    const serviceWithSubservice =
+    const serviceWithSubservice = services.find(service => 
+      service.subservices.some(subservice => subservice.id === selectedSubserviceId)
+    );
+
+    if (!serviceWithSubservice) return;
+
+    const updatedServices = services.map(service => {
+      if (service.id !== serviceWithSubservice.id) return service;
+
+      const updatedSubservices = service.subservices.map(subservice => {
+        if (subservice.id !== selectedSubserviceId) return subservice;
+
+        const newItemWithPrices = {
+          id: nextItemId,
+          name: newItem.name,
+          quickWashPrice: `₹${newItem.quickWashPrice || "0"}`,
+          standardWashPrice: `₹${newItem.standardWashPrice || "0"}`,
+          unit: newItem.unit
+        };
+
+        return {
+          ...subservice,
+          items: [...(subservice.items || []), newItemWithPrices]
+        };
+      });
+
+      return {
+        ...service,
+        subservices: updatedSubservices
+      };
+    });
+
+    setServices(updatedServices);
+    setNextItemId(prevId => prevId + 1);
+    setAddItemDialogOpen(false);
+    toast.success(`Item "${newItem.name}" added successfully`);
+  };
+
+  // New function to open the edit subservice dialog
+  const handleOpenEditSubserviceDialog = (serviceId: number, subservice: SubService) => {
+    setEditingServiceId(serviceId);
+    setEditingSubservice(subservice);
+    setNewSubserviceName(subservice.name);
+    setNewSubservicePrice(subservice.price.replace('₹', ''));
+    setNewSubserviceUnit(subservice.unit);
+    setEditSubserviceDialogOpen(true);
+  };
+
+  // New function to save the edited subservice
+  const handleSaveEditedSubservice = () => {
+    if (!newSubserviceName.trim()) {
+      toast.error("Subservice name is required");
+      return;
+    }
+
+    if (!editingServiceId || !editingSubservice) return;
+
+    const updatedServices = services.map(service => {
+      if (service.id !== editingServiceId) return service;
+
+      const updatedSubservices = service.subservices.map(subservice => {
+        if (subservice.id !== editingSubservice.id) return subservice;
+
+        return {
+          ...subservice,
+          name: newSubserviceName,
+          price: `₹${newSubservicePrice}`,
+          unit: newSubserviceUnit
+        };
+      });
+
+      return {
+        ...service,
+        subservices: updatedSubservices
+      };
+    });
+
+    setServices(updatedServices);
+    setEditSubserviceDialogOpen(false);
+    toast.success(`Subservice "${newSubserviceName}" updated successfully`);
+  };
+
+  // New function to handle opening the add subservice dialog for an existing service
+  const handleOpenAddSubserviceDialog = (serviceId: number) => {
+    setAddingToServiceId(serviceId);
+    setNewSubserviceData({
+      name: '',
+      price: '',
+      unit: 'per Kg'
+    });
+    setAddSubserviceDialogOpen(true);
+  };
+
+  // New function to save a new subservice to an existing service
+  const handleSaveNewSubservice = () => {
+    if (!newSubserviceData.name.trim()) {
+      toast.error("Subservice name is required");
+      return;
+    }
+
+    if (!addingToServiceId) return;
+
+    const newSubserviceId = nextSubserviceId;
+    
+    const updatedServices = services.map(service => {
+      if (service.id !== addingToServiceId) return service;
+
+      const newSubservice: SubService = {
+        id: newSubserviceId,
+        name: newSubserviceData.name,
+        price: `₹${newSubserviceData.price || "0"}`,
+        unit: newSubserviceData.unit,
+        items: []
+      };
+
+      return {
+        ...service,
+        subserviceCount: service.subserviceCount + 1,
+        subservices: [...service.subservices, newSubservice]
+      };
+    });
+
+    setServices(updatedServices);
+    
+    setSubserviceStatus(prev => ({
+      ...prev,
+      [newSubserviceId]: true
+    }));
+    
+    setNextSubserviceId(prevId => prevId + 1);
+    setAddSubserviceDialogOpen(false);
+    toast.success(`Subservice "${newSubserviceData.name}" added successfully`);
+  };
+
+  return (
+    <div className="container mx-auto p-4 max-w-6xl">
+      <div className="flex items-center mb-8">
+        <SettingsIcon className="mr-2 h-6 w-6" />
+        <h1 className="text-2xl font-bold">Settings</h1>
+      </div>
+
+      <div className="grid grid-cols-1 gap-6">
+        <Card>
+          <CardHeader className="bg-blue-50">
+            <CardTitle className="text-blue-700 flex items-center">
+              <Store className="mr-2 h-5 w-5" />
+              Services
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-6">
+            <div className="flex items-center justify-between mb-6">
+              <div className="relative w-full md:w-1/3">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  type="text"
+                  placeholder="Search services..."
+                  className="pl-10"
+                  value={searchServiceQuery}
+                  onChange={(e) => setSearchServiceQuery(e.target.value)}
+                />
+              </div>
+              <Button
+                className="bg-blue-500 hover:bg-blue-600 ml-4"
+                onClick={() => setAddServiceDialogOpen(true)}
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                Add Service
+              </Button>
+            </div>
+
+            <div className="space-y-3">
+              {services.filter(service => 
+                searchServiceQuery === '' || 
+                service.name.toLowerCase().includes(searchServiceQuery.toLowerCase())
+              ).map(service => (
+                <div key={service.id} className="border rounded-lg overflow-hidden">
+                  <div 
+                    className={`flex items-center justify-between p-4 cursor-pointer ${
+                      expandedServices[service.id] ? 'bg-blue-50' : 'bg-white'
+                    }`}
+                    onClick={() => toggleServiceExpand(service.id)}
+                  >
+                    <div className="flex items-center">
+                      <Button variant="serviceIcon" size="icon" className="mr-3 bg-blue-50">
+                        {service.icon}
+                      </Button>
+                      <div>
+                        <h3 className="font-medium text-gray-900">{service.name}</h3>
+                        <p className="text-sm text-gray-500">{service.subserviceCount} sub-services</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="mr-4 flex items-center">
+                        <Switch 
+                          id={`service-status-${service.id}`}
+                          checked={serviceStatus[service.id] ?? false}
+                          onCheckedChange={() => {}}
+                          onClick={(e) => toggleServiceStatus(service.id, e)}
+                        />
+                        <Label htmlFor={`service-status-${service.id}`} className="ml-2">
+                          {serviceStatus[service.id] ? 'Active' : 'Inactive'}
+                        </Label>
+                      </div>
+                      {expandedServices[service.id] ? 
+                        <ChevronUp className="h-5 w-5 text-gray-400" /> : 
+                        <ChevronDown className="h-5 w-5 text-gray-400" />
+                      }
+                    </div>
+                  </div>
+
+                  <Collapsible open={expandedServices[service.id]}>
+                    <CollapsibleContent>
+                      <div className="p-4 bg-gray-50 border-t">
+                        <div className="flex justify-between items-center mb-3">
+                          <h4 className="font-medium text-sm text-gray-700">Sub Services</h4>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-blue-500 border-blue-200 hover:bg-blue-50"
+                            onClick={() => handleOpenAddSubserviceDialog(service.id)}
+                          >
+                            <Plus className="mr-1 h-3 w-3" />
+                            Add Sub-service
+                          </Button>
+                        </div>
+                        
+                        <div className="space-y-2">
+                          {service.subservices.map(subservice => (
+                            <Collapsible key={subservice.id}>
+                              <div 
+                                className={`flex items-center justify-between p-3 bg-white border rounded-md cursor-pointer ${
+                                  expandedSubservices[subservice.id] ? 'border-blue-300' : ''
+                                }`}
+                                onClick={() => toggleSubserviceExpand(subservice.id)}
+                              >
+                                <div className="flex items-center">
+                                  <div>
+                                    <div className="flex items-center">
+                                      <h5 className="font-medium text-gray-800">{subservice.name}</h5>
+                                      <span className="ml-2 text-sm text-blue-600 font-medium">{subservice.price}</span>
+                                      <span className="ml-1 text-xs text-gray-500">{subservice.unit}</span>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                      {subservice.items?.length || 0} items
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center">
+                                  <div className="flex items-center mr-3">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm" 
+                                      className="h-8 p-0 mx-1"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleOpenEditSubserviceDialog(service.id, subservice);
+                                      }}
+                                    >
+                                      <Pencil className="h-3.5 w-3.5 text-blue-500" />
+                                    </Button>
+                                  </div>
+
+                                  <div className="mr-3">
+                                    <Switch 
+                                      id={`subservice-status-${subservice.id}`}
+                                      checked={subserviceStatus[subservice.id] ?? false}
+                                      onCheckedChange={() => {}}
+                                      onClick={(e) => toggleSubserviceStatus(subservice.id, e)}
+                                    />
+                                  </div>
+                                  
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 px-2"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleOpenAddItemDialog(subservice.id);
+                                    }}
+                                  >
+                                    <ListPlus className="h-3.5 w-3.5 text-blue-500 mr-1" />
+                                    <span className="text-xs text-blue-500">Add Item</span>
+                                  </Button>
+                                  
+                                  {expandedSubservices[subservice.id] ? 
+                                    <ChevronUp className="h-5 w-5 text-gray-400 ml-1" /> : 
+                                    <ChevronDown className="h-5 w-5 text-gray-400 ml-1" />
+                                  }
+                                </div>
+                              </div>
+
+                              <CollapsibleContent>
+                                {(subservice.items?.length || 0) > 0 ? (
+                                  <div className="mt-2 mb-4 px-2">
+                                    <Table>
+                                      <TableHeader>
+                                        <TableRow>
+                                          <TableHead>Item</TableHead>
+                                          <TableHead>Quick Wash</TableHead>
+                                          <TableHead>Standard Wash</TableHead>
+                                          <TableHead>Unit</TableHead>
+                                        </TableRow>
+                                      </TableHeader>
+                                      <TableBody>
+                                        {subservice.items?.map(item => (
+                                          <TableRow key={item.id}>
+                                            <TableCell>{item.name}</TableCell>
+                                            <TableCell quickWash>{item.quickWashPrice}</TableCell>
+                                            <TableCell standardWash>{item.standardWashPrice}</TableCell>
+                                            <TableCell>{item.unit}</TableCell>
+                                          </TableRow>
+                                        ))}
+                                      </TableBody>
+                                    </Table>
+                                  </div>
+                                ) : (
+                                  <div className="p-4 text-center text-gray-500 text-sm">
+                                    No items added yet
+                                  </div>
+                                )}
+                              </CollapsibleContent>
+                            </Collapsible>
+                          ))}
+                        </div>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Dialog for adding a new service */}
+      <Dialog open={addServiceDialogOpen} onOpenChange={setAddServiceDialogOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Add New Service</DialogTitle>
+            <DialogDescription>
+              Create a new service and add sub-services to it
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="service-name" className="mb-2 block">Service Name</Label>
+              <Input
+                id="service-name"
+                placeholder="e.g. Regular Laundry"
+                value={newServiceName}
+                onChange={(e) => setNewServiceName(e.target.value)}
+              />
+            </div>
+
+            <div className="pt-4 border-t">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-medium">Sub-services</h3>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-blue-500"
+                  onClick={handleAddSubService}
+                >
+                  <Plus className="mr-1 h-4 w-4" />
+                  Add Sub-service
+                </Button>
+              </div>
+
+              {subServices.map((subService, index) => (
+                <div key={subService.id} className="mb-6 p-4 border rounded-md bg-gray-50">
+                  <div className="flex justify-between items-center mb-3">
+                    <h4 className="font-medium text-sm">Sub-service {index + 1}</h4>
+                    {subServices.length > 1 && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-500 h-8 w-8 p-0"
+                        onClick={() => handleRemoveSubService(subService.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <Label className="mb-1 block text-xs">Name</Label>
+                      <Input
+                        placeholder="e.g. Wash & Fold"
+                        value={subService.name}
+                        onChange={(e) => handleSubServiceNameChange(subService.id, e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="mb-1 block text-xs">Base Price</Label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-2.5">₹</span>
+                        <Input
+                          type="number"
+                          min="0"
+                          placeholder="59"
+                          className="pl-7"
+                          value={subService.basePrice}
+                          onChange={(e) => handleSubServiceBasePriceChange(subService.id, e.target.value)}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <Label className="mb-1 block text-xs">Unit</Label>
+                      <select
+                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={subService.priceUnit}
+                        onChange={(e) => handleSubServicePriceUnitChange(subService.id, e.target.value)}
+                      >
+                        <option value="per Kg">per Kg</option>
+                        <option value="per piece">per piece</option>
+                        <option value="per square meter">per square meter</option>
+                        <option value="per square foot">per square foot</option>
+                        <option value="per pair">per pair</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <Collapsible>
+                    <CollapsibleTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className={`w-full justify-center text-sm ${
+                          expandedSubServiceItems[subService.id] ? 'bg-gray-100' : ''
+                        }`}
+                        onClick={() => toggleSubServiceItemsExpand(subService.id)}
+                      >
+                        {expandedSubServiceItems[subService.id] ? (
+                          <>
+                            <ChevronUp className="mr-1 h-4 w-4" />
+                            Hide Items
+                          </>
+                        ) : (
+                          <>
+                            <ChevronDown className="mr-1 h-4 w-4" />
+                            Add Items (Optional)
+                          </>
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent>
+                      <div className="mt-4">
+                        {(subService.items && subService.items.length > 0) ? (
+                          <div className="space-y-3">
+                            {subService.items.map((item, itemIndex) => (
+                              <div key={item.id} className="grid grid-cols-12 gap-2 items-end bg-white p-2 rounded border">
+                                <div className="col-span-3">
+                                  <Label className="text-xs mb-1 block">Item Name</Label>
+                                  <Input
+                                    placeholder="e.g. T-shirt"
+                                    value={item.name}
+                                    onChange={(e) => handleItemNameChange(subService.id, item.id, e.target.value)}
+                                  />
+                                </div>
+                                <div className="col-span-3">
+                                  <Label className="text-xs mb-1 block">Quick Wash Price</Label>
+                                  <div className="relative">
+                                    <span className="absolute left-3 top-2.5">₹</span>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      placeholder="40"
+                                      className="pl-7"
+                                      value={item.quickWashPrice}
+                                      onChange={(e) => handleItemQuickWashPriceChange(subService.id, item.id, e.target.value)}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-span-3">
+                                  <Label className="text-xs mb-1 block">Standard Wash Price</Label>
+                                  <div className="relative">
+                                    <span className="absolute left-3 top-2.5">₹</span>
+                                    <Input
+                                      type="number"
+                                      min="0"
+                                      placeholder="30"
+                                      className="pl-7"
+                                      value={item.standardWashPrice}
+                                      onChange={(e) => handleItemStandardWashPriceChange(subService.id, item.id, e.target.value)}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col-span-2">
+                                  <Label className="text-xs mb-1 block">Unit</Label>
+                                  <select
+                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    value={item.unit}
+                                    onChange={(e) => handleItemUnitChange(subService.id, item.id, e.target.value)}
+                                  >
+                                    <option value="per piece">per piece</option>
+                                    <option value="per Kg">per Kg</option>
+                                    <option value="per pair">per pair</option>
+                                    <option value="per sq meter">per sq meter</option>
+                                    <option value="per sq foot">per sq foot</option>
+                                  </select>
+                                </div>
+                                <div className="col-span-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-red-500 h-10 w-full p-0"
+                                    onClick={() => handleRemoveItemFromSubservice(subService.id, item.id)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center p-4 bg-gray-100 rounded-md text-gray-500 text-sm">
+                            No items added
+                          </div>
+                        )}
+
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="mt-3 w-full justify-center"
+                          onClick={() => handleAddItemToSubservice(subService.id)}
+                        >
+                          <Plus className="mr-1 h-4 w-4" />
+                          Add Item
+                        </Button>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => setAddServiceDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveNewService}>
+              <Save className="mr-1 h-4 w-4" />
+              Save Service
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for adding an item to a subservice */}
+      <Dialog open={addItemDialogOpen} onOpenChange={setAddItemDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Item</DialogTitle>
+            <DialogDescription>
+              Add a new item to this sub-service
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="item-name" className="mb-2 block">Item Name</Label>
+              <Input
+                id="item-name"
+                placeholder="e.g. T-shirt"
+                value={newItem.name}
+                onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="quick-wash-price" className="mb-2 block">Quick Wash Price</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5">₹</span>
+                  <Input
+                    id="quick-wash-price"
+                    type="number"
+                    min="0"
+                    placeholder="40"
+                    className="pl-7"
+                    value={newItem.quickWashPrice}
+                    onChange={(e) => setNewItem({...newItem, quickWashPrice: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div>
+                <Label htmlFor="standard-wash-price" className="mb-2 block">Standard Wash Price</Label>
+                <div className="relative">
+                  <span className="absolute left-3 top-2.5">₹</span>
+                  <Input
+                    id="standard-wash-price"
+                    type="number"
+                    min="0"
+                    placeholder="30"
+                    className="pl-7"
+                    value={newItem.standardWashPrice}
+                    onChange={(e) => setNewItem({...newItem, standardWashPrice: e.target.value})}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="unit" className="mb-2 block">Unit</Label>
+              <select
+                id="unit"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                value={newItem.unit}
+                onChange={(e) => setNewItem({...newItem, unit: e.target.value})}
+              >
+                <option value="per piece">per piece</option>
+                <option value="per Kg">per Kg</option>
+                <option value="per pair">per pair</option>
+                <option value="per sq meter">per sq meter</option>
+                <option value="per sq foot">per sq foot</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => setAddItemDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveNewItem}>
+              <Save className="mr-1 h-4 w-4" />
+              Save Item
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for editing a subservice */}
+      <Dialog open={editSubserviceDialogOpen} onOpenChange={setEditSubserviceDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Sub-service</DialogTitle>
+            <DialogDescription>
+              Update the sub-service details
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="edit-subservice-name" className="mb-2 block">Name</Label>
+              <Input
+                id="edit-subservice-name"
+                placeholder="e.g. Wash & Fold"
+                value={newSubserviceName}
+                onChange={(e) => setNewSubserviceName(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="edit-subservice-price" className="mb-2 block">Price</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5">₹</span>
+                <Input
+                  id="edit-subservice-price"
+                  type="number"
+                  min="0"
+                  placeholder="59"
+                  className="pl-7"
+                  value={newSubservicePrice}
+                  onChange={(e) => setNewSubservicePrice(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="edit-subservice-unit" className="mb-2 block">Unit</Label>
+              <select
+                id="edit-subservice-unit"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                value={newSubserviceUnit}
+                onChange={(e) => setNewSubserviceUnit(e.target.value)}
+              >
+                <option value="per Kg">per Kg</option>
+                <option value="per piece">per piece</option>
+                <option value="per square meter">per square meter</option>
+                <option value="per square foot">per square foot</option>
+                <option value="per pair">per pair</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => setEditSubserviceDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveEditedSubservice}>
+              <Save className="mr-1 h-4 w-4" />
+              Save Changes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog for adding a new subservice to an existing service */}
+      <Dialog open={addSubserviceDialogOpen} onOpenChange={setAddSubserviceDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Sub-service</DialogTitle>
+            <DialogDescription>
+              Add a new sub-service to this service
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 mt-4">
+            <div>
+              <Label htmlFor="new-subservice-name" className="mb-2 block">Name</Label>
+              <Input
+                id="new-subservice-name"
+                placeholder="e.g. Express Laundry"
+                value={newSubserviceData.name}
+                onChange={(e) => setNewSubserviceData({...newSubserviceData, name: e.target.value})}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="new-subservice-price" className="mb-2 block">Price</Label>
+              <div className="relative">
+                <span className="absolute left-3 top-2.5">₹</span>
+                <Input
+                  id="new-subservice-price"
+                  type="number"
+                  min="0"
+                  placeholder="99"
+                  className="pl-7"
+                  value={newSubserviceData.price}
+                  onChange={(e) => setNewSubserviceData({...newSubserviceData, price: e.target.value})}
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="new-subservice-unit" className="mb-2 block">Unit</Label>
+              <select
+                id="new-subservice-unit"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                value={newSubserviceData.unit}
+                onChange={(e) => setNewSubserviceData({...newSubserviceData, unit: e.target.value})}
+              >
+                <option value="per Kg">per Kg</option>
+                <option value="per piece">per piece</option>
+                <option value="per square meter">per square meter</option>
+                <option value="per square foot">per square foot</option>
+                <option value="per pair">per pair</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-3 mt-6">
+            <Button variant="outline" onClick={() => setAddSubserviceDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleSaveNewSubservice}>
+              <Save className="mr-1 h-4 w-4" />
+              Add Sub-service
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Settings;
