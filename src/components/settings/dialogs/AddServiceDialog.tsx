@@ -1,10 +1,13 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Plus, Trash2 } from 'lucide-react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { Plus, Trash2, ChevronDown, ChevronUp } from 'lucide-react';
+
 interface AddServiceDialogProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
@@ -48,6 +51,7 @@ interface AddServiceDialogProps {
   handleNewServiceItemChange: (field: string, value: string) => void;
   saveNewServiceItem: () => void;
 }
+
 export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   isOpen,
   onOpenChange,
@@ -64,6 +68,15 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   handleNewServiceItemChange,
   saveNewServiceItem
 }) => {
+  const [expandedSubServices, setExpandedSubServices] = React.useState<Record<string, boolean>>({});
+
+  const toggleSubService = (id: string) => {
+    setExpandedSubServices(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
   return <>
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-2xl p-6 bg-white">
@@ -87,131 +100,154 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
               </div>
               
               {newService.subServices.map((subService, index) => (
-                <div key={subService.id} className="space-y-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                  <div className="space-y-2">
-                    <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700 font-medium">Subservice Name</Label>
-                    <Input 
-                      id={`sub-service-${subService.id}`} 
-                      value={subService.name} 
-                      onChange={e => handleSubServiceChange(subService.id, 'name', e.target.value)} 
-                      placeholder="Enter subservice name"
-                      className="border-blue-200 focus:border-blue-400 rounded-md"
-                    />
+                <Collapsible 
+                  key={subService.id} 
+                  className="space-y-2 p-4 bg-gray-50 rounded-lg border border-gray-200"
+                  open={expandedSubServices[subService.id] !== false}
+                  onOpenChange={(open) => setExpandedSubServices(prev => ({ ...prev, [subService.id]: open }))}
+                >
+                  <div className="flex justify-between items-center">
+                    <div className="flex-1 space-y-2">
+                      <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700 font-medium">Subservice Name</Label>
+                      <Input 
+                        id={`sub-service-${subService.id}`} 
+                        value={subService.name} 
+                        onChange={e => handleSubServiceChange(subService.id, 'name', e.target.value)} 
+                        placeholder="Enter subservice name"
+                        className="border-blue-200 focus:border-blue-400 rounded-md"
+                      />
+                    </div>
+                    <CollapsibleTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 ml-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50"
+                        onClick={() => toggleSubService(subService.id)}
+                      >
+                        {expandedSubServices[subService.id] !== false ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
                   </div>
                   
-                  <div className="space-y-4">
-                    <h3 className="text-gray-700 font-medium">Pricing Details</h3>
-                    
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor={`price-per-kg-${subService.id}`} className="text-gray-700">Standard Price per KG</Label>
-                        <Input 
-                          id={`price-per-kg-${subService.id}`} 
-                          type="number" 
-                          value={subService.pricePerKg || ''} 
-                          onChange={e => handleSubServiceChange(subService.id, 'pricePerKg', e.target.value)} 
-                          placeholder="₹0.00"
-                          className="border-blue-200 focus:border-blue-400 rounded-md"
-                        />
+                  <CollapsibleContent className="space-y-4 pt-3">
+                    <div className="space-y-4">
+                      <h3 className="text-gray-700 font-medium">Pricing Details</h3>
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`price-per-kg-${subService.id}`} className="text-gray-700">Standard Price per KG</Label>
+                          <Input 
+                            id={`price-per-kg-${subService.id}`} 
+                            type="number" 
+                            value={subService.pricePerKg || ''} 
+                            onChange={e => handleSubServiceChange(subService.id, 'pricePerKg', e.target.value)} 
+                            placeholder="₹0.00"
+                            className="border-blue-200 focus:border-blue-400 rounded-md"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`express-price-per-kg-${subService.id}`} className="text-gray-700">Express Price per KG</Label>
+                          <Input 
+                            id={`express-price-per-kg-${subService.id}`} 
+                            type="number" 
+                            value={subService.expressPricePerKg || ''} 
+                            onChange={e => handleSubServiceChange(subService.id, 'expressPricePerKg', e.target.value)} 
+                            placeholder="₹0.00"
+                            className="border-blue-200 focus:border-blue-400 rounded-md"
+                          />
+                        </div>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`express-price-per-kg-${subService.id}`} className="text-gray-700">Express Price per KG</Label>
-                        <Input 
-                          id={`express-price-per-kg-${subService.id}`} 
-                          type="number" 
-                          value={subService.expressPricePerKg || ''} 
-                          onChange={e => handleSubServiceChange(subService.id, 'expressPricePerKg', e.target.value)} 
-                          placeholder="₹0.00"
-                          className="border-blue-200 focus:border-blue-400 rounded-md"
-                        />
+                      
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor={`price-per-item-${subService.id}`} className="text-gray-700">Standard Price per Item</Label>
+                          <Input 
+                            id={`price-per-item-${subService.id}`} 
+                            type="number" 
+                            value={subService.pricePerItem || ''} 
+                            onChange={e => handleSubServiceChange(subService.id, 'pricePerItem', e.target.value)} 
+                            placeholder="₹0.00"
+                            className="border-blue-200 focus:border-blue-400 rounded-md"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor={`express-price-per-item-${subService.id}`} className="text-gray-700">Express Price per Item</Label>
+                          <Input 
+                            id={`express-price-per-item-${subService.id}`} 
+                            type="number" 
+                            value={subService.expressPricePerItem || ''} 
+                            onChange={e => handleSubServiceChange(subService.id, 'expressPricePerItem', e.target.value)} 
+                            placeholder="₹0.00"
+                            className="border-blue-200 focus:border-blue-400 rounded-md"
+                          />
+                        </div>
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor={`price-per-item-${subService.id}`} className="text-gray-700">Standard Price per Item</Label>
-                        <Input 
-                          id={`price-per-item-${subService.id}`} 
-                          type="number" 
-                          value={subService.pricePerItem || ''} 
-                          onChange={e => handleSubServiceChange(subService.id, 'pricePerItem', e.target.value)} 
-                          placeholder="₹0.00"
-                          className="border-blue-200 focus:border-blue-400 rounded-md"
-                        />
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-gray-700 font-medium">Clothing Items</h3>
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="flex items-center gap-1 text-blue-600 border-blue-200 hover:bg-blue-50" 
+                          onClick={() => addItemToSubService(subService.id)}
+                        >
+                          <Plus className="h-4 w-4" /> Add Items
+                        </Button>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor={`express-price-per-item-${subService.id}`} className="text-gray-700">Express Price per Item</Label>
-                        <Input 
-                          id={`express-price-per-item-${subService.id}`} 
-                          type="number" 
-                          value={subService.expressPricePerItem || ''} 
-                          onChange={e => handleSubServiceChange(subService.id, 'expressPricePerItem', e.target.value)} 
-                          placeholder="₹0.00"
-                          className="border-blue-200 focus:border-blue-400 rounded-md"
-                        />
-                      </div>
+                      
+                      {subService.items && subService.items.length > 0 && (
+                        <div className="mt-2 space-y-2">
+                          {subService.items.map((item) => (
+                            <div key={item.id} className="flex justify-between items-center p-3 bg-white rounded-md border border-gray-200">
+                              <div>
+                                <p className="text-sm font-medium text-gray-700">{item.name}</p>
+                                <div className="flex text-xs text-gray-500 space-x-2">
+                                  <span>Standard: ₹{item.standardPrice}</span>
+                                  <span>Express: ₹{item.expressPrice}</span>
+                                </div>
+                              </div>
+                              <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" 
+                                onClick={() => {
+                                  handleSubServiceChange(subService.id, 'items', 
+                                    JSON.stringify(subService.items?.filter(i => i.id !== item.id) || [])
+                                  );
+                                }}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <h3 className="text-gray-700 font-medium">Clothing Items</h3>
+                    
+                    <div className="grid grid-cols-2 gap-4 mt-6">
                       <Button 
                         variant="outline" 
-                        size="sm" 
-                        className="flex items-center gap-1 text-blue-600 border-blue-200 hover:bg-blue-50" 
-                        onClick={() => addItemToSubService(subService.id)}
+                        onClick={addSubServiceToForm} 
+                        className="w-full py-2 h-auto text-blue-600 border-blue-200 hover:bg-blue-50"
                       >
-                        <Plus className="h-4 w-4" /> Add Items
+                        Add Another Subservice
+                      </Button>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => removeSubServiceFromForm(subService.id)} 
+                        className="w-full py-2 h-auto text-red-500 border-red-200 hover:bg-red-50"
+                      >
+                        Remove Subservice
                       </Button>
                     </div>
-                    
-                    {subService.items && subService.items.length > 0 && (
-                      <div className="mt-2 space-y-2">
-                        {subService.items.map((item) => (
-                          <div key={item.id} className="flex justify-between items-center p-3 bg-white rounded-md border border-gray-200">
-                            <div>
-                              <p className="text-sm font-medium text-gray-700">{item.name}</p>
-                              <div className="flex text-xs text-gray-500 space-x-2">
-                                <span>Standard: ₹{item.standardPrice}</span>
-                                <span>Express: ₹{item.expressPrice}</span>
-                              </div>
-                            </div>
-                            <Button 
-                              variant="ghost" 
-                              size="sm" 
-                              className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50" 
-                              onClick={() => {
-                                handleSubServiceChange(subService.id, 'items', 
-                                  JSON.stringify(subService.items?.filter(i => i.id !== item.id) || [])
-                                );
-                              }}
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4 mt-6">
-                    <Button 
-                      variant="outline" 
-                      onClick={addSubServiceToForm} 
-                      className="w-full py-2 h-auto text-blue-600 border-blue-200 hover:bg-blue-50"
-                    >
-                      Add Another Subservice
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      onClick={() => removeSubServiceFromForm(subService.id)} 
-                      className="w-full py-2 h-auto text-red-500 border-red-200 hover:bg-red-50"
-                    >
-                      Remove Subservice
-                    </Button>
-                  </div>
-                </div>
+                  </CollapsibleContent>
+                </Collapsible>
               ))}
             </div>
             
