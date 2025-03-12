@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Service, NewSubservice, EditSubservice, NewItem, EditItem, Subservice } from '@/types/services';
 import { toast } from 'sonner';
@@ -395,10 +396,14 @@ export const useServices = () => {
   };
 
   const addNewItem = (newItem: NewItem) => {
-    if (!newItem.name || !newItem.price || !newItem.standardPrice || !newItem.expressPrice) {
+    if (!newItem.name || !newItem.standardPrice || !newItem.expressPrice) {
       toast.error('Please fill all required fields');
       return false;
     }
+    
+    // Automatically set the price to be the same as standardPrice
+    const standardPrice = parseFloat(newItem.standardPrice);
+    
     setServices(prev => prev.map(service => service.id === newItem.parentServiceId ? {
       ...service,
       subServices: service.subServices.map(subservice => subservice.id === newItem.parentSubserviceId ? {
@@ -406,8 +411,8 @@ export const useServices = () => {
         items: [...subservice.items, {
           id: `${subservice.id}-${subservice.items.length + 1}`,
           name: newItem.name,
-          price: parseFloat(newItem.price),
-          standardPrice: parseFloat(newItem.standardPrice),
+          price: standardPrice, // Use standardPrice as the price
+          standardPrice: standardPrice,
           expressPrice: parseFloat(newItem.expressPrice),
           active: true
         }]
@@ -417,10 +422,14 @@ export const useServices = () => {
   };
 
   const saveItemChanges = (editItem: EditItem) => {
-    if (!editItem.name || !editItem.price || !editItem.standardPrice || !editItem.expressPrice) {
+    if (!editItem.name || !editItem.standardPrice || !editItem.expressPrice) {
       toast.error('Please fill all required fields');
       return false;
     }
+    
+    // Automatically set the price to be the same as standardPrice
+    const standardPrice = parseFloat(editItem.standardPrice as string);
+    
     setServices(prev => prev.map(service => service.id === editItem.parentServiceId ? {
       ...service,
       subServices: service.subServices.map(subservice => subservice.id === editItem.parentSubserviceId ? {
@@ -428,8 +437,8 @@ export const useServices = () => {
         items: subservice.items.map(item => item.id === editItem.id ? {
           ...item,
           name: editItem.name,
-          price: parseFloat(editItem.price as string),
-          standardPrice: parseFloat(editItem.standardPrice as string),
+          price: standardPrice, // Use standardPrice as the price
+          standardPrice: standardPrice,
           expressPrice: parseFloat(editItem.expressPrice as string),
         } : item)
       } : subservice)
