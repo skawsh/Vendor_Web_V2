@@ -1,436 +1,579 @@
-
 import React, { useState } from 'react';
-import { Plus, Pencil, Trash2, Search, Filter } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Plus } from 'lucide-react';
+import { toast } from 'sonner';
+import { ServiceCard } from '@/components/settings/ServiceCard';
+import { AddServiceDialog } from '@/components/settings/dialogs/AddServiceDialog';
+import { SubserviceDialogs } from '@/components/settings/dialogs/SubserviceDialogs';
+import { ItemDialogs } from '@/components/settings/dialogs/ItemDialogs';
+import { Service, NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
 
-// Mock data
-const services = [
-  { 
-    id: 1, 
-    name: "Wash & Fold", 
-    price: "$2.50", 
-    unit: "per lb", 
-    turnaround: "24 hours", 
-    description: "Regular laundry service for everyday clothes.",
-    active: true 
-  },
-  { 
-    id: 2, 
-    name: "Dry Cleaning", 
-    price: "$6.50", 
-    unit: "per item", 
-    turnaround: "48 hours", 
-    description: "Professional cleaning for delicate fabrics and formal wear.",
-    active: true 
-  },
-  { 
-    id: 3, 
-    name: "Ironing", 
-    price: "$3.00", 
-    unit: "per item", 
-    turnaround: "24 hours", 
-    description: "Professional pressing service for wrinkle-free clothes.",
-    active: true 
-  },
-  { 
-    id: 4, 
-    name: "Stain Removal", 
-    price: "$5.00", 
-    unit: "per stain", 
-    turnaround: "48 hours", 
-    description: "Specialized treatment for tough stains.",
-    active: true 
-  },
-  { 
-    id: 5, 
-    name: "Bedding & Linens", 
-    price: "$4.00", 
-    unit: "per lb", 
-    turnaround: "48 hours", 
-    description: "Cleaning service for sheets, comforters, and other linens.",
-    active: true 
-  },
-  { 
-    id: 6, 
-    name: "Leather & Suede", 
-    price: "$15.00", 
-    unit: "per item", 
-    turnaround: "72 hours", 
-    description: "Specialized cleaning for leather and suede items.",
-    active: false 
-  },
-  { 
-    id: 7, 
-    name: "Wedding Dress", 
-    price: "$150.00", 
-    unit: "per dress", 
-    turnaround: "7 days", 
-    description: "Premium service for wedding dress cleaning and preservation.",
-    active: true 
-  },
-  { 
-    id: 8, 
-    name: "Alterations", 
-    price: "$10.00", 
-    unit: "starting price", 
-    turnaround: "3-5 days", 
-    description: "Clothing alterations and repairs.",
-    active: false 
-  },
-];
-
-const Services: React.FC = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredServices, setFilteredServices] = useState(services);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [serviceToDelete, setServiceToDelete] = useState<number | null>(null);
+const Services = () => {
+  const [services, setServices] = useState<Service[]>([{
+    id: '1',
+    name: 'Wash & Fold',
+    isOpen: false,
+    description: 'Garments are washed and folded neatly',
+    price: 49,
+    unit: 'kg',
+    isEditing: false,
+    subServices: [{
+      id: '1-1',
+      name: 'Regular Wash',
+      isOpen: false,
+      items: [{
+        id: '1-1-1',
+        name: 'T-shirt',
+        price: 40,
+        standardPrice: 40,
+        expressPrice: 60
+      }, {
+        id: '1-1-2',
+        name: 'Jeans',
+        price: 50,
+        standardPrice: 50,
+        expressPrice: 70
+      }]
+    }, {
+      id: '1-2',
+      name: 'Premium Wash',
+      isOpen: false,
+      items: [{
+        id: '1-2-1',
+        name: 'Dress Shirt',
+        price: 60,
+        standardPrice: 60,
+        expressPrice: 90
+      }, {
+        id: '1-2-2',
+        name: 'Trousers',
+        price: 70,
+        standardPrice: 70,
+        expressPrice: 100
+      }]
+    }]
+  }, {
+    id: '2',
+    name: 'Wash & Iron',
+    isOpen: false,
+    description: 'Garments are washed and ironed to perfection',
+    price: 69,
+    unit: 'kg',
+    isEditing: false,
+    subServices: [{
+      id: '2-1',
+      name: 'Regular Service',
+      isOpen: false,
+      items: [{
+        id: '2-1-1',
+        name: 'Shirt',
+        price: 55,
+        standardPrice: 55,
+        expressPrice: 75
+      }, {
+        id: '2-1-2',
+        name: 'Pants',
+        price: 65,
+        standardPrice: 65,
+        expressPrice: 85
+      }]
+    }, {
+      id: '2-2',
+      name: 'Premium Service',
+      isOpen: false,
+      items: [{
+        id: '2-2-1',
+        name: 'Blazer',
+        price: 120,
+        standardPrice: 120,
+        expressPrice: 160
+      }, {
+        id: '2-2-2',
+        name: 'Suit',
+        price: 200,
+        standardPrice: 200,
+        expressPrice: 260
+      }]
+    }]
+  }, {
+    id: '3',
+    name: 'Dry Clean',
+    isOpen: false,
+    description: 'Specialized cleaning for delicate fabrics',
+    price: 250,
+    unit: 'piece',
+    isEditing: false,
+    subServices: [{
+      id: '3-1',
+      name: 'Basic Dry Clean',
+      isOpen: false,
+      items: [{
+        id: '3-1-1',
+        name: 'Sweater',
+        price: 180,
+        standardPrice: 180,
+        expressPrice: 250
+      }, {
+        id: '3-1-2',
+        name: 'Winter Jacket',
+        price: 350,
+        standardPrice: 350,
+        expressPrice: 450
+      }]
+    }, {
+      id: '3-2',
+      name: 'Premium Dry Clean',
+      isOpen: false,
+      items: [{
+        id: '3-2-1',
+        name: 'Wedding Dress',
+        price: 1200,
+        standardPrice: 1200,
+        expressPrice: 1500
+      }, {
+        id: '3-2-2',
+        name: 'Formal Suit',
+        price: 800,
+        standardPrice: 800,
+        expressPrice: 1000
+      }]
+    }]
+  }]);
   
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
-    
-    if (term.trim() === '') {
-      setFilteredServices(services);
-    } else {
-      const results = services.filter(service => 
-        service.name.toLowerCase().includes(term.toLowerCase()) ||
-        service.description.toLowerCase().includes(term.toLowerCase())
-      );
-      setFilteredServices(results);
+  const [isAddServiceDialogOpen, setIsAddServiceDialogOpen] = useState(false);
+  const [isAddSubserviceDialogOpen, setIsAddSubserviceDialogOpen] = useState(false);
+  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
+  const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
+  const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
+  
+  const [newService, setNewService] = useState({
+    name: '',
+    description: '',
+    price: '',
+    expressPrice: '',
+    unit: 'kg',
+    subServices: [{
+      name: '',
+      price: '',
+      id: '0'
+    }]
+  });
+  
+  const [newSubservice, setNewSubservice] = useState<NewSubservice>({
+    name: '',
+    parentServiceId: '',
+    price: ''
+  });
+  
+  const [editSubservice, setEditSubservice] = useState<EditSubservice>({
+    id: '',
+    name: '',
+    parentServiceId: '',
+    price: ''
+  });
+  
+  const [newItem, setNewItem] = useState<NewItem>({
+    name: '',
+    price: '',
+    standardPrice: '',
+    expressPrice: '',
+    parentServiceId: '',
+    parentSubserviceId: ''
+  });
+  
+  const [editItem, setEditItem] = useState<EditItem>({
+    id: '',
+    name: '',
+    price: '',
+    standardPrice: '',
+    expressPrice: '',
+    parentServiceId: '',
+    parentSubserviceId: ''
+  });
+
+  const toggleService = serviceId => {
+    setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
+      ...service,
+      isOpen: !service.isOpen
+    } : service));
+  };
+
+  const toggleSubservice = (serviceId, subserviceId) => {
+    setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
+      ...service,
+      subServices: service.subServices.map(subservice => subservice.id === subserviceId ? {
+        ...subservice,
+        isOpen: !subservice.isOpen
+      } : subservice)
+    } : service));
+  };
+
+  const toggleEditService = serviceId => {
+    setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
+      ...service,
+      isEditing: !service.isEditing
+    } : service));
+  };
+
+  const handleServiceChange = (serviceId, field, value) => {
+    setServices(prevServices => prevServices.map(service => service.id === serviceId ? {
+      ...service,
+      [field]: value
+    } : service));
+  };
+
+  const saveServiceChanges = serviceId => {
+    toggleEditService(serviceId);
+    toast.success('Service updated successfully');
+  };
+
+  const openAddServiceDialog = () => {
+    setNewService({
+      name: '',
+      description: '',
+      price: '',
+      expressPrice: '',
+      unit: 'kg',
+      subServices: [{
+        name: '',
+        price: '',
+        id: '0'
+      }]
+    });
+    setIsAddServiceDialogOpen(true);
+  };
+
+  const handleNewServiceChange = (field, value) => {
+    setNewService(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const addSubServiceToForm = () => {
+    setNewService(prev => ({
+      ...prev,
+      subServices: [...prev.subServices, {
+        name: '',
+        price: '',
+        id: String(prev.subServices.length)
+      }]
+    }));
+  };
+
+  const removeSubServiceFromForm = id => {
+    if (newService.subServices.length <= 1) {
+      toast.error("You need at least one sub-service");
+      return;
+    }
+    setNewService(prev => ({
+      ...prev,
+      subServices: prev.subServices.filter(ss => ss.id !== id)
+    }));
+  };
+
+  const handleSubServiceChange = (id, field, value) => {
+    setNewService(prev => ({
+      ...prev,
+      subServices: prev.subServices.map(ss => ss.id === id ? {
+        ...ss,
+        [field]: value
+      } : ss)
+    }));
+  };
+
+  const addNewService = () => {
+    if (!newService.name) {
+      toast.error('Please enter a service name');
+      return;
+    }
+    if (!newService.subServices.some(ss => ss.name.trim())) {
+      toast.error('Please enter at least one sub-service name');
+      return;
+    }
+    const newId = (services.length + 1).toString();
+    setServices(prev => [...prev, {
+      id: newId,
+      name: newService.name,
+      description: newService.description || 'New service',
+      price: parseFloat(newService.price) || 0,
+      expressPrice: parseFloat(newService.expressPrice) || 0,
+      unit: newService.unit,
+      isOpen: false,
+      isEditing: false,
+      subServices: newService.subServices.filter(ss => ss.name.trim()).map((ss, index) => ({
+        id: `${newId}-${index + 1}`,
+        name: ss.name,
+        price: parseFloat(ss.price) || undefined,
+        isOpen: false,
+        items: []
+      }))
+    }]);
+    setIsAddServiceDialogOpen(false);
+    toast.success('Service added successfully');
+  };
+
+  const openAddSubserviceDialog = serviceId => {
+    setNewSubservice({
+      name: '',
+      parentServiceId: serviceId,
+      price: ''
+    });
+    setIsAddSubserviceDialogOpen(true);
+  };
+
+  const handleNewSubserviceChange = (field, value) => {
+    setNewSubservice(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const addNewSubservice = () => {
+    if (!newSubservice.name) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    setServices(prev => prev.map(service => service.id === newSubservice.parentServiceId ? {
+      ...service,
+      subServices: [...service.subServices, {
+        id: `${service.id}-${service.subServices.length + 1}`,
+        name: newSubservice.name,
+        price: newSubservice.price ? parseFloat(newSubservice.price) : undefined,
+        isOpen: false,
+        items: []
+      }]
+    } : service));
+    setIsAddSubserviceDialogOpen(false);
+    toast.success('Subservice added successfully');
+  };
+
+  const openEditSubserviceDialog = (serviceId, subservice) => {
+    setEditSubservice({
+      id: subservice.id,
+      name: subservice.name,
+      parentServiceId: serviceId,
+      price: subservice.price?.toString() || ''
+    });
+    setIsEditSubserviceDialogOpen(true);
+  };
+
+  const handleEditSubserviceChange = (field, value) => {
+    setEditSubservice(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const saveSubserviceChanges = () => {
+    if (!editSubservice.name) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    setServices(prev => prev.map(service => service.id === editSubservice.parentServiceId ? {
+      ...service,
+      subServices: service.subServices.map(subservice => subservice.id === editSubservice.id ? {
+        ...subservice,
+        name: editSubservice.name,
+        price: editSubservice.price ? parseFloat(editSubservice.price) : undefined
+      } : subservice)
+    } : service));
+    setIsEditSubserviceDialogOpen(false);
+    toast.success('Subservice updated successfully');
+  };
+
+  const openAddItemDialog = (serviceId, subserviceId) => {
+    setNewItem({
+      name: '',
+      price: '',
+      standardPrice: '',
+      expressPrice: '',
+      parentServiceId: serviceId,
+      parentSubserviceId: subserviceId
+    });
+    setIsAddItemDialogOpen(true);
+  };
+
+  const handleNewItemChange = (field, value) => {
+    setNewItem(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const addNewItem = () => {
+    if (!newItem.name || !newItem.price || !newItem.standardPrice || !newItem.expressPrice) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    setServices(prev => prev.map(service => service.id === newItem.parentServiceId ? {
+      ...service,
+      subServices: service.subServices.map(subservice => subservice.id === newItem.parentSubserviceId ? {
+        ...subservice,
+        items: [...subservice.items, {
+          id: `${subservice.id}-${subservice.items.length + 1}`,
+          name: newItem.name,
+          price: parseFloat(newItem.price),
+          standardPrice: parseFloat(newItem.standardPrice),
+          expressPrice: parseFloat(newItem.expressPrice)
+        }]
+      } : subservice)
+    } : service));
+    setIsAddItemDialogOpen(false);
+    toast.success('Item added successfully');
+  };
+
+  const openEditItemDialog = (serviceId, subserviceId, item) => {
+    setEditItem({
+      id: item.id,
+      name: item.name,
+      price: item.price,
+      standardPrice: item.standardPrice || item.price,
+      expressPrice: item.expressPrice || item.price * 1.5,
+      parentServiceId: serviceId,
+      parentSubserviceId: subserviceId
+    });
+    setIsEditItemDialogOpen(true);
+  };
+
+  const handleEditItemChange = (field, value) => {
+    setEditItem(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const saveItemChanges = () => {
+    if (!editItem.name || !editItem.price || !editItem.standardPrice || !editItem.expressPrice) {
+      toast.error('Please fill all required fields');
+      return;
+    }
+    setServices(prev => prev.map(service => service.id === editItem.parentServiceId ? {
+      ...service,
+      subServices: service.subServices.map(subservice => subservice.id === editItem.parentSubserviceId ? {
+        ...subservice,
+        items: subservice.items.map(item => item.id === editItem.id ? {
+          ...item,
+          name: editItem.name,
+          price: parseFloat(editItem.price as string),
+          standardPrice: parseFloat(editItem.standardPrice as string),
+          expressPrice: parseFloat(editItem.expressPrice as string)
+        } : item)
+      } : subservice)
+    } : service));
+    setIsEditItemDialogOpen(false);
+    toast.success('Item updated successfully');
+  };
+
+  const deleteService = serviceId => {
+    if (confirm('Are you sure you want to delete this service?')) {
+      setServices(prev => prev.filter(service => service.id !== serviceId));
+      toast.success('Service deleted successfully');
     }
   };
 
-  const confirmDelete = (id: number) => {
-    setServiceToDelete(id);
-    setIsDeleteDialogOpen(true);
+  const deleteSubservice = (serviceId, subserviceId) => {
+    if (confirm('Are you sure you want to delete this subservice?')) {
+      setServices(prev => prev.map(service => service.id === serviceId ? {
+        ...service,
+        subServices: service.subServices.filter(subservice => subservice.id !== subserviceId)
+      } : service));
+      toast.success('Subservice deleted successfully');
+    }
   };
 
-  const handleDelete = () => {
-    if (serviceToDelete !== null) {
-      // In a real app, you would make an API call to delete the service
-      // For now, we'll filter it out from our local state
-      setFilteredServices(services.filter(service => service.id !== serviceToDelete));
+  const deleteItem = (serviceId, subserviceId, itemId) => {
+    if (confirm('Are you sure you want to delete this item?')) {
+      setServices(prev => prev.map(service => service.id === serviceId ? {
+        ...service,
+        subServices: service.subServices.map(subservice => subservice.id === subserviceId ? {
+          ...subservice,
+          items: subservice.items.filter(item => item.id !== itemId)
+        } : subservice)
+      } : service));
+      toast.success('Item deleted successfully');
     }
-    setIsDeleteDialogOpen(false);
-    setServiceToDelete(null);
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Services</h1>
-          <p className="text-muted-foreground">Manage your laundry services and pricing</p>
-        </div>
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
-              <Plus className="h-4 w-4" />
-              Add Service
-            </Button>
-          </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
-            <DialogHeader>
-              <DialogTitle>Add New Service</DialogTitle>
-              <DialogDescription>
-                Create a new laundry service for your customers
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="name" className="text-right">
-                  Name
-                </Label>
-                <Input
-                  id="name"
-                  placeholder="Service name"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="price" className="text-right">
-                  Price
-                </Label>
-                <Input
-                  id="price"
-                  placeholder="e.g. $2.50"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="unit" className="text-right">
-                  Unit
-                </Label>
-                <Input
-                  id="unit"
-                  placeholder="e.g. per lb, per item"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="turnaround" className="text-right">
-                  Turnaround
-                </Label>
-                <Input
-                  id="turnaround"
-                  placeholder="e.g. 24 hours"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="description" className="text-right">
-                  Description
-                </Label>
-                <Input
-                  id="description"
-                  placeholder="Short description"
-                  className="col-span-3"
-                />
-              </div>
-              <div className="grid grid-cols-4 items-center gap-4">
-                <Label htmlFor="active" className="text-right">
-                  Active
-                </Label>
-                <div className="flex items-center space-x-2 col-span-3">
-                  <Switch id="active" defaultChecked />
-                  <Label htmlFor="active">Service is active and available</Label>
-                </div>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button type="submit">Save Service</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+    <div className="container mx-auto p-6">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-3xl font-bold">Services</h1>
       </div>
 
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="w-full sm:w-auto mb-4">
-          <TabsTrigger value="all">All Services</TabsTrigger>
-          <TabsTrigger value="active">Active</TabsTrigger>
-          <TabsTrigger value="inactive">Inactive</TabsTrigger>
-        </TabsList>
-
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search services..."
-              value={searchTerm}
-              onChange={handleSearch}
-              className="pl-10"
-            />
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Service Management</CardTitle>
+            <CardDescription>
+              Manage your services, subservices, and item details
+            </CardDescription>
           </div>
-          <Button variant="outline" className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            <span>Filter</span>
+          <Button onClick={openAddServiceDialog} className="flex items-center gap-1">
+            <Plus className="h-4 w-4" /> Add Service
           </Button>
-        </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {services.map(service => (
+              <ServiceCard
+                key={service.id}
+                service={service}
+                toggleService={toggleService}
+                toggleEditService={toggleEditService}
+                handleServiceChange={handleServiceChange}
+                saveServiceChanges={saveServiceChanges}
+                openAddSubserviceDialog={openAddSubserviceDialog}
+                openEditSubserviceDialog={openEditSubserviceDialog}
+                deleteSubservice={deleteSubservice}
+                toggleSubservice={toggleSubservice}
+                openAddItemDialog={openAddItemDialog}
+                openEditItemDialog={openEditItemDialog}
+                deleteItem={deleteItem}
+                deleteService={deleteService}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
-        <TabsContent value="all" className="mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredServices.map((service, index) => (
-              <Card key={service.id} className="overflow-hidden animate-scale-in" style={{ animationDelay: `${index * 0.05}s` }}>
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between">
-                    <CardTitle className="text-xl">{service.name}</CardTitle>
-                    <div className={`px-2 py-1 rounded-full text-xs ${service.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {service.active ? 'Active' : 'Inactive'}
-                    </div>
-                  </div>
-                  <CardDescription>{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 mt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Price:</span>
-                      <span className="font-medium">{service.price} {service.unit}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Turnaround:</span>
-                      <span className="font-medium">{service.turnaround}</span>
-                    </div>
-                    <div className="flex items-center justify-end gap-2 mt-4">
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm" className="h-8">
-                            <Pencil className="h-3.5 w-3.5 mr-1" />
-                            Edit
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-[500px]">
-                          <DialogHeader>
-                            <DialogTitle>Edit Service</DialogTitle>
-                            <DialogDescription>
-                              Make changes to the {service.name} service
-                            </DialogDescription>
-                          </DialogHeader>
-                          <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="edit-name" className="text-right">
-                                Name
-                              </Label>
-                              <Input
-                                id="edit-name"
-                                defaultValue={service.name}
-                                className="col-span-3"
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="edit-price" className="text-right">
-                                Price
-                              </Label>
-                              <Input
-                                id="edit-price"
-                                defaultValue={service.price.replace('$', '')}
-                                className="col-span-3"
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="edit-unit" className="text-right">
-                                Unit
-                              </Label>
-                              <Input
-                                id="edit-unit"
-                                defaultValue={service.unit}
-                                className="col-span-3"
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="edit-turnaround" className="text-right">
-                                Turnaround
-                              </Label>
-                              <Input
-                                id="edit-turnaround"
-                                defaultValue={service.turnaround}
-                                className="col-span-3"
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="edit-description" className="text-right">
-                                Description
-                              </Label>
-                              <Input
-                                id="edit-description"
-                                defaultValue={service.description}
-                                className="col-span-3"
-                              />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                              <Label htmlFor="edit-active" className="text-right">
-                                Active
-                              </Label>
-                              <div className="flex items-center space-x-2 col-span-3">
-                                <Switch id="edit-active" defaultChecked={service.active} />
-                                <Label htmlFor="edit-active">Service is active and available</Label>
-                              </div>
-                            </div>
-                          </div>
-                          <DialogFooter>
-                            <Button type="submit">Save Changes</Button>
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        className="h-8 text-red-600" 
-                        onClick={() => confirmDelete(service.id)}
-                      >
-                        <Trash2 className="h-3.5 w-3.5 mr-1" />
-                        Delete
-                      </Button>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent value="active" className="mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredServices.filter(s => s.active).map((service, index) => (
-              <Card key={service.id} className="overflow-hidden">
-                {/* Card content same as above, filtered for active services */}
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">{service.name}</CardTitle>
-                  <CardDescription>{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 mt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Price:</span>
-                      <span className="font-medium">{service.price} {service.unit}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Turnaround:</span>
-                      <span className="font-medium">{service.turnaround}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        <TabsContent value="inactive" className="mt-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredServices.filter(s => !s.active).map((service, index) => (
-              <Card key={service.id} className="overflow-hidden">
-                {/* Card content same as above, filtered for inactive services */}
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl">{service.name}</CardTitle>
-                  <CardDescription>{service.description}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 mt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Price:</span>
-                      <span className="font-medium">{service.price} {service.unit}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Turnaround:</span>
-                      <span className="font-medium">{service.turnaround}</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-      </Tabs>
-
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this service? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="sm:justify-between">
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDelete}>
-              Delete Service
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <AddServiceDialog
+        isOpen={isAddServiceDialogOpen}
+        onOpenChange={setIsAddServiceDialogOpen}
+        newService={newService}
+        handleNewServiceChange={handleNewServiceChange}
+        handleSubServiceChange={handleSubServiceChange}
+        addSubServiceToForm={addSubServiceToForm}
+        removeSubServiceFromForm={removeSubServiceFromForm}
+        addNewService={addNewService}
+      />
+      
+      <SubserviceDialogs
+        isAddSubserviceDialogOpen={isAddSubserviceDialogOpen}
+        setIsAddSubserviceDialogOpen={setIsAddSubserviceDialogOpen}
+        newSubservice={newSubservice}
+        handleNewSubserviceChange={handleNewSubserviceChange}
+        addNewSubservice={addNewSubservice}
+        isEditSubserviceDialogOpen={isEditSubserviceDialogOpen}
+        setIsEditSubserviceDialogOpen={setIsEditSubserviceDialogOpen}
+        editSubservice={editSubservice}
+        handleEditSubserviceChange={handleEditSubserviceChange}
+        saveSubserviceChanges={saveSubserviceChanges}
+      />
+      
+      <ItemDialogs
+        isAddItemDialogOpen={isAddItemDialogOpen}
+        setIsAddItemDialogOpen={setIsAddItemDialogOpen}
+        newItem={newItem}
+        handleNewItemChange={handleNewItemChange}
+        addNewItem={addNewItem}
+        isEditItemDialogOpen={isEditItemDialogOpen}
+        setIsEditItemDialogOpen={setIsEditItemDialogOpen}
+        editItem={editItem}
+        handleEditItemChange={handleEditItemChange}
+        saveItemChanges={saveItemChanges}
+      />
     </div>
   );
 };

@@ -66,8 +66,8 @@ const AppSidebar: React.FC = () => {
           <SidebarLink to="/profile" icon={<UserCircle className="h-4 w-4" />}>
             Profile
           </SidebarLink>
-          <SidebarLink to="/settings" icon={<Settings className="h-4 w-4" />}>
-            Settings
+          <SidebarLink to="/services" icon={<Settings className="h-4 w-4" />}>
+            Services
           </SidebarLink>
           <SidebarLink to="/support" icon={<HelpCircle className="h-4 w-4" />}>
             Support
