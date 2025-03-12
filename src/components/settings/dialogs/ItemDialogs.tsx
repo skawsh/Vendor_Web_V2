@@ -61,10 +61,6 @@ export const ItemDialogs: React.FC<ItemDialogsProps> = ({
               <Input id="new-item-name" value={newItem.name} onChange={e => handleNewItemChange('name', e.target.value)} />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="new-item-price">Price</Label>
-              <Input id="new-item-price" type="number" value={newItem.price} onChange={e => handleNewItemChange('price', e.target.value)} />
-            </div>
-            <div className="space-y-2">
               <Label htmlFor="new-item-standard-price">Standard Price</Label>
               <Input id="new-item-standard-price" type="number" value={newItem.standardPrice} onChange={e => handleNewItemChange('standardPrice', e.target.value)} />
             </div>
@@ -96,10 +92,6 @@ export const ItemDialogs: React.FC<ItemDialogsProps> = ({
             <div className="space-y-2">
               <Label htmlFor="edit-item-name" className="rounded-md">Item Name</Label>
               <Input id="edit-item-name" value={editItem.name} onChange={e => handleEditItemChange('name', e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-item-price">Price</Label>
-              <Input id="edit-item-price" type="number" value={editItem.price} onChange={e => handleEditItemChange('price', e.target.value)} />
             </div>
             <div className="space-y-2">
               <Label htmlFor="edit-item-standard-price">Standard Price</Label>
