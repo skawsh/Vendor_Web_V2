@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Service, NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
 import { toast } from 'sonner';
@@ -22,13 +23,17 @@ export const useServices = () => {
         name: 'T-shirt',
         price: 40,
         standardPrice: 40,
-        expressPrice: 60
+        expressPrice: 60,
+        pricePerKg: 35,
+        pricePerItem: 40
       }, {
         id: '1-1-2',
         name: 'Jeans',
         price: 50,
         standardPrice: 50,
-        expressPrice: 70
+        expressPrice: 70,
+        pricePerKg: 40,
+        pricePerItem: 50
       }]
     }, {
       id: '1-2',
@@ -40,13 +45,17 @@ export const useServices = () => {
         name: 'Dress Shirt',
         price: 60,
         standardPrice: 60,
-        expressPrice: 90
+        expressPrice: 90,
+        pricePerKg: 45,
+        pricePerItem: 60
       }, {
         id: '1-2-2',
         name: 'Trousers',
         price: 70,
         standardPrice: 70,
-        expressPrice: 100
+        expressPrice: 100,
+        pricePerKg: 50,
+        pricePerItem: 70
       }]
     }]
   }, {
@@ -68,13 +77,17 @@ export const useServices = () => {
         name: 'Sweater',
         price: 180,
         standardPrice: 180,
-        expressPrice: 250
+        expressPrice: 250,
+        pricePerKg: 0,
+        pricePerItem: 180
       }, {
         id: '2-1-2',
         name: 'Winter Jacket',
         price: 350,
         standardPrice: 350,
-        expressPrice: 450
+        expressPrice: 450,
+        pricePerKg: 0,
+        pricePerItem: 350
       }]
     }, {
       id: '2-2',
@@ -86,13 +99,17 @@ export const useServices = () => {
         name: 'Wedding Dress',
         price: 1200,
         standardPrice: 1200,
-        expressPrice: 1500
+        expressPrice: 1500,
+        pricePerKg: 0,
+        pricePerItem: 1200
       }, {
         id: '2-2-2',
         name: 'Formal Suit',
         price: 800,
         standardPrice: 800,
-        expressPrice: 1000
+        expressPrice: 1000,
+        pricePerKg: 0,
+        pricePerItem: 800
       }]
     }]
   }, {
@@ -114,13 +131,17 @@ export const useServices = () => {
         name: 'Light Stains',
         price: 100,
         standardPrice: 100,
-        expressPrice: 150
+        expressPrice: 150,
+        pricePerKg: 80,
+        pricePerItem: 100
       }, {
         id: '3-1-2',
         name: 'Heavy Stains',
         price: 200,
         standardPrice: 200,
-        expressPrice: 300
+        expressPrice: 300,
+        pricePerKg: 150,
+        pricePerItem: 200
       }]
     }]
   }, {
@@ -142,13 +163,17 @@ export const useServices = () => {
         name: 'Leather Shoes',
         price: 99,
         standardPrice: 99,
-        expressPrice: 149
+        expressPrice: 149,
+        pricePerKg: 0,
+        pricePerItem: 99
       }, {
         id: '4-1-2',
         name: 'Canvas Shoes',
         price: 79,
         standardPrice: 79,
-        expressPrice: 119
+        expressPrice: 119,
+        pricePerKg: 0,
+        pricePerItem: 79
       }]
     }]
   }, {
@@ -170,13 +195,17 @@ export const useServices = () => {
         name: 'Basic Clean',
         price: 129,
         standardPrice: 129,
-        expressPrice: 189
+        expressPrice: 189,
+        pricePerKg: 0,
+        pricePerItem: 129
       }, {
         id: '5-1-2',
         name: 'Deep Clean',
         price: 179,
         standardPrice: 179,
-        expressPrice: 259
+        expressPrice: 259,
+        pricePerKg: 0,
+        pricePerItem: 179
       }]
     }]
   }]);
@@ -355,7 +384,9 @@ export const useServices = () => {
           name: newItem.name,
           price: parseFloat(newItem.price),
           standardPrice: parseFloat(newItem.standardPrice),
-          expressPrice: parseFloat(newItem.expressPrice)
+          expressPrice: parseFloat(newItem.expressPrice),
+          pricePerKg: newItem.pricePerKg ? parseFloat(newItem.pricePerKg) : undefined,
+          pricePerItem: newItem.pricePerItem ? parseFloat(newItem.pricePerItem) : undefined
         }]
       } : subservice)
     } : service));
@@ -376,7 +407,9 @@ export const useServices = () => {
           name: editItem.name,
           price: parseFloat(editItem.price as string),
           standardPrice: parseFloat(editItem.standardPrice as string),
-          expressPrice: parseFloat(editItem.expressPrice as string)
+          expressPrice: parseFloat(editItem.expressPrice as string),
+          pricePerKg: editItem.pricePerKg ? parseFloat(editItem.pricePerKg as string) : item.pricePerKg,
+          pricePerItem: editItem.pricePerItem ? parseFloat(editItem.pricePerItem as string) : item.pricePerItem
         } : item)
       } : subservice)
     } : service));

@@ -1,9 +1,12 @@
+
 export interface Item {
   id: string;
   name: string;
   price: number;
   standardPrice: number;
   expressPrice: number;
+  pricePerKg?: number;
+  pricePerItem?: number;
 }
 
 export interface Subservice {
@@ -45,6 +48,8 @@ export interface NewItem {
   price: string;
   standardPrice: string;
   expressPrice: string;
+  pricePerKg?: string;
+  pricePerItem?: string;
   parentServiceId: string;
   parentSubserviceId: string;
 }
@@ -55,6 +60,8 @@ export interface EditItem {
   price: string | number;
   standardPrice: string | number;
   expressPrice: string | number;
+  pricePerKg?: string | number;
+  pricePerItem?: string | number;
   parentServiceId: string;
   parentSubserviceId: string;
 }

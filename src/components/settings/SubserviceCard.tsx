@@ -80,15 +80,17 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
           
           {subservice.items.length > 0 ? (
             <div className="space-y-2">
-              <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
+              <div className="grid grid-cols-6 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
                 <div>Name</div>
                 <div className="text-right">Price</div>
                 <div className="text-right">Standard Price</div>
                 <div className="text-right">Express Price</div>
+                <div className="text-right">Price/KG</div>
+                <div className="text-right">Price/Item</div>
               </div>
               
               {subservice.items.map(item => (
-                <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
+                <div key={item.id} className="grid grid-cols-6 gap-2 px-2 py-2 border-b text-sm">
                   <div className="flex items-center">
                     {item.name}
                     <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={() => openEditItemDialog(service.id, subservice.id, item)}>
@@ -97,8 +99,10 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
                   </div>
                   <div className="text-right">₹{item.price}</div>
                   <div className="text-right">₹{item.standardPrice || item.price}</div>
+                  <div className="text-right">₹{item.expressPrice || (item.price * 1.5).toFixed(0)}</div>
+                  <div className="text-right">₹{item.pricePerKg || '-'}</div>
                   <div className="text-right flex justify-end items-center gap-2">
-                    ₹{item.expressPrice || (item.price * 1.5).toFixed(0)}
+                    ₹{item.pricePerItem || '-'}
                     <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
