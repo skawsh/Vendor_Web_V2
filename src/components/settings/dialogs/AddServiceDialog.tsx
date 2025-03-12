@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,7 +38,7 @@ interface AddServiceDialogProps {
   handleNewServiceChange: (field: string, value: string) => void;
   handleSubServiceChange: (id: string, field: string, value: string) => void;
   addSubServiceToForm: () => void;
-  removeSubServiceFromForm: () => void;
+  removeSubServiceFromForm: (id: string) => void; // Updated to accept id parameter
   addNewService: () => void;
   addItemToSubService: (subServiceId: string) => void;
   isAddServiceItemDialogOpen: boolean;
@@ -165,7 +166,6 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                         variant="ghost" 
                         size="sm" 
                         className="h-8 w-8 p-0 ml-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50"
-                        onClick={() => toggleSubService(subService.id)}
                       >
                         {expandedSubServices[subService.id] !== false ? (
                           <ChevronUp className="h-4 w-4" />
@@ -283,6 +283,7 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                       </Button>
                       <Button 
                         variant="outline" 
+                        // Fix: Pass the subService.id to removeSubServiceFromForm
                         onClick={() => removeSubServiceFromForm(subService.id)} 
                         className="w-full py-2 h-auto text-red-500 border-red-200 hover:bg-red-50"
                       >

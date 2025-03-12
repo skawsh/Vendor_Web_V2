@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
@@ -109,6 +110,7 @@ export const useServiceDialogs = () => {
     }));
   };
 
+  // Updated to accept the id parameter
   const removeSubServiceFromForm = (id: string) => {
     if (newService.subServices.length <= 1) {
       toast.error("You need at least one sub-service");
