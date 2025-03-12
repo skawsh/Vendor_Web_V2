@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -169,6 +170,12 @@ const Services = () => {
         addSubServiceToForm={handlers.addSubServiceToForm}
         removeSubServiceFromForm={handlers.removeSubServiceFromForm}
         addNewService={handleAddNewService}
+        addItemToSubService={handlers.addItemToSubService}
+        isAddServiceItemDialogOpen={dialogStates.isAddServiceItemDialogOpen}
+        setIsAddServiceItemDialogOpen={dialogStates.setIsAddServiceItemDialogOpen}
+        newServiceItem={formStates.newServiceItem}
+        handleNewServiceItemChange={handlers.handleNewServiceItemChange}
+        saveNewServiceItem={handlers.saveNewServiceItem}
       />
       
       <SubserviceDialogs
