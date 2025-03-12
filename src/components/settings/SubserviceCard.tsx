@@ -36,9 +36,14 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
   const [pricePerItem, setPricePerItem] = useState(subservice.pricePerItem?.toString() || "10");
   const [expressPricePerKg, setExpressPricePerKg] = useState(subservice.expressPricePerKg?.toString() || "100");
   const [expressPricePerItem, setExpressPricePerItem] = useState(subservice.expressPricePerItem?.toString() || "20");
+  const [editingItem, setEditingItem] = useState<string | null>(null);
+  const [editedValues, setEditedValues] = useState<{
+    name: string;
+    standardPrice: string;
+    expressPrice: string;
+  }>({ name: '', standardPrice: '', expressPrice: '' });
 
   const handleSavePrices = () => {
-    // Update the subservice with new prices by calling the API or state update function
     const updatedSubservice = {
       ...subservice,
       pricePerKg: parseFloat(pricePerKg),
@@ -46,11 +51,36 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
       expressPricePerKg: parseFloat(expressPricePerKg),
       expressPricePerItem: parseFloat(expressPricePerItem)
     };
-    
-    // This is where you would call your update function
-    // For now, we'll just toggle the editing state
     openEditSubserviceDialog(service.id, updatedSubservice);
     setIsEditingPrices(false);
+  };
+
+  const startEditingItem = (item: any) => {
+    setEditingItem(item.id);
+    setEditedValues({
+      name: item.name,
+      standardPrice: item.standardPrice.toString(),
+      expressPrice: item.expressPrice.toString()
+    });
+  };
+
+  const cancelEditingItem = () => {
+    setEditingItem(null);
+    setEditedValues({ name: '', standardPrice: '', expressPrice: '' });
+  };
+
+  const saveItemEdit = (itemId: string) => {
+    const updatedItem = {
+      id: itemId,
+      name: editedValues.name,
+      price: parseFloat(editedValues.standardPrice), // Keep price field for compatibility
+      standardPrice: parseFloat(editedValues.standardPrice),
+      expressPrice: parseFloat(editedValues.expressPrice),
+      parentServiceId: service.id,
+      parentSubserviceId: subservice.id
+    };
+    openEditItemDialog(service.id, subservice.id, updatedItem);
+    setEditingItem(null);
   };
 
   return (
@@ -199,29 +229,63 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
           
           {subservice.items.length > 0 ? (
             <div className="space-y-2">
-              <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
+              <div className="grid grid-cols-3 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
                 <div>Name</div>
-                <div className="text-right">Price</div>
                 <div className="text-right">Standard Price</div>
                 <div className="text-right">Express Price</div>
               </div>
               
               {subservice.items.map(item => (
-                <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
-                  <div className="flex items-center">
-                    {item.name}
-                    <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={() => openEditItemDialog(service.id, subservice.id, item)}>
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                  </div>
-                  <div className="text-right">₹{item.price}</div>
-                  <div className="text-right">₹{item.standardPrice || item.price}</div>
-                  <div className="text-right flex justify-end items-center gap-2">
-                    ₹{item.expressPrice || (item.price * 1.5).toFixed(0)}
-                    <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
+                <div key={item.id} className="grid grid-cols-3 gap-2 px-2 py-2 border-b text-sm">
+                  {editingItem === item.id ? (
+                    <>
+                      <div className="flex items-center">
+                        <Input
+                          value={editedValues.name}
+                          onChange={(e) => setEditedValues(prev => ({ ...prev, name: e.target.value }))}
+                          className="h-7 text-sm"
+                        />
+                      </div>
+                      <div className="text-right">
+                        <Input
+                          type="number"
+                          value={editedValues.standardPrice}
+                          onChange={(e) => setEditedValues(prev => ({ ...prev, standardPrice: e.target.value }))}
+                          className="h-7 text-sm text-right"
+                        />
+                      </div>
+                      <div className="text-right flex justify-end items-center gap-2">
+                        <Input
+                          type="number"
+                          value={editedValues.expressPrice}
+                          onChange={(e) => setEditedValues(prev => ({ ...prev, expressPrice: e.target.value }))}
+                          className="h-7 text-sm text-right"
+                        />
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-green-500" onClick={() => saveItemEdit(item.id)}>
+                          <Check className="h-3 w-3" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={cancelEditingItem}>
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex items-center">
+                        {item.name}
+                        <Button variant="ghost" size="icon" className="h-6 w-6 ml-2" onClick={() => startEditingItem(item)}>
+                          <Edit className="h-3 w-3" />
+                        </Button>
+                      </div>
+                      <div className="text-right">₹{item.standardPrice}</div>
+                      <div className="text-right flex justify-end items-center gap-2">
+                        ₹{item.expressPrice}
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>
