@@ -1,5 +1,4 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
 
@@ -11,8 +10,8 @@ export const useServiceDialogs = () => {
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
   const [isAddServiceItemDialogOpen, setIsAddServiceItemDialogOpen] = useState(false);
   const [currentSubserviceIndex, setCurrentSubserviceIndex] = useState<string>('0');
-  
-  const [newService, setNewService] = useState({
+
+  const defaultNewService = {
     name: '',
     description: '',
     price: '',
@@ -28,7 +27,16 @@ export const useServiceDialogs = () => {
       expressPricePerItem: '',
       items: []
     }]
-  });
+  };
+  
+  const [newService, setNewService] = useState(defaultNewService);
+  
+  // Reset the newService state when dialog opens or closes
+  useEffect(() => {
+    if (!isAddServiceDialogOpen) {
+      setNewService(defaultNewService);
+    }
+  }, [isAddServiceDialogOpen]);
   
   const [newSubservice, setNewSubservice] = useState<NewSubservice>({
     name: '',
