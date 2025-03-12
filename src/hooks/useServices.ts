@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Service, NewSubservice, EditSubservice, NewItem, EditItem, Subservice } from '@/types/services';
 import { toast } from 'sonner';
@@ -240,6 +239,18 @@ export const useServices = () => {
             isOpen: !subservice.isOpen
           } : subservice
         )
+      } : service
+    ));
+  };
+
+  const collapseAllSubservices = (serviceId: string) => {
+    setServices(prevServices => prevServices.map(service => 
+      service.id === serviceId ? {
+        ...service,
+        subServices: service.subServices.map(subservice => ({
+          ...subservice,
+          isOpen: false
+        }))
       } : service
     ));
   };
@@ -491,6 +502,7 @@ export const useServices = () => {
     services,
     toggleService,
     toggleSubservice,
+    collapseAllSubservices,
     toggleEditService,
     handleServiceChange,
     saveServiceChanges,

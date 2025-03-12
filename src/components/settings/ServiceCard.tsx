@@ -44,11 +44,27 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
   toggleSubserviceActive,
   toggleItemActive
 }) => {
+  // Handler to collapse all subservices when toggling service
+  const handleToggleService = (serviceId: string) => {
+    // When collapsing, ensure all subservices collapse too
+    if (service.isOpen) {
+      // Collapse all subservices first
+      service.subServices.forEach(subservice => {
+        if (subservice.isOpen) {
+          toggleSubservice(serviceId, subservice.id);
+        }
+      });
+    }
+    
+    // Then toggle the service itself
+    toggleService(serviceId);
+  };
+
   return (
     <Card key={service.id} className="border">
       <ServiceHeader 
         service={service}
-        toggleService={toggleService}
+        toggleService={handleToggleService}
         toggleEditService={toggleEditService}
         deleteService={deleteService}
         toggleServiceActive={toggleServiceActive}

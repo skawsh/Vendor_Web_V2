@@ -80,6 +80,19 @@ export const useServiceDialogs = () => {
     expressPrice: '',
   });
 
+  // Added state to manage expanded subservices in the service dialog
+  const [expandedSubServices, setExpandedSubServices] = useState<Record<string, boolean>>({});
+  const [isServiceExpanded, setIsServiceExpanded] = useState(true);
+
+  // Function to handle service expand/collapse
+  const handleServiceCollapse = (open: boolean) => {
+    setIsServiceExpanded(open);
+    // When collapsing the service, collapse all subservices as well
+    if (!open) {
+      setExpandedSubServices({});
+    }
+  };
+
   const handleNewServiceChange = (field: string, value: string) => {
     setNewService(prev => ({
       ...prev,
@@ -230,7 +243,9 @@ export const useServiceDialogs = () => {
       editItem,
       newServiceItem,
       currentSubserviceIndex,
-      pendingServices
+      pendingServices,
+      expandedSubServices,
+      isServiceExpanded
     },
     setters: {
       setNewSubservice,
@@ -238,7 +253,8 @@ export const useServiceDialogs = () => {
       setNewItem,
       setEditItem,
       setNewServiceItem,
-      setPendingServices
+      setPendingServices,
+      setExpandedSubServices
     },
     handlers: {
       handleNewServiceChange,
@@ -249,7 +265,8 @@ export const useServiceDialogs = () => {
       saveNewServiceItem,
       handleNewServiceItemChange,
       resetServiceForm,
-      addAllPendingServices
+      addAllPendingServices,
+      handleServiceCollapse
     }
   };
 };
