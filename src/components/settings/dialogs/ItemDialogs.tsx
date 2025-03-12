@@ -13,8 +13,6 @@ interface ItemDialogsProps {
     price: string;
     standardPrice: string;
     expressPrice: string;
-    pricePerKg?: string;
-    pricePerItem?: string;
     parentServiceId: string;
     parentSubserviceId: string;
   };
@@ -28,8 +26,6 @@ interface ItemDialogsProps {
     price: string | number;
     standardPrice: string | number;
     expressPrice: string | number;
-    pricePerKg?: string | number;
-    pricePerItem?: string | number;
     parentServiceId: string;
     parentSubserviceId: string;
   };
@@ -76,14 +72,6 @@ export const ItemDialogs: React.FC<ItemDialogsProps> = ({
               <Label htmlFor="new-item-express-price">Express Price</Label>
               <Input id="new-item-express-price" type="number" value={newItem.expressPrice} onChange={e => handleNewItemChange('expressPrice', e.target.value)} />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-item-price-per-kg">Price per KG</Label>
-              <Input id="new-item-price-per-kg" type="number" value={newItem.pricePerKg || ''} onChange={e => handleNewItemChange('pricePerKg', e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="new-item-price-per-item">Price per Item</Label>
-              <Input id="new-item-price-per-item" type="number" value={newItem.pricePerItem || ''} onChange={e => handleNewItemChange('pricePerItem', e.target.value)} />
-            </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddItemDialogOpen(false)}>
@@ -106,7 +94,7 @@ export const ItemDialogs: React.FC<ItemDialogsProps> = ({
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label htmlFor="edit-item-name">Item Name</Label>
+              <Label htmlFor="edit-item-name" className="rounded-md">Item Name</Label>
               <Input id="edit-item-name" value={editItem.name} onChange={e => handleEditItemChange('name', e.target.value)} />
             </div>
             <div className="space-y-2">
@@ -120,14 +108,6 @@ export const ItemDialogs: React.FC<ItemDialogsProps> = ({
             <div className="space-y-2">
               <Label htmlFor="edit-item-express-price">Express Price</Label>
               <Input id="edit-item-express-price" type="number" value={editItem.expressPrice} onChange={e => handleEditItemChange('expressPrice', e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-item-price-per-kg">Price per KG</Label>
-              <Input id="edit-item-price-per-kg" type="number" value={editItem.pricePerKg || ''} onChange={e => handleEditItemChange('pricePerKg', e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-item-price-per-item">Price per Item</Label>
-              <Input id="edit-item-price-per-item" type="number" value={editItem.pricePerItem || ''} onChange={e => handleEditItemChange('pricePerItem', e.target.value)} />
             </div>
           </div>
           <DialogFooter>

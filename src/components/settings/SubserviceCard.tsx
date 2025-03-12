@@ -77,42 +77,6 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
               <Plus className="h-3 w-3 mr-1" /> Add Item
             </Button>
           </div>
-
-          {/* Pricing information section - moved from table */}
-          <div className="bg-blue-50 p-3 rounded-md mb-3">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <h6 className="text-xs font-medium text-blue-700 mb-1">Standard Pricing</h6>
-                <div className="flex gap-4">
-                  {subservice.pricePerKg ? (
-                    <p className="text-xs">
-                      <span className="font-medium">Price/KG:</span> ₹{subservice.pricePerKg}
-                    </p>
-                  ) : null}
-                  {subservice.pricePerItem ? (
-                    <p className="text-xs">
-                      <span className="font-medium">Price/Item:</span> ₹{subservice.pricePerItem}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-              <div>
-                <h6 className="text-xs font-medium text-blue-700 mb-1">Express Pricing</h6>
-                <div className="flex gap-4">
-                  {subservice.pricePerKg ? (
-                    <p className="text-xs">
-                      <span className="font-medium">Price/KG:</span> ₹{(subservice.pricePerKg * 1.5).toFixed(0)}
-                    </p>
-                  ) : null}
-                  {subservice.pricePerItem ? (
-                    <p className="text-xs">
-                      <span className="font-medium">Price/Item:</span> ₹{(subservice.pricePerItem * 1.5).toFixed(0)}
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </div>
           
           {subservice.items.length > 0 ? (
             <div className="space-y-2">
