@@ -18,7 +18,11 @@ export const useServiceDialogs = () => {
     subServices: [{
       name: '',
       price: '',
-      id: '0'
+      id: '0',
+      pricePerKg: '',
+      expressPricePerKg: '',
+      pricePerItem: '',
+      expressPricePerItem: ''
     }]
   });
   
@@ -77,7 +81,11 @@ export const useServiceDialogs = () => {
       subServices: [...prev.subServices, {
         name: '',
         price: '',
-        id: String(prev.subServices.length)
+        id: String(prev.subServices.length),
+        pricePerKg: '',
+        expressPricePerKg: '',
+        pricePerItem: '',
+        expressPricePerItem: ''
       }]
     }));
   };
