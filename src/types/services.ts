@@ -12,7 +12,11 @@ export interface Subservice {
   isOpen: boolean;
   price?: number;
   items: Item[];
-  active: boolean; // Added active state
+  active: boolean;
+  pricePerKg: number;
+  pricePerItem: number;
+  expressPricePerKg: number;
+  expressPricePerItem: number;
 }
 
 export interface Service {
@@ -24,7 +28,7 @@ export interface Service {
   unit: string;
   isEditing: boolean;
   subServices: Subservice[];
-  active: boolean; // Added active state
+  active: boolean;
 }
 
 export interface NewSubservice {

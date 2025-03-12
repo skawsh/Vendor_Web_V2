@@ -70,7 +70,31 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
       </div>
       
       <Collapsible open={subservice.isOpen}>
-        <CollapsibleContent className="p-3 pt-0 border-t mt-2">                                          
+        <CollapsibleContent className="p-3 pt-0 border-t mt-2">
+          {subservice.name === "Wash&Fold" && (
+            <div className="mb-4 p-4 bg-gray-50 rounded-lg">
+              <h3 className="text-lg font-semibold mb-3">{subservice.name}</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <p className="text-gray-600">
+                    Standard Price per KG: <span className="font-medium">₹{subservice.pricePerKg || 70}</span>
+                  </p>
+                  <p className="text-gray-600">
+                    Express Price per KG: <span className="font-medium">₹{subservice.expressPricePerKg || 100}</span>
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-gray-600">
+                    Standard Price per Item: <span className="font-medium">₹{subservice.pricePerItem || 10}</span>
+                  </p>
+                  <p className="text-gray-600">
+                    Express Price per Item: <span className="font-medium">₹{subservice.expressPricePerItem || 20}</span>
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="flex justify-between items-center mb-2 mt-2">
             <h5 className="text-sm font-medium">Items</h5>
             <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => openAddItemDialog(service.id, subservice.id)}>
