@@ -9,6 +9,7 @@ import { SubserviceDialogs } from '@/components/settings/dialogs/SubserviceDialo
 import { ItemDialogs } from '@/components/settings/dialogs/ItemDialogs';
 import { useServices } from '@/hooks/useServices';
 import { useServiceDialogs } from '@/hooks/useServiceDialogs';
+import { toast } from 'sonner';
 
 const Services = () => {
   const {
@@ -87,16 +88,25 @@ const Services = () => {
   };
 
   const handleAddNewService = () => {
-    if (addNewService(formStates.newService)) {
+    // Use the addAllPendingServices handler to add all services at once
+    const allSuccessful = handlers.addAllPendingServices(addNewService);
+    
+    if (allSuccessful) {
       dialogStates.setIsAddServiceDialogOpen(false);
+      
+      const totalServicesAdded = formStates.pendingServices.length + 
+        (formStates.newService.name && formStates.newService.subServices.some(ss => ss.name) ? 1 : 0);
+      
+      if (totalServicesAdded > 0) {
+        toast.success(`${totalServicesAdded} service${totalServicesAdded > 1 ? 's' : ''} added successfully`);
+      }
     }
   };
 
   const handleAddAnotherService = () => {
     // First add the current service if it has valid data
     if (formStates.newService.name && formStates.newService.subServices.some(ss => ss.name)) {
-      addNewService(formStates.newService);
-      // Then reset the form for a new service
+      // Reset the form for a new service
       handlers.resetServiceForm();
     } else {
       // If there's no valid data yet, just reset the form

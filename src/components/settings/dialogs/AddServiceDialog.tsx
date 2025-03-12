@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Plus, ChevronDown, ChevronUp, X } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, X, Trash } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
 
 interface AddServiceDialogProps {
   isOpen: boolean;
@@ -67,8 +69,31 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   handleNewServiceItemChange,
   saveNewServiceItem
 }) => {
-  const [expandedSubServices, setExpandedSubServices] = React.useState<Record<string, boolean>>({});
-  const [isServiceExpanded, setIsServiceExpanded] = React.useState(true);
+  const [expandedSubServices, setExpandedSubServices] = useState<Record<string, boolean>>({});
+  const [isServiceExpanded, setIsServiceExpanded] = useState(true);
+  const [services, setServices] = useState<
+    Array<{
+      id: string;
+      name: string;
+      subServices: Array<{
+        id: string;
+        name: string;
+        pricePerKg?: string;
+        expressPricePerKg?: string;
+        pricePerItem?: string;
+        expressPricePerItem?: string;
+        items?: Array<{
+          id: string;
+          name: string;
+          standardPrice: string;
+          expressPrice: string;
+          price: string;
+          active: boolean;
+        }>;
+      }>;
+    }>
+  >([]);
+  const [currentServiceIndex, setCurrentServiceIndex] = useState(0);
 
   // Reset all subservices visibility when main service is collapsed
   const handleServiceCollapse = (open: boolean) => {
@@ -78,11 +103,61 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
     }
   };
 
+  // Add current service to the list and prepare for a new one
+  const handleAddAnotherService = () => {
+    if (!newService.name || !newService.subServices.some(ss => ss.name)) {
+      return;
+    }
+
+    // Add current service to the list
+    setServices(prev => [...prev, { 
+      id: `service-${Date.now()}`,
+      name: newService.name,
+      subServices: newService.subServices
+    }]);
+
+    // Reset form for new service
+    handleNewServiceChange('name', '');
+    newService.subServices.forEach(ss => {
+      removeSubServiceFromForm(ss.id);
+    });
+    addSubServiceToForm();
+    
+    setCurrentServiceIndex(prev => prev + 1);
+    setIsServiceExpanded(true);
+    setExpandedSubServices({});
+  };
+
+  const handleRemoveService = (index: number) => {
+    setServices(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSaveAllServices = () => {
+    // First add the current service if it has data
+    if (newService.name && newService.subServices.some(ss => ss.name)) {
+      setServices(prev => [...prev, { 
+        id: `service-${Date.now()}`,
+        name: newService.name,
+        subServices: newService.subServices
+      }]);
+    }
+
+    // Save all services
+    services.forEach(() => {
+      addNewService();
+    });
+
+    // Close dialog
+    onOpenChange(false);
+  };
+
   // Reset form data when dialog opens or closes
   useEffect(() => {
     if (!isOpen) {
       setExpandedSubServices({});
       setIsServiceExpanded(true);
+      setServices([]);
+      setCurrentServiceIndex(0);
     }
   }, [isOpen]);
 
@@ -90,13 +165,42 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-2xl p-0 bg-white rounded-2xl overflow-hidden">
           <DialogHeader className="bg-white p-6 border-b">
-            <DialogTitle className="text-2xl font-semibold text-center text-blue-600">Add New Service</DialogTitle>
+            <DialogTitle className="text-2xl font-semibold text-center text-blue-600">Add New Services</DialogTitle>
             <DialogDescription className="text-center text-gray-500 mt-1">
-              Create a new service with subservices and items
+              Create multiple services with subservices and items
             </DialogDescription>
           </DialogHeader>
           
           <ScrollArea className="max-h-[70vh] overflow-y-auto py-6 px-6">
+            {/* Already added services */}
+            {services.length > 0 && (
+              <div className="mb-6 space-y-4">
+                <h3 className="text-lg font-medium text-gray-800">Added Services</h3>
+                {services.map((service, index) => (
+                  <div 
+                    key={service.id} 
+                    className="relative p-4 border border-blue-100 rounded-lg bg-blue-50"
+                  >
+                    <div className="flex justify-between items-center mb-2">
+                      <h4 className="font-medium text-blue-600">{service.name}</h4>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-8 w-8 p-0 rounded-full text-red-500 hover:bg-red-50"
+                        onClick={() => handleRemoveService(index)}
+                      >
+                        <Trash className="h-4 w-4" />
+                      </Button>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      <p>Subservices: {service.subServices.filter(ss => ss.name).length}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            
+            {/* Current service form */}
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4">
                 <Collapsible open={isServiceExpanded} onOpenChange={handleServiceCollapse}>
@@ -123,10 +227,10 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                 </Collapsible>
               </div>
               
-              {newService.subServices.map((subService, index) => (
+              {isServiceExpanded && newService.subServices.map((subService, index) => (
                 <div key={subService.id} className="bg-gray-50 rounded-lg p-4">
                   <Collapsible 
-                    open={isServiceExpanded && expandedSubServices[subService.id] !== false}
+                    open={expandedSubServices[subService.id] !== false}
                     onOpenChange={(open) => setExpandedSubServices(prev => ({ ...prev, [subService.id]: open }))}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -272,17 +376,19 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
             <div className="pt-6 space-y-4 mt-4">
               <Button 
                 variant="outline"
-                onClick={addNewService}
+                onClick={handleAddAnotherService}
                 className="w-full py-3 h-auto bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium flex items-center justify-center"
+                disabled={!newService.name || !newService.subServices.some(ss => ss.name)}
               >
-                <Plus className="h-4 w-4 mr-2" /> Add Another Service
+                <Plus className="h-4 w-4 mr-2" /> Add Service & Create Another
               </Button>
               
               <Button 
-                onClick={addNewService}
+                onClick={handleSaveAllServices}
                 className="w-full py-3 h-auto bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium"
+                disabled={(services.length === 0 && (!newService.name || !newService.subServices.some(ss => ss.name)))}
               >
-                Save
+                Save {services.length + (newService.name && newService.subServices.some(ss => ss.name) ? 1 : 0)} Services
               </Button>
             </div>
           </ScrollArea>
@@ -350,3 +456,4 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
       </Dialog>
     </>;
 };
+

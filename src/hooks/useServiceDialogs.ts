@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
@@ -30,11 +31,14 @@ export const useServiceDialogs = () => {
   };
   
   const [newService, setNewService] = useState(defaultNewService);
+  // Store multiple services being created
+  const [pendingServices, setPendingServices] = useState<typeof defaultNewService[]>([]);
   
   // Reset the newService state when dialog opens or closes
   useEffect(() => {
     if (!isAddServiceDialogOpen) {
       setNewService(defaultNewService);
+      setPendingServices([]);
     }
   }, [isAddServiceDialogOpen]);
   
@@ -109,7 +113,6 @@ export const useServiceDialogs = () => {
     }));
   };
 
-  // Updated to accept the id parameter
   const removeSubServiceFromForm = (id: string) => {
     if (newService.subServices.length <= 1) {
       toast.error("You need at least one sub-service");
@@ -171,8 +174,37 @@ export const useServiceDialogs = () => {
 
   // Function to reset the form and keep the dialog open
   const resetServiceForm = () => {
+    // Save the current service to pendingServices if it has a name
+    if (newService.name && newService.subServices.some(ss => ss.name.trim())) {
+      setPendingServices(prev => [...prev, newService]);
+    }
+    
+    // Reset for new service
     setNewService(defaultNewService);
     toast.success("Form reset for new service entry");
+  };
+
+  // Function to add all pending services at once
+  const addAllPendingServices = (addNewServiceFn: (service: any) => boolean) => {
+    let allSuccessful = true;
+    
+    // Add all pending services
+    pendingServices.forEach(service => {
+      const success = addNewServiceFn(service);
+      if (!success) {
+        allSuccessful = false;
+      }
+    });
+    
+    // Add current service if it has data
+    if (newService.name && newService.subServices.some(ss => ss.name.trim())) {
+      const success = addNewServiceFn(newService);
+      if (!success) {
+        allSuccessful = false;
+      }
+    }
+    
+    return allSuccessful;
   };
 
   return {
@@ -197,14 +229,16 @@ export const useServiceDialogs = () => {
       newItem,
       editItem,
       newServiceItem,
-      currentSubserviceIndex
+      currentSubserviceIndex,
+      pendingServices
     },
     setters: {
       setNewSubservice,
       setEditSubservice,
       setNewItem,
       setEditItem,
-      setNewServiceItem
+      setNewServiceItem,
+      setPendingServices
     },
     handlers: {
       handleNewServiceChange,
@@ -214,7 +248,8 @@ export const useServiceDialogs = () => {
       addItemToSubService,
       saveNewServiceItem,
       handleNewServiceItemChange,
-      resetServiceForm
+      resetServiceForm,
+      addAllPendingServices
     }
   };
 };
