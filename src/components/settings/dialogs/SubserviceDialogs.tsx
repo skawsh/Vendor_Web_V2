@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Plus } from 'lucide-react';
 
 interface SubserviceDialogsProps {
   isAddSubserviceDialogOpen: boolean;
@@ -62,11 +63,71 @@ export const SubserviceDialogs: React.FC<SubserviceDialogsProps> = ({
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="new-subservice-name">Subservice Name</Label>
-              <Input id="new-subservice-name" value={newSubservice.name} onChange={e => handleNewSubserviceChange('name', e.target.value)} />
+              <Input 
+                id="new-subservice-name" 
+                value={newSubservice.name} 
+                onChange={e => handleNewSubserviceChange('name', e.target.value)} 
+                className="w-full"
+              />
             </div>
+
+            <div className="space-y-4">
+              <h3 className="font-medium">Pricing Details</h3>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-price-per-kg">Standard Price per KG</Label>
+                  <Input 
+                    id="new-price-per-kg" 
+                    type="number" 
+                    value={newSubservice.pricePerKg || ''} 
+                    onChange={e => handleNewSubserviceChange('pricePerKg', e.target.value)} 
+                    placeholder="Price per KG" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-express-price-per-kg">Express Price per KG</Label>
+                  <Input 
+                    id="new-express-price-per-kg" 
+                    type="number" 
+                    value={newSubservice.expressPricePerKg || ''} 
+                    onChange={e => handleNewSubserviceChange('expressPricePerKg', e.target.value)} 
+                    placeholder="Express price per KG" 
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="new-price-per-item">Standard Price per Item</Label>
+                  <Input 
+                    id="new-price-per-item" 
+                    type="number" 
+                    value={newSubservice.pricePerItem || ''} 
+                    onChange={e => handleNewSubserviceChange('pricePerItem', e.target.value)} 
+                    placeholder="Price per item" 
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="new-express-price-per-item">Express Price per Item</Label>
+                  <Input 
+                    id="new-express-price-per-item" 
+                    type="number" 
+                    value={newSubservice.expressPricePerItem || ''} 
+                    onChange={e => handleNewSubserviceChange('expressPricePerItem', e.target.value)} 
+                    placeholder="Express price per item" 
+                  />
+                </div>
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <Label htmlFor="new-subservice-price">Price (Optional)</Label>
-              <Input id="new-subservice-price" type="number" value={newSubservice.price || ''} onChange={e => handleNewSubserviceChange('price', e.target.value)} placeholder="Enter price (optional)" />
+              <div className="flex justify-between items-center">
+                <h3 className="font-medium">Clothing Items</h3>
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
+                  <Plus className="h-4 w-4" /> Add Items
+                </Button>
+              </div>
             </div>
           </div>
           <DialogFooter>
@@ -74,7 +135,7 @@ export const SubserviceDialogs: React.FC<SubserviceDialogsProps> = ({
               Cancel
             </Button>
             <Button onClick={addNewSubservice}>
-              Add Subservice
+              Save
             </Button>
           </DialogFooter>
         </DialogContent>
