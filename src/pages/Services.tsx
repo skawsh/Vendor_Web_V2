@@ -12,9 +12,9 @@ import { Service, NewSubservice, EditSubservice, NewItem, EditItem } from '@/typ
 const Services = () => {
   const [services, setServices] = useState<Service[]>([{
     id: '1',
-    name: 'Wash & Fold',
+    name: 'Core Laundry Services',
     isOpen: false,
-    description: 'Garments are washed and folded neatly',
+    description: 'Complete laundry care for everyday garments',
     price: 49,
     unit: 'kg',
     isEditing: false,
@@ -55,92 +55,127 @@ const Services = () => {
     }]
   }, {
     id: '2',
-    name: 'Wash & Iron',
+    name: 'Dry Cleaning',
     isOpen: false,
-    description: 'Garments are washed and ironed to perfection',
-    price: 69,
-    unit: 'kg',
-    isEditing: false,
-    subServices: [{
-      id: '2-1',
-      name: 'Regular Service',
-      isOpen: false,
-      items: [{
-        id: '2-1-1',
-        name: 'Shirt',
-        price: 55,
-        standardPrice: 55,
-        expressPrice: 75
-      }, {
-        id: '2-1-2',
-        name: 'Pants',
-        price: 65,
-        standardPrice: 65,
-        expressPrice: 85
-      }]
-    }, {
-      id: '2-2',
-      name: 'Premium Service',
-      isOpen: false,
-      items: [{
-        id: '2-2-1',
-        name: 'Blazer',
-        price: 120,
-        standardPrice: 120,
-        expressPrice: 160
-      }, {
-        id: '2-2-2',
-        name: 'Suit',
-        price: 200,
-        standardPrice: 200,
-        expressPrice: 260
-      }]
-    }]
-  }, {
-    id: '3',
-    name: 'Dry Clean',
-    isOpen: false,
-    description: 'Specialized cleaning for delicate fabrics',
+    description: 'Professional dry cleaning for delicate fabrics',
     price: 250,
     unit: 'piece',
     isEditing: false,
     subServices: [{
-      id: '3-1',
+      id: '2-1',
       name: 'Basic Dry Clean',
       isOpen: false,
       items: [{
-        id: '3-1-1',
+        id: '2-1-1',
         name: 'Sweater',
         price: 180,
         standardPrice: 180,
         expressPrice: 250
       }, {
-        id: '3-1-2',
+        id: '2-1-2',
         name: 'Winter Jacket',
         price: 350,
         standardPrice: 350,
         expressPrice: 450
       }]
     }, {
-      id: '3-2',
+      id: '2-2',
       name: 'Premium Dry Clean',
       isOpen: false,
       items: [{
-        id: '3-2-1',
+        id: '2-2-1',
         name: 'Wedding Dress',
         price: 1200,
         standardPrice: 1200,
         expressPrice: 1500
       }, {
-        id: '3-2-2',
+        id: '2-2-2',
         name: 'Formal Suit',
         price: 800,
         standardPrice: 800,
         expressPrice: 1000
       }]
     }]
+  }, {
+    id: '3',
+    name: 'Specialized Laundry Services',
+    isOpen: false,
+    description: 'Specialized care for unique garments and fabrics',
+    price: 150,
+    unit: 'piece',
+    isEditing: false,
+    subServices: [{
+      id: '3-1',
+      name: 'Stain Removal',
+      isOpen: false,
+      items: [{
+        id: '3-1-1',
+        name: 'Light Stains',
+        price: 100,
+        standardPrice: 100,
+        expressPrice: 150
+      }, {
+        id: '3-1-2',
+        name: 'Heavy Stains',
+        price: 200,
+        standardPrice: 200,
+        expressPrice: 300
+      }]
+    }]
+  }, {
+    id: '4',
+    name: 'Shoe Cleaning',
+    isOpen: false,
+    description: 'Professional cleaning for all types of shoes',
+    price: 99,
+    unit: 'pair',
+    isEditing: false,
+    subServices: [{
+      id: '4-1',
+      name: 'Basic Shoe Clean',
+      isOpen: false,
+      items: [{
+        id: '4-1-1',
+        name: 'Leather Shoes',
+        price: 99,
+        standardPrice: 99,
+        expressPrice: 149
+      }, {
+        id: '4-1-2',
+        name: 'Canvas Shoes',
+        price: 79,
+        standardPrice: 79,
+        expressPrice: 119
+      }]
+    }]
+  }, {
+    id: '5',
+    name: 'Sneaker Cleaning',
+    isOpen: false,
+    description: 'Specialized cleaning for sneakers and athletic footwear',
+    price: 129,
+    unit: 'pair',
+    isEditing: false,
+    subServices: [{
+      id: '5-1',
+      name: 'Premium Sneaker Care',
+      isOpen: false,
+      items: [{
+        id: '5-1-1',
+        name: 'Basic Clean',
+        price: 129,
+        standardPrice: 129,
+        expressPrice: 189
+      }, {
+        id: '5-1-2',
+        name: 'Deep Clean',
+        price: 179,
+        standardPrice: 179,
+        expressPrice: 259
+      }]
+    }]
   }]);
-  
+
   const [isAddServiceDialogOpen, setIsAddServiceDialogOpen] = useState(false);
   const [isAddSubserviceDialogOpen, setIsAddSubserviceDialogOpen] = useState(false);
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
