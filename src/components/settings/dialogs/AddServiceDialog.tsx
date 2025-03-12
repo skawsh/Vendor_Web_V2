@@ -1,9 +1,8 @@
-
 import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Plus, ChevronDown, ChevronUp, X } from 'lucide-react';
@@ -71,17 +70,17 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   const [expandedSubServices, setExpandedSubServices] = React.useState<Record<string, boolean>>({});
   const [isServiceExpanded, setIsServiceExpanded] = React.useState(true);
 
-  const toggleSubService = (id: string) => {
-    setExpandedSubServices(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+  // Reset all subservices visibility when main service is collapsed
+  const handleServiceCollapse = (open: boolean) => {
+    setIsServiceExpanded(open);
+    if (!open) {
+      setExpandedSubServices({});
+    }
   };
 
   // Reset form data when dialog opens or closes
   useEffect(() => {
     if (!isOpen) {
-      // Reset expandedSubServices state when dialog closes
       setExpandedSubServices({});
       setIsServiceExpanded(true);
     }
@@ -90,20 +89,17 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   return <>
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-2xl p-0 bg-white rounded-2xl overflow-hidden">
-          <DialogHeader className="bg-white p-6 border-b relative">
+          <DialogHeader className="bg-white p-6 border-b">
             <DialogTitle className="text-2xl font-semibold text-center text-blue-600">Add New Service</DialogTitle>
             <DialogDescription className="text-center text-gray-500 mt-1">
               Create a new service with subservices and items
             </DialogDescription>
-            <DialogClose className="absolute right-4 top-4 rounded-full p-1 text-gray-400 hover:text-gray-500 hover:bg-gray-100">
-              <X className="h-5 w-5" />
-            </DialogClose>
           </DialogHeader>
           
           <ScrollArea className="max-h-[70vh] overflow-y-auto py-6 px-6">
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4">
-                <Collapsible open={isServiceExpanded} onOpenChange={setIsServiceExpanded}>
+                <Collapsible open={isServiceExpanded} onOpenChange={handleServiceCollapse}>
                   <div className="flex items-center justify-between mb-2">
                     <Label htmlFor="new-service-name" className="text-gray-700 font-medium text-base">Service Name</Label>
                     <CollapsibleTrigger asChild>
@@ -124,26 +120,13 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                     placeholder="Enter service name"
                     className="border border-blue-200 focus:border-blue-400 rounded-lg mb-2"
                   />
-                  
-                  <CollapsibleContent>
-                    <div className="pt-2">
-                      <Label htmlFor="new-service-description" className="text-gray-700 font-medium">Service Description</Label>
-                      <Input 
-                        id="new-service-description" 
-                        value={newService.description} 
-                        onChange={e => handleNewServiceChange('description', e.target.value)} 
-                        placeholder="Enter service description"
-                        className="border border-blue-200 focus:border-blue-400 rounded-lg mt-1"
-                      />
-                    </div>
-                  </CollapsibleContent>
                 </Collapsible>
               </div>
               
               {newService.subServices.map((subService, index) => (
                 <div key={subService.id} className="bg-gray-50 rounded-lg p-4">
                   <Collapsible 
-                    open={expandedSubServices[subService.id] !== false}
+                    open={isServiceExpanded && expandedSubServices[subService.id] !== false}
                     onOpenChange={(open) => setExpandedSubServices(prev => ({ ...prev, [subService.id]: open }))}
                   >
                     <div className="flex items-center justify-between mb-2">
@@ -289,7 +272,7 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
             <div className="pt-6 space-y-4 mt-4">
               <Button 
                 variant="outline"
-                onClick={addSubServiceToForm}
+                onClick={addNewService}
                 className="w-full py-3 h-auto bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium flex items-center justify-center"
               >
                 <Plus className="h-4 w-4 mr-2" /> Add Another Service
