@@ -1,4 +1,3 @@
-
 export interface Item {
   id: string;
   name: string;
@@ -13,6 +12,7 @@ export interface Subservice {
   isOpen: boolean;
   price?: number;
   items: Item[];
+  active: boolean; // Added active state
 }
 
 export interface Service {
@@ -24,6 +24,7 @@ export interface Service {
   unit: string;
   isEditing: boolean;
   subServices: Subservice[];
+  active: boolean; // Added active state
 }
 
 export interface NewSubservice {

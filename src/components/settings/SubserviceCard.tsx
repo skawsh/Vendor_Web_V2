@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronRight, Edit, Plus, Trash2 } from 'lucide-react';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { Service, Subservice } from '@/types/services';
+import { Switch } from '@/components/ui/switch';
 
 interface SubserviceCardProps {
   service: Service;
@@ -15,6 +16,7 @@ interface SubserviceCardProps {
   openAddItemDialog: (serviceId: string, subserviceId: string) => void;
   openEditItemDialog: (serviceId: string, subserviceId: string, item: any) => void;
   deleteItem: (serviceId: string, subserviceId: string, itemId: string) => void;
+  toggleSubserviceActive: (serviceId: string, subserviceId: string) => void;
 }
 
 export const SubserviceCard: React.FC<SubserviceCardProps> = ({
@@ -25,7 +27,8 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
   deleteSubservice,
   openAddItemDialog,
   openEditItemDialog,
-  deleteItem
+  deleteItem,
+  toggleSubserviceActive
 }) => {
   return (
     <Card key={subservice.id} className="border">
@@ -41,6 +44,16 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
           </div>
         </div>
         <div className="flex items-center gap-1">
+          <div 
+            className="flex items-center gap-2 mr-2" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <span className="text-xs text-gray-500">{subservice.active ? 'Active' : 'Inactive'}</span>
+            <Switch 
+              checked={subservice.active} 
+              onCheckedChange={() => toggleSubserviceActive(service.id, subservice.id)}
+            />
+          </div>
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={e => {
             e.stopPropagation();
             openEditSubserviceDialog(service.id, subservice);

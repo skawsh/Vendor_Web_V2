@@ -14,6 +14,7 @@ interface SubservicesSectionProps {
   openAddItemDialog: (serviceId: string, subserviceId: string) => void;
   openEditItemDialog: (serviceId: string, subserviceId: string, item: any) => void;
   deleteItem: (serviceId: string, subserviceId: string, itemId: string) => void;
+  toggleSubserviceActive: (serviceId: string, subserviceId: string) => void;
 }
 
 export const SubservicesSection: React.FC<SubservicesSectionProps> = ({
@@ -24,7 +25,8 @@ export const SubservicesSection: React.FC<SubservicesSectionProps> = ({
   deleteSubservice,
   openAddItemDialog,
   openEditItemDialog,
-  deleteItem
+  deleteItem,
+  toggleSubserviceActive
 }) => {
   return (
     <div className="mt-4 mx-0 my-0 px-0 py-0">
@@ -47,6 +49,7 @@ export const SubservicesSection: React.FC<SubservicesSectionProps> = ({
             openAddItemDialog={openAddItemDialog}
             openEditItemDialog={openEditItemDialog}
             deleteItem={deleteItem}
+            toggleSubserviceActive={toggleSubserviceActive}
           />
         ))}
         

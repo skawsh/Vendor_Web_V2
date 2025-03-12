@@ -11,10 +11,12 @@ export const useServices = () => {
     price: 49,
     unit: 'kg',
     isEditing: false,
+    active: true,
     subServices: [{
       id: '1-1',
       name: 'Regular Wash',
       isOpen: false,
+      active: true,
       items: [{
         id: '1-1-1',
         name: 'T-shirt',
@@ -32,6 +34,7 @@ export const useServices = () => {
       id: '1-2',
       name: 'Premium Wash',
       isOpen: false,
+      active: true,
       items: [{
         id: '1-2-1',
         name: 'Dress Shirt',
@@ -54,10 +57,12 @@ export const useServices = () => {
     price: 250,
     unit: 'piece',
     isEditing: false,
+    active: true,
     subServices: [{
       id: '2-1',
       name: 'Basic Dry Clean',
       isOpen: false,
+      active: true,
       items: [{
         id: '2-1-1',
         name: 'Sweater',
@@ -75,6 +80,7 @@ export const useServices = () => {
       id: '2-2',
       name: 'Premium Dry Clean',
       isOpen: false,
+      active: true,
       items: [{
         id: '2-2-1',
         name: 'Wedding Dress',
@@ -97,10 +103,12 @@ export const useServices = () => {
     price: 150,
     unit: 'piece',
     isEditing: false,
+    active: true,
     subServices: [{
       id: '3-1',
       name: 'Stain Removal',
       isOpen: false,
+      active: true,
       items: [{
         id: '3-1-1',
         name: 'Light Stains',
@@ -123,10 +131,12 @@ export const useServices = () => {
     price: 99,
     unit: 'pair',
     isEditing: false,
+    active: true,
     subServices: [{
       id: '4-1',
       name: 'Basic Shoe Clean',
       isOpen: false,
+      active: true,
       items: [{
         id: '4-1-1',
         name: 'Leather Shoes',
@@ -149,10 +159,12 @@ export const useServices = () => {
     price: 129,
     unit: 'pair',
     isEditing: false,
+    active: true,
     subServices: [{
       id: '5-1',
       name: 'Premium Sneaker Care',
       isOpen: false,
+      active: true,
       items: [{
         id: '5-1-1',
         name: 'Basic Clean',
@@ -187,6 +199,42 @@ export const useServices = () => {
         )
       } : service
     ));
+  };
+
+  // New function to toggle service active state
+  const toggleServiceActive = (serviceId: string) => {
+    setServices(prevServices => prevServices.map(service => 
+      service.id === serviceId ? { 
+        ...service, 
+        active: !service.active 
+      } : service
+    ));
+    
+    const service = services.find(s => s.id === serviceId);
+    if (service) {
+      toast.success(`${service.name} ${!service.active ? 'activated' : 'deactivated'} successfully`);
+    }
+  };
+
+  // New function to toggle subservice active state
+  const toggleSubserviceActive = (serviceId: string, subserviceId: string) => {
+    setServices(prevServices => prevServices.map(service => 
+      service.id === serviceId ? {
+        ...service,
+        subServices: service.subServices.map(subservice => 
+          subservice.id === subserviceId ? {
+            ...subservice,
+            active: !subservice.active
+          } : subservice
+        )
+      } : service
+    ));
+    
+    const service = services.find(s => s.id === serviceId);
+    const subservice = service?.subServices.find(s => s.id === subserviceId);
+    if (subservice) {
+      toast.success(`${subservice.name} ${!subservice.active ? 'activated' : 'deactivated'} successfully`);
+    }
   };
 
   const toggleEditService = (serviceId: string) => {
@@ -233,6 +281,7 @@ export const useServices = () => {
       unit: newService.unit,
       isOpen: false,
       isEditing: false,
+      active: true, // New services are active by default
       subServices: newService.subServices
         .filter((ss: any) => ss.name.trim())
         .map((ss: any, index: number) => ({
@@ -240,6 +289,7 @@ export const useServices = () => {
           name: ss.name,
           price: parseFloat(ss.price) || undefined,
           isOpen: false,
+          active: true, // New subservices are active by default
           items: []
         }))
     }]);
@@ -268,6 +318,7 @@ export const useServices = () => {
         name: newSubservice.name,
         price: newSubservice.price ? parseFloat(newSubservice.price) : undefined,
         isOpen: false,
+        active: true, // New subservices are active by default
         items: []
       }]
     } : service));
@@ -359,6 +410,8 @@ export const useServices = () => {
     saveSubserviceChanges,
     addNewItem,
     saveItemChanges,
-    deleteItem
+    deleteItem,
+    toggleServiceActive,   // Export the new toggle functions
+    toggleSubserviceActive
   };
 };

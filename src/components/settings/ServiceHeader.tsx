@@ -2,24 +2,28 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronDown, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 
 interface ServiceHeaderProps {
   service: {
     id: string;
     name: string;
     isOpen: boolean;
+    active: boolean;
     subServices: any[];
   };
   toggleService: (serviceId: string) => void;
   toggleEditService: (serviceId: string) => void;
   deleteService: (serviceId: string) => void;
+  toggleServiceActive: (serviceId: string) => void;
 }
 
 export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
   service,
   toggleService,
   toggleEditService,
-  deleteService
+  deleteService,
+  toggleServiceActive
 }) => {
   return (
     <div 
@@ -39,6 +43,16 @@ export const ServiceHeader: React.FC<ServiceHeaderProps> = ({
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <div 
+          className="flex items-center gap-2 mr-2" 
+          onClick={(e) => e.stopPropagation()}
+        >
+          <span className="text-sm text-gray-500">{service.active ? 'Active' : 'Inactive'}</span>
+          <Switch 
+            checked={service.active} 
+            onCheckedChange={() => toggleServiceActive(service.id)}
+          />
+        </div>
         <Button 
           variant="ghost" 
           size="icon" 

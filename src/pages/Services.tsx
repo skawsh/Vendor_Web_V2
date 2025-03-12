@@ -25,7 +25,9 @@ const Services = () => {
     saveSubserviceChanges,
     addNewItem,
     saveItemChanges,
-    deleteItem
+    deleteItem,
+    toggleServiceActive,
+    toggleSubserviceActive
   } = useServices();
 
   const {
@@ -149,6 +151,8 @@ const Services = () => {
                 openEditItemDialog={openEditItemDialog}
                 deleteItem={deleteItem}
                 deleteService={deleteService}
+                toggleServiceActive={toggleServiceActive}
+                toggleSubserviceActive={toggleSubserviceActive}
               />
             ))}
           </div>

@@ -21,6 +21,8 @@ interface ServiceCardProps {
   openEditItemDialog: (serviceId: string, subserviceId: string, item: any) => void;
   deleteItem: (serviceId: string, subserviceId: string, itemId: string) => void;
   deleteService: (serviceId: string) => void;
+  toggleServiceActive: (serviceId: string) => void;
+  toggleSubserviceActive: (serviceId: string, subserviceId: string) => void;
 }
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({
@@ -36,7 +38,9 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
   openAddItemDialog,
   openEditItemDialog,
   deleteItem,
-  deleteService
+  deleteService,
+  toggleServiceActive,
+  toggleSubserviceActive
 }) => {
   return (
     <Card key={service.id} className="border">
@@ -45,6 +49,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
         toggleService={toggleService}
         toggleEditService={toggleEditService}
         deleteService={deleteService}
+        toggleServiceActive={toggleServiceActive}
       />
       
       <Collapsible open={service.isOpen}>
@@ -72,6 +77,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
                   openAddItemDialog={openAddItemDialog}
                   openEditItemDialog={openEditItemDialog}
                   deleteItem={deleteItem}
+                  toggleSubserviceActive={toggleSubserviceActive}
                 />
               </div>
             )}
