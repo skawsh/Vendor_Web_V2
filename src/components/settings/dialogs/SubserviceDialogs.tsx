@@ -1,10 +1,9 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Plus } from 'lucide-react';
+import { Plus, X, Check } from 'lucide-react';
 
 interface SubserviceDialogsProps {
   isAddSubserviceDialogOpen: boolean;
@@ -48,6 +47,33 @@ export const SubserviceDialogs: React.FC<SubserviceDialogsProps> = ({
   handleEditSubserviceChange,
   saveSubserviceChanges
 }) => {
+  const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
+  const [newItem, setNewItem] = useState({
+    name: '',
+    standardPrice: '',
+    expressPrice: ''
+  });
+
+  const handleNewItemChange = (field: string, value: string) => {
+    setNewItem(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleAddItem = () => {
+    if (!newItem.name) {
+      return;
+    }
+    // Add the item logic here
+    setIsAddItemDialogOpen(false);
+    setNewItem({
+      name: '',
+      standardPrice: '',
+      expressPrice: ''
+    });
+  };
+
   const isWashFold = editSubservice.name === 'Wash&Fold';
 
   return (
@@ -217,6 +243,60 @@ export const SubserviceDialogs: React.FC<SubserviceDialogsProps> = ({
             </Button>
             <Button onClick={saveSubserviceChanges}>
               Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isAddItemDialogOpen} onOpenChange={setIsAddItemDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Item</DialogTitle>
+            <DialogDescription>
+              Create a new item for the selected subservice
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="item-name">Item Name</Label>
+              <Input
+                id="item-name"
+                value={newItem.name}
+                onChange={(e) => handleNewItemChange('name', e.target.value)}
+                placeholder="Enter item name"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="standard-price">Standard Price</Label>
+              <Input
+                id="standard-price"
+                type="number"
+                value={newItem.standardPrice}
+                onChange={(e) => handleNewItemChange('standardPrice', e.target.value)}
+                placeholder="Enter standard price"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="express-price">Express Price</Label>
+              <Input
+                id="express-price"
+                type="number"
+                value={newItem.expressPrice}
+                onChange={(e) => handleNewItemChange('expressPrice', e.target.value)}
+                placeholder="Enter express price"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddItemDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              variant="default"
+              onClick={handleAddItem}
+              className="bg-blue-500 hover:bg-blue-600"
+            >
+              Add Item
             </Button>
           </DialogFooter>
         </DialogContent>
