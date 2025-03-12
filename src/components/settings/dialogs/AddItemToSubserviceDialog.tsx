@@ -26,7 +26,7 @@ export const AddItemToSubserviceDialog: React.FC<AddItemToSubserviceDialogProps>
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Add New Item</DialogTitle>
           <DialogDescription>
@@ -41,6 +41,7 @@ export const AddItemToSubserviceDialog: React.FC<AddItemToSubserviceDialogProps>
               value={newItem.name}
               onChange={(e) => handleNewItemChange('name', e.target.value)}
               placeholder="Enter item name"
+              className="rounded-lg border-blue-200"
             />
           </div>
           <div className="space-y-2">
@@ -51,6 +52,7 @@ export const AddItemToSubserviceDialog: React.FC<AddItemToSubserviceDialogProps>
               value={newItem.standardPrice}
               onChange={(e) => handleNewItemChange('standardPrice', e.target.value)}
               placeholder="Enter standard price"
+              className="rounded-lg border-blue-200"
             />
           </div>
           <div className="space-y-2">
@@ -61,17 +63,21 @@ export const AddItemToSubserviceDialog: React.FC<AddItemToSubserviceDialogProps>
               value={newItem.expressPrice}
               onChange={(e) => handleNewItemChange('expressPrice', e.target.value)}
               placeholder="Enter express price"
+              className="rounded-lg border-blue-200"
             />
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button 
+            variant="outline" 
+            onClick={() => onOpenChange(false)}
+            className="rounded-md"
+          >
             Cancel
           </Button>
           <Button 
-            variant="default"
             onClick={handleAddItem}
-            className="bg-blue-500 hover:bg-blue-600"
+            className="bg-blue-500 hover:bg-blue-600 rounded-md"
           >
             Add Item
           </Button>
