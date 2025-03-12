@@ -11,6 +11,8 @@ export const useServiceDialogs = () => {
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
   const [isAddServiceItemDialogOpen, setIsAddServiceItemDialogOpen] = useState(false);
   const [currentSubserviceIndex, setCurrentSubserviceIndex] = useState<string>('0');
+  const [isEditingService, setIsEditingService] = useState(false);
+  const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
 
   const defaultNewService = {
     name: '',
@@ -39,6 +41,8 @@ export const useServiceDialogs = () => {
     if (!isAddServiceDialogOpen) {
       setNewService(defaultNewService);
       setPendingServices([]);
+      setIsEditingService(false);
+      setEditingServiceId(null);
     }
   }, [isAddServiceDialogOpen]);
   
@@ -194,6 +198,8 @@ export const useServiceDialogs = () => {
     
     // Reset for new service
     setNewService(defaultNewService);
+    setIsEditingService(false);
+    setEditingServiceId(null);
     toast.success("Form reset for new service entry");
   };
 
@@ -218,6 +224,19 @@ export const useServiceDialogs = () => {
     }
     
     return allSuccessful;
+  };
+
+  // Function to set editing mode and service
+  const startEditingService = (service: any) => {
+    setIsEditingService(true);
+    setEditingServiceId(service.id);
+    
+    // Populate form with service data
+    setNewService({
+      ...defaultNewService,
+      name: service.name,
+      subServices: service.subServices
+    });
   };
 
   return {
@@ -245,7 +264,9 @@ export const useServiceDialogs = () => {
       currentSubserviceIndex,
       pendingServices,
       expandedSubServices,
-      isServiceExpanded
+      isServiceExpanded,
+      isEditingService,
+      editingServiceId
     },
     setters: {
       setNewSubservice,
@@ -254,7 +275,9 @@ export const useServiceDialogs = () => {
       setEditItem,
       setNewServiceItem,
       setPendingServices,
-      setExpandedSubServices
+      setExpandedSubServices,
+      setIsEditingService,
+      setEditingServiceId
     },
     handlers: {
       handleNewServiceChange,
@@ -266,7 +289,8 @@ export const useServiceDialogs = () => {
       handleNewServiceItemChange,
       resetServiceForm,
       addAllPendingServices,
-      handleServiceCollapse
+      handleServiceCollapse,
+      startEditingService
     }
   };
 };

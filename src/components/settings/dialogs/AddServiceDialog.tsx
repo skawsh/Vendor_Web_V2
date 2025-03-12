@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Plus, ChevronDown, ChevronUp, Trash, X } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Trash, X, Pencil } from 'lucide-react';
 
 interface AddServiceDialogProps {
   isOpen: boolean;
@@ -92,6 +93,8 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
     }>
   >([]);
   const [currentServiceIndex, setCurrentServiceIndex] = React.useState(0);
+  const [isEditingService, setIsEditingService] = React.useState(false);
+  const [editingServiceId, setEditingServiceId] = React.useState<string | null>(null);
 
   const handleServiceCollapse = (open: boolean) => {
     setIsServiceExpanded(open);
@@ -105,12 +108,29 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
       return;
     }
 
-    setServices(prev => [...prev, { 
-      id: `service-${Date.now()}`,
-      name: newService.name,
-      subServices: newService.subServices.filter(ss => ss.name.trim())
-    }]);
+    if (isEditingService && editingServiceId) {
+      // Update existing service
+      setServices(prev => prev.map(service => 
+        service.id === editingServiceId 
+          ? { 
+              ...service, 
+              name: newService.name,
+              subServices: newService.subServices.filter(ss => ss.name.trim())
+            } 
+          : service
+      ));
+      setIsEditingService(false);
+      setEditingServiceId(null);
+    } else {
+      // Add new service
+      setServices(prev => [...prev, { 
+        id: `service-${Date.now()}`,
+        name: newService.name,
+        subServices: newService.subServices.filter(ss => ss.name.trim())
+      }]);
+    }
 
+    // Reset form for new service
     handleNewServiceChange('name', '');
     newService.subServices.forEach(ss => {
       removeSubServiceFromForm(ss.id);
@@ -126,13 +146,67 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
     setServices(prev => prev.filter((_, i) => i !== index));
   };
 
+  const handleEditService = (serviceId: string) => {
+    const serviceToEdit = services.find(service => service.id === serviceId);
+    if (!serviceToEdit) return;
+
+    // Clear current form
+    handleNewServiceChange('name', '');
+    newService.subServices.forEach(ss => {
+      removeSubServiceFromForm(ss.id);
+    });
+
+    // Fill form with service to edit
+    handleNewServiceChange('name', serviceToEdit.name);
+    
+    // Remove the empty subservice that gets added by default
+    if (newService.subServices.length > 0) {
+      removeSubServiceFromForm(newService.subServices[0].id);
+    }
+
+    // Add the subservices from the service being edited
+    serviceToEdit.subServices.forEach((subService, index) => {
+      addSubServiceToForm();
+      const newId = String(newService.subServices.length - 1);
+      
+      handleSubServiceChange(newId, 'name', subService.name);
+      if (subService.pricePerKg) handleSubServiceChange(newId, 'pricePerKg', subService.pricePerKg);
+      if (subService.expressPricePerKg) handleSubServiceChange(newId, 'expressPricePerKg', subService.expressPricePerKg);
+      if (subService.pricePerItem) handleSubServiceChange(newId, 'pricePerItem', subService.pricePerItem);
+      if (subService.expressPricePerItem) handleSubServiceChange(newId, 'expressPricePerItem', subService.expressPricePerItem);
+      
+      // Add items if present
+      if (subService.items && subService.items.length > 0) {
+        handleSubServiceChange(newId, 'items', JSON.stringify(subService.items));
+      }
+    });
+
+    setIsEditingService(true);
+    setEditingServiceId(serviceId);
+    setIsServiceExpanded(true);
+  };
+
   const handleSaveAllServices = () => {
     if (newService.name && newService.subServices.some(ss => ss.name)) {
-      setServices(prev => [...prev, { 
-        id: `service-${Date.now()}`,
-        name: newService.name,
-        subServices: newService.subServices.filter(ss => ss.name.trim())
-      }]);
+      if (isEditingService && editingServiceId) {
+        // Update existing service
+        setServices(prev => prev.map(service => 
+          service.id === editingServiceId 
+            ? { 
+                ...service, 
+                name: newService.name,
+                subServices: newService.subServices.filter(ss => ss.name.trim())
+              } 
+            : service
+        ));
+      } else {
+        // Add new service
+        setServices(prev => [...prev, { 
+          id: `service-${Date.now()}`,
+          name: newService.name,
+          subServices: newService.subServices.filter(ss => ss.name.trim())
+        }]);
+      }
     }
 
     services.forEach(() => {
@@ -148,6 +222,8 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
       setIsServiceExpanded(true);
       setServices([]);
       setCurrentServiceIndex(0);
+      setIsEditingService(false);
+      setEditingServiceId(null);
     }
   }, [isOpen]);
 
@@ -172,14 +248,26 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                   >
                     <div className="flex justify-between items-center mb-2">
                       <h4 className="font-medium text-blue-600">{service.name}</h4>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0 rounded-full text-red-500 hover:bg-red-50"
-                        onClick={() => handleRemoveService(index)}
-                      >
-                        <Trash className="h-4 w-4" />
-                      </Button>
+                      <div className="flex space-x-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 rounded-full text-blue-500 hover:bg-blue-100"
+                          onClick={() => handleEditService(service.id)}
+                          title="Edit service"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 rounded-full text-red-500 hover:bg-red-50"
+                          onClick={() => handleRemoveService(index)}
+                          title="Remove service"
+                        >
+                          <Trash className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                     <div className="text-sm text-gray-600">
                       <p>Subservices: {service.subServices.filter(ss => ss.name).length}</p>
@@ -193,7 +281,9 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
               <div className="bg-gray-50 rounded-lg p-4">
                 <Collapsible open={isServiceExpanded} onOpenChange={handleServiceCollapse}>
                   <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor="new-service-name" className="text-gray-700 font-medium text-base">Service Name</Label>
+                    <Label htmlFor="new-service-name" className="text-gray-700 font-medium text-base">
+                      {isEditingService ? 'Edit Service Name' : 'Service Name'}
+                    </Label>
                     <CollapsibleTrigger asChild>
                       <Button 
                         variant="ghost" 
@@ -370,7 +460,11 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                 className="w-full py-3 h-auto bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium flex items-center justify-center"
                 disabled={!newService.name || !newService.subServices.some(ss => ss.name)}
               >
-                <Plus className="h-4 w-4 mr-2" /> Add Service & Create Another
+                {isEditingService ? (
+                  <>Update Service & Continue</>
+                ) : (
+                  <><Plus className="h-4 w-4 mr-2" /> Add Service & Create Another</>
+                )}
               </Button>
               
               <Button 
