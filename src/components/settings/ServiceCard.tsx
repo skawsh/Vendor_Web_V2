@@ -23,6 +23,7 @@ interface ServiceCardProps {
   deleteService: (serviceId: string) => void;
   toggleServiceActive: (serviceId: string) => void;
   toggleSubserviceActive: (serviceId: string, subserviceId: string) => void;
+  toggleItemActive: (serviceId: string, subserviceId: string, itemId: string) => void;
 }
 
 export const ServiceCard: React.FC<ServiceCardProps> = ({
@@ -40,7 +41,8 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
   deleteItem,
   deleteService,
   toggleServiceActive,
-  toggleSubserviceActive
+  toggleSubserviceActive,
+  toggleItemActive
 }) => {
   return (
     <Card key={service.id} className="border">
@@ -78,6 +80,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({
                   openEditItemDialog={openEditItemDialog}
                   deleteItem={deleteItem}
                   toggleSubserviceActive={toggleSubserviceActive}
+                  toggleItemActive={toggleItemActive}
                 />
               </div>
             )}
