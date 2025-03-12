@@ -35,7 +35,7 @@ const AppSidebar = () => {
     { name: 'Revenue', icon: DollarSign, path: '/revenue' },
     { name: 'Support', icon: HelpCircle, path: '/support' },
     { name: 'Profile', icon: User, path: '/profile' },
-    { name: 'Settings', icon: Settings, path: '/settings' },
+    { name: 'Services', icon: Settings, path: '/services' },
   ];
 
   const SidebarContent = () => (
