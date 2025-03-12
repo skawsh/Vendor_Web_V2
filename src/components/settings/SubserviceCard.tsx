@@ -164,57 +164,57 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
               
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <p className="text-sm text-gray-600">Standard Price per KG:</p>
                     {!isEditingPrices ? (
-                      <span className="font-medium text-sm">₹{subservice.pricePerKg || (subservice.name === "Wash&Iron" ? 75 : 70)}</span>
+                      <span className="font-medium text-sm ml-1">₹{subservice.pricePerKg || (subservice.name === "Wash&Iron" ? 75 : 70)}</span>
                     ) : (
                       <Input
                         type="number"
                         value={pricePerKg}
                         onChange={(e) => setPricePerKg(e.target.value)}
-                        className="w-20 h-7 text-right text-sm"
+                        className="w-20 h-7 text-right text-sm ml-1"
                       />
                     )}
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <p className="text-sm text-gray-600">Express Price per KG:</p>
                     {!isEditingPrices ? (
-                      <span className="font-medium text-sm">₹{subservice.expressPricePerKg || (subservice.name === "Wash&Iron" ? 120 : 100)}</span>
+                      <span className="font-medium text-sm ml-1">₹{subservice.expressPricePerKg || (subservice.name === "Wash&Iron" ? 120 : 100)}</span>
                     ) : (
                       <Input
                         type="number"
                         value={expressPricePerKg}
                         onChange={(e) => setExpressPricePerKg(e.target.value)}
-                        className="w-20 h-7 text-right text-sm"
+                        className="w-20 h-7 text-right text-sm ml-1"
                       />
                     )}
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <p className="text-sm text-gray-600">Standard Price per Item:</p>
                     {!isEditingPrices ? (
-                      <span className="font-medium text-sm">₹{subservice.pricePerItem || (subservice.name === "Wash&Iron" ? 15 : 10)}</span>
+                      <span className="font-medium text-sm ml-1">₹{subservice.pricePerItem || (subservice.name === "Wash&Iron" ? 15 : 10)}</span>
                     ) : (
                       <Input
                         type="number"
                         value={pricePerItem}
                         onChange={(e) => setPricePerItem(e.target.value)}
-                        className="w-20 h-7 text-right text-sm"
+                        className="w-20 h-7 text-right text-sm ml-1"
                       />
                     )}
                   </div>
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center">
                     <p className="text-sm text-gray-600">Express Price per Item:</p>
                     {!isEditingPrices ? (
-                      <span className="font-medium text-sm">₹{subservice.expressPricePerItem || (subservice.name === "Wash&Iron" ? 25 : 20)}</span>
+                      <span className="font-medium text-sm ml-1">₹{subservice.expressPricePerItem || (subservice.name === "Wash&Iron" ? 25 : 20)}</span>
                     ) : (
                       <Input
                         type="number"
                         value={expressPricePerItem}
                         onChange={(e) => setExpressPricePerItem(e.target.value)}
-                        className="w-20 h-7 text-right text-sm"
+                        className="w-20 h-7 text-right text-sm ml-1"
                       />
                     )}
                   </div>
@@ -311,3 +311,4 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
     </Card>
   );
 };
+
