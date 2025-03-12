@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Service, NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
+import { Service, NewSubservice, EditSubservice, NewItem, EditItem, Subservice } from '@/types/services';
 import { toast } from 'sonner';
 
 export const useServices = () => {
@@ -17,6 +17,10 @@ export const useServices = () => {
       name: 'Wash&Fold',
       isOpen: false,
       active: true,
+      pricePerKg: 70,
+      pricePerItem: 10,
+      expressPricePerKg: 100,
+      expressPricePerItem: 20,
       items: [{
         id: '1-1-1',
         name: 'T-shirt',
@@ -35,6 +39,10 @@ export const useServices = () => {
       name: 'Wash&Iron',
       isOpen: false,
       active: true,
+      pricePerKg: 75,
+      pricePerItem: 15,
+      expressPricePerKg: 120,
+      expressPricePerItem: 25,
       items: [{
         id: '1-2-1',
         name: 'Dress Shirt',
@@ -63,6 +71,10 @@ export const useServices = () => {
       name: 'Basic Dry Clean',
       isOpen: false,
       active: true,
+      pricePerKg: 0,
+      pricePerItem: 0,
+      expressPricePerKg: 0,
+      expressPricePerItem: 0,
       items: [{
         id: '2-1-1',
         name: 'Sweater',
@@ -81,6 +93,10 @@ export const useServices = () => {
       name: 'Premium Dry Clean',
       isOpen: false,
       active: true,
+      pricePerKg: 0,
+      pricePerItem: 0,
+      expressPricePerKg: 0,
+      expressPricePerItem: 0,
       items: [{
         id: '2-2-1',
         name: 'Wedding Dress',
@@ -109,6 +125,10 @@ export const useServices = () => {
       name: 'Stain Removal',
       isOpen: false,
       active: true,
+      pricePerKg: 0,
+      pricePerItem: 0,
+      expressPricePerKg: 0,
+      expressPricePerItem: 0,
       items: [{
         id: '3-1-1',
         name: 'Light Stains',
@@ -137,6 +157,10 @@ export const useServices = () => {
       name: 'Basic Shoe Clean',
       isOpen: false,
       active: true,
+      pricePerKg: 0,
+      pricePerItem: 0,
+      expressPricePerKg: 0,
+      expressPricePerItem: 0,
       items: [{
         id: '4-1-1',
         name: 'Leather Shoes',
@@ -165,6 +189,10 @@ export const useServices = () => {
       name: 'Premium Sneaker Care',
       isOpen: false,
       active: true,
+      pricePerKg: 0,
+      pricePerItem: 0,
+      expressPricePerKg: 0,
+      expressPricePerItem: 0,
       items: [{
         id: '5-1-1',
         name: 'Basic Clean',
@@ -201,7 +229,6 @@ export const useServices = () => {
     ));
   };
 
-  // New function to toggle service active state
   const toggleServiceActive = (serviceId: string) => {
     setServices(prevServices => prevServices.map(service => 
       service.id === serviceId ? { 
@@ -216,7 +243,6 @@ export const useServices = () => {
     }
   };
 
-  // New function to toggle subservice active state
   const toggleSubserviceActive = (serviceId: string, subserviceId: string) => {
     setServices(prevServices => prevServices.map(service => 
       service.id === serviceId ? {
@@ -281,7 +307,7 @@ export const useServices = () => {
       unit: newService.unit,
       isOpen: false,
       isEditing: false,
-      active: true, // New services are active by default
+      active: true,
       subServices: newService.subServices
         .filter((ss: any) => ss.name.trim())
         .map((ss: any, index: number) => ({
@@ -289,8 +315,12 @@ export const useServices = () => {
           name: ss.name,
           price: parseFloat(ss.price) || undefined,
           isOpen: false,
-          active: true, // New subservices are active by default
-          items: []
+          active: true,
+          items: [],
+          pricePerKg: 0,
+          pricePerItem: 0,
+          expressPricePerKg: 0,
+          expressPricePerItem: 0
         }))
     }]);
     return true;
@@ -318,8 +348,12 @@ export const useServices = () => {
         name: newSubservice.name,
         price: newSubservice.price ? parseFloat(newSubservice.price) : undefined,
         isOpen: false,
-        active: true, // New subservices are active by default
-        items: []
+        active: true,
+        items: [],
+        pricePerKg: 0,
+        pricePerItem: 0,
+        expressPricePerKg: 0,
+        expressPricePerItem: 0
       }]
     } : service));
     return true;
@@ -335,9 +369,14 @@ export const useServices = () => {
       subServices: service.subServices.map(subservice => subservice.id === editSubservice.id ? {
         ...subservice,
         name: editSubservice.name,
-        price: editSubservice.price ? parseFloat(editSubservice.price) : undefined
+        price: editSubservice.price ? parseFloat(editSubservice.price) : undefined,
+        pricePerKg: (editSubservice as any).pricePerKg !== undefined ? parseFloat((editSubservice as any).pricePerKg) : subservice.pricePerKg,
+        pricePerItem: (editSubservice as any).pricePerItem !== undefined ? parseFloat((editSubservice as any).pricePerItem) : subservice.pricePerItem,
+        expressPricePerKg: (editSubservice as any).expressPricePerKg !== undefined ? parseFloat((editSubservice as any).expressPricePerKg) : subservice.expressPricePerKg,
+        expressPricePerItem: (editSubservice as any).expressPricePerItem !== undefined ? parseFloat((editSubservice as any).expressPricePerItem) : subservice.expressPricePerItem
       } : subservice)
     } : service));
+    toast.success('Subservice updated successfully');
     return true;
   };
 
@@ -411,7 +450,7 @@ export const useServices = () => {
     addNewItem,
     saveItemChanges,
     deleteItem,
-    toggleServiceActive,   // Export the new toggle functions
+    toggleServiceActive,
     toggleSubserviceActive
   };
 };

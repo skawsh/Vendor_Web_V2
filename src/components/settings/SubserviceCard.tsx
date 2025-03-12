@@ -1,11 +1,12 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronRight, Edit, Plus, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, Edit, Plus, Trash2, Check, X } from 'lucide-react';
 import { Collapsible, CollapsibleContent } from '@/components/ui/collapsible';
 import { Service, Subservice } from '@/types/services';
 import { Switch } from '@/components/ui/switch';
+import { Input } from '@/components/ui/input';
 
 interface SubserviceCardProps {
   service: Service;
@@ -30,6 +31,28 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
   deleteItem,
   toggleSubserviceActive
 }) => {
+  const [isEditingPrices, setIsEditingPrices] = useState(false);
+  const [pricePerKg, setPricePerKg] = useState(subservice.pricePerKg?.toString() || "70");
+  const [pricePerItem, setPricePerItem] = useState(subservice.pricePerItem?.toString() || "10");
+  const [expressPricePerKg, setExpressPricePerKg] = useState(subservice.expressPricePerKg?.toString() || "100");
+  const [expressPricePerItem, setExpressPricePerItem] = useState(subservice.expressPricePerItem?.toString() || "20");
+
+  const handleSavePrices = () => {
+    // Update the subservice with new prices by calling the API or state update function
+    const updatedSubservice = {
+      ...subservice,
+      pricePerKg: parseFloat(pricePerKg),
+      pricePerItem: parseFloat(pricePerItem),
+      expressPricePerKg: parseFloat(expressPricePerKg),
+      expressPricePerItem: parseFloat(expressPricePerItem)
+    };
+    
+    // This is where you would call your update function
+    // For now, we'll just toggle the editing state
+    openEditSubserviceDialog(service.id, updatedSubservice);
+    setIsEditingPrices(false);
+  };
+
   return (
     <Card key={subservice.id} className="border">
       <div className="p-2 flex justify-between items-center cursor-pointer hover:bg-gray-50" onClick={() => toggleSubservice(service.id, subservice.id)}>
@@ -73,23 +96,95 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
         <CollapsibleContent className="p-3 pt-0 border-t mt-2">
           {subservice.name === "Wash&Fold" && (
             <div className="mb-4 p-4 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-semibold mb-3">{subservice.name}</h3>
+              <div className="flex justify-between items-center mb-3">
+                <div className="flex-1">Pricing Information</div>
+                {!isEditingPrices ? (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setIsEditingPrices(true)}
+                    className="h-7"
+                  >
+                    <Edit className="h-3 w-3 mr-1" /> Edit Prices
+                  </Button>
+                ) : (
+                  <div className="flex gap-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleSavePrices}
+                      className="h-7 text-green-600"
+                    >
+                      <Check className="h-3 w-3 mr-1" /> Save
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setIsEditingPrices(false)}
+                      className="h-7 text-red-500"
+                    >
+                      <X className="h-3 w-3 mr-1" /> Cancel
+                    </Button>
+                  </div>
+                )}
+              </div>
+              
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <p className="text-gray-600">
-                    Standard Price per KG: <span className="font-medium">₹{subservice.pricePerKg || 70}</span>
-                  </p>
-                  <p className="text-gray-600">
-                    Express Price per KG: <span className="font-medium">₹{subservice.expressPricePerKg || 100}</span>
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-gray-600">Standard Price per KG:</p>
+                    {!isEditingPrices ? (
+                      <span className="font-medium">₹{subservice.pricePerKg || 70}</span>
+                    ) : (
+                      <Input
+                        type="number"
+                        value={pricePerKg}
+                        onChange={(e) => setPricePerKg(e.target.value)}
+                        className="w-20 h-7 text-right"
+                      />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-gray-600">Express Price per KG:</p>
+                    {!isEditingPrices ? (
+                      <span className="font-medium">₹{subservice.expressPricePerKg || 100}</span>
+                    ) : (
+                      <Input
+                        type="number"
+                        value={expressPricePerKg}
+                        onChange={(e) => setExpressPricePerKg(e.target.value)}
+                        className="w-20 h-7 text-right"
+                      />
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2">
-                  <p className="text-gray-600">
-                    Standard Price per Item: <span className="font-medium">₹{subservice.pricePerItem || 10}</span>
-                  </p>
-                  <p className="text-gray-600">
-                    Express Price per Item: <span className="font-medium">₹{subservice.expressPricePerItem || 20}</span>
-                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-gray-600">Standard Price per Item:</p>
+                    {!isEditingPrices ? (
+                      <span className="font-medium">₹{subservice.pricePerItem || 10}</span>
+                    ) : (
+                      <Input
+                        type="number"
+                        value={pricePerItem}
+                        onChange={(e) => setPricePerItem(e.target.value)}
+                        className="w-20 h-7 text-right"
+                      />
+                    )}
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <p className="text-gray-600">Express Price per Item:</p>
+                    {!isEditingPrices ? (
+                      <span className="font-medium">₹{subservice.expressPricePerItem || 20}</span>
+                    ) : (
+                      <Input
+                        type="number"
+                        value={expressPricePerItem}
+                        onChange={(e) => setExpressPricePerItem(e.target.value)}
+                        className="w-20 h-7 text-right"
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
