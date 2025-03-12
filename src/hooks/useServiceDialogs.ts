@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
@@ -170,6 +169,12 @@ export const useServiceDialogs = () => {
     }));
   };
 
+  // Function to reset the form and keep the dialog open
+  const resetServiceForm = () => {
+    setNewService(defaultNewService);
+    toast.success("Form reset for new service entry");
+  };
+
   return {
     dialogStates: {
       isAddServiceDialogOpen,
@@ -208,7 +213,8 @@ export const useServiceDialogs = () => {
       removeSubServiceFromForm,
       addItemToSubService,
       saveNewServiceItem,
-      handleNewServiceItemChange
+      handleNewServiceItemChange,
+      resetServiceForm
     }
   };
 };

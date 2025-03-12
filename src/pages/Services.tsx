@@ -92,6 +92,18 @@ const Services = () => {
     }
   };
 
+  const handleAddAnotherService = () => {
+    // First add the current service if it has valid data
+    if (formStates.newService.name && formStates.newService.subServices.some(ss => ss.name)) {
+      addNewService(formStates.newService);
+      // Then reset the form for a new service
+      handlers.resetServiceForm();
+    } else {
+      // If there's no valid data yet, just reset the form
+      handlers.resetServiceForm();
+    }
+  };
+
   const handleAddNewSubservice = () => {
     if (addNewSubservice(formStates.newSubservice)) {
       dialogStates.setIsAddSubserviceDialogOpen(false);
