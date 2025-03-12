@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { Plus, ChevronDown, ChevronUp, Trash } from 'lucide-react';
+import { Plus, ChevronDown, ChevronUp, Trash, X } from 'lucide-react';
 
 interface AddServiceDialogProps {
   isOpen: boolean;
@@ -93,7 +93,6 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   >([]);
   const [currentServiceIndex, setCurrentServiceIndex] = React.useState(0);
 
-  // Reset all subservices visibility when main service is collapsed
   const handleServiceCollapse = (open: boolean) => {
     setIsServiceExpanded(open);
     if (!open) {
@@ -101,26 +100,21 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
     }
   };
 
-  // Add current service to the list and prepare for a new one
   const handleAddAnotherService = () => {
     if (!newService.name || !newService.subServices.some(ss => ss.name)) {
       return;
     }
 
-    // Add current service to the list
     setServices(prev => [...prev, { 
       id: `service-${Date.now()}`,
       name: newService.name,
       subServices: newService.subServices.filter(ss => ss.name.trim())
     }]);
 
-    // Reset form for new service
     handleNewServiceChange('name', '');
-    // Clear existing subservices
     newService.subServices.forEach(ss => {
       removeSubServiceFromForm(ss.id);
     });
-    // Add one empty subservice
     addSubServiceToForm();
     
     setCurrentServiceIndex(prev => prev + 1);
@@ -133,7 +127,6 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
   };
 
   const handleSaveAllServices = () => {
-    // First add the current service if it has data
     if (newService.name && newService.subServices.some(ss => ss.name)) {
       setServices(prev => [...prev, { 
         id: `service-${Date.now()}`,
@@ -142,16 +135,13 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
       }]);
     }
 
-    // Save all services
     services.forEach(() => {
       addNewService();
     });
 
-    // Close dialog
     onOpenChange(false);
   };
 
-  // Reset form data when dialog opens or closes
   useEffect(() => {
     if (!isOpen) {
       setExpandedSubServices({});
@@ -172,7 +162,6 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
           </DialogHeader>
           
           <ScrollArea className="max-h-[70vh] overflow-y-auto py-6 px-6">
-            {/* Already added services */}
             {services.length > 0 && (
               <div className="mb-6 space-y-4">
                 <h3 className="text-lg font-medium text-gray-800">Added Services</h3>
@@ -200,7 +189,6 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
               </div>
             )}
             
-            {/* Current service form */}
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4">
                 <Collapsible open={isServiceExpanded} onOpenChange={handleServiceCollapse}>
@@ -226,7 +214,6 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                   />
                   
                   <CollapsibleContent>
-                    {/* Subservices Section - Only visible when service is expanded */}
                     {newService.subServices.map((subService, index) => (
                       <div key={subService.id} className="bg-gray-50 rounded-lg p-4 mt-4">
                         <Collapsible 
