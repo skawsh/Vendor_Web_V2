@@ -109,9 +109,19 @@ export const useServiceDialogs = () => {
       ...prev,
       subServices: prev.subServices.map(ss => ss.id === id ? {
         ...ss,
-        [field]: value
+        [field]: field === 'items' ? tryParseJSON(value, []) : value
       } : ss)
     }));
+  };
+
+  // Helper function to safely parse JSON with a fallback value
+  const tryParseJSON = (jsonString: string, fallback: any = null) => {
+    try {
+      return JSON.parse(jsonString);
+    } catch (e) {
+      console.error('Error parsing JSON:', e);
+      return fallback;
+    }
   };
 
   const addSubServiceToForm = () => {
@@ -162,7 +172,7 @@ export const useServiceDialogs = () => {
       subServices: prev.subServices.map(ss => 
         ss.id === currentSubserviceIndex ? {
           ...ss,
-          items: [...(ss.items || []), {
+          items: [...(Array.isArray(ss.items) ? ss.items : []), {
             id: `temp-${Date.now()}`,
             name: newServiceItem.name,
             standardPrice: newServiceItem.standardPrice || '0',
@@ -235,7 +245,10 @@ export const useServiceDialogs = () => {
     setNewService({
       ...defaultNewService,
       name: service.name,
-      subServices: service.subServices
+      subServices: service.subServices.map((ss: any) => ({
+        ...ss,
+        items: Array.isArray(ss.items) ? ss.items : []
+      }))
     });
   };
 

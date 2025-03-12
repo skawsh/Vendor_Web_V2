@@ -165,7 +165,7 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
     }
 
     // Add the subservices from the service being edited
-    serviceToEdit.subServices.forEach((subService, index) => {
+    serviceToEdit.subServices.forEach((subService) => {
       addSubServiceToForm();
       const newId = String(newService.subServices.length - 1);
       
@@ -175,9 +175,18 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
       if (subService.pricePerItem) handleSubServiceChange(newId, 'pricePerItem', subService.pricePerItem);
       if (subService.expressPricePerItem) handleSubServiceChange(newId, 'expressPricePerItem', subService.expressPricePerItem);
       
-      // Add items if present
-      if (subService.items && subService.items.length > 0) {
-        handleSubServiceChange(newId, 'items', JSON.stringify(subService.items));
+      // Add items if present and ensure it's an array
+      if (subService.items && Array.isArray(subService.items) && subService.items.length > 0) {
+        try {
+          handleSubServiceChange(newId, 'items', JSON.stringify(subService.items));
+        } catch (error) {
+          console.error('Error stringifying items:', error);
+          // Initialize with empty array if parsing fails
+          handleSubServiceChange(newId, 'items', '[]');
+        }
+      } else {
+        // Ensure items is initialized as an empty array
+        handleSubServiceChange(newId, 'items', '[]');
       }
     });
 
@@ -399,7 +408,7 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                                 </Button>
                               </div>
                               
-                              {subService.items && subService.items.length > 0 && (
+                              {subService.items && Array.isArray(subService.items) && subService.items.length > 0 && (
                                 <div className="mt-2 space-y-2">
                                   {subService.items.map((item) => (
                                     <div key={item.id} className="flex justify-between items-center p-3 bg-white rounded-md border border-gray-200">
@@ -415,9 +424,12 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                                         size="sm" 
                                         className="h-7 w-7 p-0 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-full" 
                                         onClick={() => {
-                                          handleSubServiceChange(subService.id, 'items', 
-                                            JSON.stringify(subService.items?.filter(i => i.id !== item.id) || [])
-                                          );
+                                          // First check if items is an array
+                                          if (subService.items && Array.isArray(subService.items)) {
+                                            handleSubServiceChange(subService.id, 'items', 
+                                              JSON.stringify(subService.items.filter(i => i.id !== item.id) || [])
+                                            );
+                                          }
                                         }}
                                       >
                                         <X className="h-4 w-4" />
