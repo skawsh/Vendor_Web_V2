@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { NewSubservice, EditSubservice, NewItem, EditItem } from '@/types/services';
@@ -8,6 +9,8 @@ export const useServiceDialogs = () => {
   const [isAddItemDialogOpen, setIsAddItemDialogOpen] = useState(false);
   const [isEditSubserviceDialogOpen, setIsEditSubserviceDialogOpen] = useState(false);
   const [isEditItemDialogOpen, setIsEditItemDialogOpen] = useState(false);
+  const [isAddServiceItemDialogOpen, setIsAddServiceItemDialogOpen] = useState(false);
+  const [currentSubserviceIndex, setCurrentSubserviceIndex] = useState<string>('0');
   
   const [newService, setNewService] = useState({
     name: '',
@@ -22,7 +25,8 @@ export const useServiceDialogs = () => {
       pricePerKg: '',
       expressPricePerKg: '',
       pricePerItem: '',
-      expressPricePerItem: ''
+      expressPricePerItem: '',
+      items: []
     }]
   });
   
@@ -58,6 +62,12 @@ export const useServiceDialogs = () => {
     parentSubserviceId: ''
   });
 
+  const [newServiceItem, setNewServiceItem] = useState({
+    name: '',
+    standardPrice: '',
+    expressPrice: '',
+  });
+
   const handleNewServiceChange = (field: string, value: string) => {
     setNewService(prev => ({
       ...prev,
@@ -85,7 +95,8 @@ export const useServiceDialogs = () => {
         pricePerKg: '',
         expressPricePerKg: '',
         pricePerItem: '',
-        expressPricePerItem: ''
+        expressPricePerItem: '',
+        items: []
       }]
     }));
   };
@@ -101,6 +112,54 @@ export const useServiceDialogs = () => {
     }));
   };
 
+  const addItemToSubService = (subServiceId: string) => {
+    setCurrentSubserviceIndex(subServiceId);
+    setNewServiceItem({
+      name: '',
+      standardPrice: '',
+      expressPrice: '',
+    });
+    setIsAddServiceItemDialogOpen(true);
+  };
+
+  const saveNewServiceItem = () => {
+    if (!newServiceItem.name) {
+      toast.error("Item name is required");
+      return;
+    }
+
+    setNewService(prev => ({
+      ...prev,
+      subServices: prev.subServices.map(ss => 
+        ss.id === currentSubserviceIndex ? {
+          ...ss,
+          items: [...(ss.items || []), {
+            id: `temp-${Date.now()}`,
+            name: newServiceItem.name,
+            standardPrice: newServiceItem.standardPrice || '0',
+            expressPrice: newServiceItem.expressPrice || '0',
+            price: newServiceItem.standardPrice || '0',
+            active: true
+          }]
+        } : ss
+      )
+    }));
+    
+    setIsAddServiceItemDialogOpen(false);
+    setNewServiceItem({
+      name: '',
+      standardPrice: '',
+      expressPrice: '',
+    });
+  };
+
+  const handleNewServiceItemChange = (field: string, value: string) => {
+    setNewServiceItem(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   return {
     dialogStates: {
       isAddServiceDialogOpen,
@@ -112,26 +171,34 @@ export const useServiceDialogs = () => {
       isEditSubserviceDialogOpen,
       setIsEditSubserviceDialogOpen,
       isEditItemDialogOpen,
-      setIsEditItemDialogOpen
+      setIsEditItemDialogOpen,
+      isAddServiceItemDialogOpen,
+      setIsAddServiceItemDialogOpen
     },
     formStates: {
       newService,
       newSubservice,
       editSubservice,
       newItem,
-      editItem
+      editItem,
+      newServiceItem,
+      currentSubserviceIndex
     },
     setters: {
       setNewSubservice,
       setEditSubservice,
       setNewItem,
-      setEditItem
+      setEditItem,
+      setNewServiceItem
     },
     handlers: {
       handleNewServiceChange,
       handleSubServiceChange,
       addSubServiceToForm,
-      removeSubServiceFromForm
+      removeSubServiceFromForm,
+      addItemToSubService,
+      saveNewServiceItem,
+      handleNewServiceItemChange
     }
   };
 };
