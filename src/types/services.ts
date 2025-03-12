@@ -4,6 +4,7 @@ export interface Item {
   price: number;
   standardPrice: number;
   expressPrice: number;
+  active?: boolean;
 }
 
 export interface Subservice {

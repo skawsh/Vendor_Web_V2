@@ -26,13 +26,15 @@ export const useServices = () => {
         name: 'T-shirt',
         price: 40,
         standardPrice: 40,
-        expressPrice: 60
+        expressPrice: 60,
+        active: true
       }, {
         id: '1-1-2',
         name: 'Jeans',
         price: 50,
         standardPrice: 50,
-        expressPrice: 70
+        expressPrice: 70,
+        active: true
       }]
     }, {
       id: '1-2',
@@ -48,13 +50,15 @@ export const useServices = () => {
         name: 'Dress Shirt',
         price: 60,
         standardPrice: 60,
-        expressPrice: 90
+        expressPrice: 90,
+        active: true
       }, {
         id: '1-2-2',
         name: 'Trousers',
         price: 70,
         standardPrice: 70,
-        expressPrice: 100
+        expressPrice: 100,
+        active: true
       }]
     }]
   }, {
@@ -80,13 +84,15 @@ export const useServices = () => {
         name: 'Sweater',
         price: 180,
         standardPrice: 180,
-        expressPrice: 250
+        expressPrice: 250,
+        active: true
       }, {
         id: '2-1-2',
         name: 'Winter Jacket',
         price: 350,
         standardPrice: 350,
-        expressPrice: 450
+        expressPrice: 450,
+        active: true
       }]
     }, {
       id: '2-2',
@@ -102,13 +108,15 @@ export const useServices = () => {
         name: 'Wedding Dress',
         price: 1200,
         standardPrice: 1200,
-        expressPrice: 1500
+        expressPrice: 1500,
+        active: true
       }, {
         id: '2-2-2',
         name: 'Formal Suit',
         price: 800,
         standardPrice: 800,
-        expressPrice: 1000
+        expressPrice: 1000,
+        active: true
       }]
     }]
   }, {
@@ -134,13 +142,15 @@ export const useServices = () => {
         name: 'Light Stains',
         price: 100,
         standardPrice: 100,
-        expressPrice: 150
+        expressPrice: 150,
+        active: true
       }, {
         id: '3-1-2',
         name: 'Heavy Stains',
         price: 200,
         standardPrice: 200,
-        expressPrice: 300
+        expressPrice: 300,
+        active: true
       }]
     }]
   }, {
@@ -166,13 +176,15 @@ export const useServices = () => {
         name: 'Leather Shoes',
         price: 99,
         standardPrice: 99,
-        expressPrice: 149
+        expressPrice: 149,
+        active: true
       }, {
         id: '4-1-2',
         name: 'Canvas Shoes',
         price: 79,
         standardPrice: 79,
-        expressPrice: 119
+        expressPrice: 119,
+        active: true
       }]
     }]
   }, {
@@ -198,13 +210,15 @@ export const useServices = () => {
         name: 'Basic Clean',
         price: 129,
         standardPrice: 129,
-        expressPrice: 189
+        expressPrice: 189,
+        active: true
       }, {
         id: '5-1-2',
         name: 'Deep Clean',
         price: 179,
         standardPrice: 179,
-        expressPrice: 259
+        expressPrice: 259,
+        active: true
       }]
     }]
   }]);
@@ -394,7 +408,8 @@ export const useServices = () => {
           name: newItem.name,
           price: parseFloat(newItem.price),
           standardPrice: parseFloat(newItem.standardPrice),
-          expressPrice: parseFloat(newItem.expressPrice)
+          expressPrice: parseFloat(newItem.expressPrice),
+          active: true
         }]
       } : subservice)
     } : service));
@@ -415,7 +430,7 @@ export const useServices = () => {
           name: editItem.name,
           price: parseFloat(editItem.price as string),
           standardPrice: parseFloat(editItem.standardPrice as string),
-          expressPrice: parseFloat(editItem.expressPrice as string)
+          expressPrice: parseFloat(editItem.expressPrice as string),
         } : item)
       } : subservice)
     } : service));
@@ -435,6 +450,34 @@ export const useServices = () => {
     }
   };
 
+  const toggleItemActive = (serviceId: string, subserviceId: string, itemId: string) => {
+    setServices(prevServices => prevServices.map(service => 
+      service.id === serviceId ? {
+        ...service,
+        subServices: service.subServices.map(subservice => 
+          subservice.id === subserviceId ? {
+            ...subservice,
+            items: subservice.items.map(item => 
+              item.id === itemId ? {
+                ...item,
+                active: item.active === false ? true : false
+              } : item
+            )
+          } : subservice
+        )
+      } : service
+    ));
+    
+    const service = services.find(s => s.id === serviceId);
+    const subservice = service?.subServices.find(s => s.id === subserviceId);
+    const item = subservice?.items.find(i => i.id === itemId);
+    
+    if (item) {
+      const newStatus = item.active === false ? 'activated' : 'deactivated';
+      toast.success(`${item.name} ${newStatus} successfully`);
+    }
+  };
+
   return {
     services,
     toggleService,
@@ -451,6 +494,7 @@ export const useServices = () => {
     saveItemChanges,
     deleteItem,
     toggleServiceActive,
-    toggleSubserviceActive
+    toggleSubserviceActive,
+    toggleItemActive
   };
 };

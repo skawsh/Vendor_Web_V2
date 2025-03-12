@@ -18,6 +18,7 @@ interface SubserviceCardProps {
   openEditItemDialog: (serviceId: string, subserviceId: string, item: any) => void;
   deleteItem: (serviceId: string, subserviceId: string, itemId: string) => void;
   toggleSubserviceActive: (serviceId: string, subserviceId: string) => void;
+  toggleItemActive?: (serviceId: string, subserviceId: string, itemId: string) => void;
 }
 
 export const SubserviceCard: React.FC<SubserviceCardProps> = ({
@@ -29,7 +30,8 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
   openAddItemDialog,
   openEditItemDialog,
   deleteItem,
-  toggleSubserviceActive
+  toggleSubserviceActive,
+  toggleItemActive
 }) => {
   const [isEditingPrices, setIsEditingPrices] = useState(false);
   const [pricePerKg, setPricePerKg] = useState(subservice.pricePerKg?.toString() || "70");
@@ -229,14 +231,15 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
           
           {subservice.items.length > 0 ? (
             <div className="space-y-2">
-              <div className="grid grid-cols-3 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
+              <div className="grid grid-cols-4 gap-2 px-2 py-1 bg-gray-50 text-xs font-medium">
                 <div>Name</div>
                 <div className="text-right">Standard Price</div>
                 <div className="text-right">Express Price</div>
+                <div className="text-right">Status</div>
               </div>
               
               {subservice.items.map(item => (
-                <div key={item.id} className="grid grid-cols-3 gap-2 px-2 py-2 border-b text-sm">
+                <div key={item.id} className="grid grid-cols-4 gap-2 px-2 py-2 border-b text-sm">
                   {editingItem === item.id ? (
                     <>
                       <div className="flex items-center">
@@ -254,13 +257,15 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
                           className="h-7 text-sm text-right"
                         />
                       </div>
-                      <div className="text-right flex justify-end items-center gap-2">
+                      <div className="text-right">
                         <Input
                           type="number"
                           value={editedValues.expressPrice}
                           onChange={(e) => setEditedValues(prev => ({ ...prev, expressPrice: e.target.value }))}
                           className="h-7 text-sm text-right"
                         />
+                      </div>
+                      <div className="text-right flex justify-end items-center gap-2">
                         <Button variant="ghost" size="icon" className="h-6 w-6 text-green-500" onClick={() => saveItemEdit(item.id)}>
                           <Check className="h-3 w-3" />
                         </Button>
@@ -278,8 +283,18 @@ export const SubserviceCard: React.FC<SubserviceCardProps> = ({
                         </Button>
                       </div>
                       <div className="text-right">₹{item.standardPrice}</div>
+                      <div className="text-right">₹{item.expressPrice}</div>
                       <div className="text-right flex justify-end items-center gap-2">
-                        ₹{item.expressPrice}
+                        <div 
+                          className="flex items-center gap-2" 
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className="text-xs text-gray-500">{item.active !== false ? 'Active' : 'Inactive'}</span>
+                          <Switch 
+                            checked={item.active !== false} 
+                            onCheckedChange={() => toggleItemActive && toggleItemActive(service.id, subservice.id, item.id)}
+                          />
+                        </div>
                         <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => deleteItem(service.id, subservice.id, item.id)}>
                           <Trash2 className="h-3 w-3" />
                         </Button>
