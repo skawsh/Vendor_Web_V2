@@ -14,7 +14,7 @@ export const useServices = () => {
     active: true,
     subServices: [{
       id: '1-1',
-      name: 'Regular Wash',
+      name: 'Wash&Fold',
       isOpen: false,
       active: true,
       items: [{
@@ -32,7 +32,7 @@ export const useServices = () => {
       }]
     }, {
       id: '1-2',
-      name: 'Premium Wash',
+      name: 'Wash&Iron',
       isOpen: false,
       active: true,
       items: [{
