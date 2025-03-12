@@ -103,20 +103,20 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
           <ScrollArea className="max-h-[70vh] overflow-y-auto py-6 px-6">
             <div className="space-y-6">
               <div className="bg-gray-50 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <Label htmlFor="new-service-name" className="text-gray-700 font-medium text-base">Service Name</Label>
-                  <CollapsibleTrigger asChild>
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      className="h-8 w-8 p-0 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-                      onClick={() => setIsServiceExpanded(!isServiceExpanded)}
-                    >
-                      {isServiceExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    </Button>
-                  </CollapsibleTrigger>
-                </div>
                 <Collapsible open={isServiceExpanded} onOpenChange={setIsServiceExpanded}>
+                  <div className="flex items-center justify-between mb-2">
+                    <Label htmlFor="new-service-name" className="text-gray-700 font-medium text-base">Service Name</Label>
+                    <CollapsibleTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+                      >
+                        {isServiceExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                      </Button>
+                    </CollapsibleTrigger>
+                  </div>
+                  
                   <Input 
                     id="new-service-name" 
                     value={newService.name} 
@@ -124,6 +124,7 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
                     placeholder="Enter service name"
                     className="border border-blue-200 focus:border-blue-400 rounded-lg mb-2"
                   />
+                  
                   <CollapsibleContent>
                     <div className="pt-2">
                       <Label htmlFor="new-service-description" className="text-gray-700 font-medium">Service Description</Label>
@@ -141,24 +142,23 @@ export const AddServiceDialog: React.FC<AddServiceDialogProps> = ({
               
               {newService.subServices.map((subService, index) => (
                 <div key={subService.id} className="bg-gray-50 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-2">
-                    <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700 font-medium text-base">Subservice Name</Label>
-                    <CollapsibleTrigger asChild>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-8 w-8 p-0 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100"
-                        onClick={() => toggleSubService(subService.id)}
-                      >
-                        {expandedSubServices[subService.id] !== false ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                      </Button>
-                    </CollapsibleTrigger>
-                  </div>
-                  
                   <Collapsible 
                     open={expandedSubServices[subService.id] !== false}
                     onOpenChange={(open) => setExpandedSubServices(prev => ({ ...prev, [subService.id]: open }))}
                   >
+                    <div className="flex items-center justify-between mb-2">
+                      <Label htmlFor={`sub-service-${subService.id}`} className="text-gray-700 font-medium text-base">Subservice Name</Label>
+                      <CollapsibleTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="h-8 w-8 p-0 rounded-full text-gray-400 hover:text-gray-500 hover:bg-gray-100"
+                        >
+                          {expandedSubServices[subService.id] !== false ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                        </Button>
+                      </CollapsibleTrigger>
+                    </div>
+                    
                     <Input 
                       id={`sub-service-${subService.id}`} 
                       value={subService.name} 
