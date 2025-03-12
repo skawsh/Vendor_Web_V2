@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -27,7 +26,8 @@ const Services = () => {
     saveItemChanges,
     deleteItem,
     toggleServiceActive,
-    toggleSubserviceActive
+    toggleSubserviceActive,
+    toggleItemActive
   } = useServices();
 
   const {
@@ -153,6 +153,7 @@ const Services = () => {
                 deleteService={deleteService}
                 toggleServiceActive={toggleServiceActive}
                 toggleSubserviceActive={toggleSubserviceActive}
+                toggleItemActive={toggleItemActive}
               />
             ))}
           </div>
