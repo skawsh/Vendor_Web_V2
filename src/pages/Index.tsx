@@ -31,6 +31,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { NotificationsDropdown } from '@/components/NotificationsDropdown';
+import OrderFilterDropdown from '@/components/OrderFilterDropdown';
 
 const initialCurrentOrders = [
   {
@@ -140,6 +141,7 @@ const Index = () => {
   const [isStudioActive, setIsStudioActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("new");
+  const [selectedDateFilter, setSelectedDateFilter] = useState<string | null>(null);
 
   const navigate = useNavigate();
 
@@ -206,6 +208,14 @@ const Index = () => {
     setIsStudioActive(newStatus);
     toast.success(`Studio ${newStatus ? 'activated' : 'deactivated'} successfully`, {
       description: `Your laundry studio is now ${newStatus ? 'active' : 'inactive'}.`
+    });
+  };
+
+  const handleFilterChange = (filterType: string, value?: any) => {
+    setSelectedDateFilter(filterType);
+    
+    toast.success(`Filter applied: ${filterType}`, {
+      description: "Orders filtered by selected criteria."
     });
   };
 
@@ -363,10 +373,7 @@ const Index = () => {
         <div className="flex justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-medium">Orders</h2>
-            <Button variant="outline" size="sm" className="h-8 flex items-center gap-1.5">
-              <Filter className="h-4 w-4" />
-              <span>Filter</span>
-            </Button>
+            <OrderFilterDropdown onFilterChange={handleFilterChange} />
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
