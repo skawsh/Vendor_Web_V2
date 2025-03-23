@@ -2,19 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   ShoppingBag, 
-  DollarSign, 
-  CheckCircle,
-  Calendar,
-  FileText,
   Search,
   Power,
-  Shirt,
-  TrendingUp,
   RotateCw,
   PackageCheck,
   Info,
   Filter,
-  Inbox
+  Inbox,
+  Calendar
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -429,45 +424,6 @@ const Index = () => {
               </div>
             </CardContent>
           </Card>
-          
-          <Card className="card-stats bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Today's Revenue</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">₹20,340</div>
-              <p className="text-xs text-muted-foreground mt-1">+15% from yesterday</p>
-              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-amber-500">
-                <DollarSign size={20} />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="card-stats bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Active Services</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">8</div>
-              <p className="text-xs text-muted-foreground mt-1">+2 services added</p>
-              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-rose-500">
-                <Shirt size={20} />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="card-stats bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Growth</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">+24%</div>
-              <p className="text-xs text-muted-foreground mt-1">Compared to last month</p>
-              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-cyan-500">
-                <TrendingUp size={20} />
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
@@ -809,4 +765,3 @@ const Index = () => {
 };
 
 export default Index;
-
