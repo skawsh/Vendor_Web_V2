@@ -242,11 +242,9 @@ const Index = () => {
     e.preventDefault();
     
     if (searchQuery === "08081997") {
-      setDriverAssignments(prev => prev.filter(assignment => assignment.action !== "drop"));
+      setDriverAssignments(prev => prev.filter(assignment => assignment.driverName !== "Deepak"));
     } else if (searchQuery === "08081998") {
-      setDriverAssignments(prev => prev.filter(assignment => 
-        !(assignment.driverName === "Saiteja" && assignment.action === "collect")
-      ));
+      setDriverAssignments(prev => prev.filter(assignment => assignment.driverName !== "Saiteja"));
     } else if (searchQuery === "08081999") {
       const kavyaExists = driverAssignments.some(
         assignment => assignment.driverName === "Kavya" && assignment.orderId === "ORD-008"
@@ -833,3 +831,4 @@ const Index = () => {
 };
 
 export default Index;
+
