@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
+import { ChevronDown, ChevronUp, Filter, Calendar, Clock } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
@@ -8,12 +8,22 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { DateRange } from "react-day-picker";
+import { Input } from "@/components/ui/input";
+import { DateRangePicker } from "@/components/ui/date-range-picker";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { format } from "date-fns";
 
 interface OrderFilterDropdownProps {
   onFilterChange?: (filterType: string, value?: any) => void;
@@ -23,8 +33,12 @@ const OrderFilterDropdown: React.FC<OrderFilterDropdownProps> = ({ onFilterChang
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
     relativeTime: true,
-    relativeDate: true
+    relativeDate: true,
+    dateRange: false,
+    dateTimeRange: false
   });
+  const [fromTime, setFromTime] = useState<string>("12:00 AM");
+  const [toTime, setToTime] = useState<string>("11:59 PM");
 
   const handleFilterSelection = (filterType: string) => {
     if (onFilterChange) {
@@ -39,6 +53,30 @@ const OrderFilterDropdown: React.FC<OrderFilterDropdownProps> = ({ onFilterChang
     }
   };
 
+  const toggleSection = (section: string) => {
+    setOpenSections({
+      ...openSections,
+      [section]: !openSections[section]
+    });
+  };
+  
+  const applyDateRange = () => {
+    if (dateRange && dateRange.from) {
+      onFilterChange && onFilterChange('appliedDateRange', dateRange);
+    }
+  };
+  
+  const applyDateTimeRange = () => {
+    if (dateRange && dateRange.from) {
+      const dateTimeRange = {
+        ...dateRange,
+        fromTime,
+        toTime
+      };
+      onFilterChange && onFilterChange('appliedDateTimeRange', dateTimeRange);
+    }
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -47,7 +85,7 @@ const OrderFilterDropdown: React.FC<OrderFilterDropdownProps> = ({ onFilterChang
           <span>Filter</span>
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[280px] p-0" align="start">
+      <PopoverContent className="w-[320px] p-0" align="start">
         <div className="rounded-md border shadow-sm divide-y">
           <Accordion type="multiple" defaultValue={["relativeTime", "relativeDate"]} className="w-full">
             <AccordionItem value="relativeTime" className="border-b">
@@ -135,21 +173,143 @@ const OrderFilterDropdown: React.FC<OrderFilterDropdownProps> = ({ onFilterChang
                 </div>
               </AccordionContent>
             </AccordionItem>
+
+            <AccordionItem value="dateRange" className="border-b">
+              <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline">
+                Date Range
+              </AccordionTrigger>
+              <AccordionContent className="px-4 py-3">
+                <div className="space-y-4">
+                  <div>
+                    <p className="mb-2 font-medium">From:</p>
+                    <div className="relative">
+                      <Input 
+                        placeholder="Select start date" 
+                        className="pl-3 h-12" 
+                        value={dateRange?.from ? format(dateRange.from, "MMM dd, yyyy") : ""}
+                        readOnly
+                      />
+                      <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="mb-2 font-medium">To:</p>
+                    <div className="relative">
+                      <Input 
+                        placeholder="Select end date" 
+                        className="pl-3 h-12" 
+                        value={dateRange?.to ? format(dateRange.to, "MMM dd, yyyy") : ""}
+                        readOnly
+                      />
+                      <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                    </div>
+                  </div>
+                  <DateRangePicker 
+                    date={dateRange} 
+                    onDateChange={setDateRange} 
+                    className="hidden"
+                  />
+                  <Button 
+                    className="w-full bg-gray-500 hover:bg-gray-600 text-white"
+                    onClick={applyDateRange}
+                  >
+                    Apply Date Range
+                  </Button>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="dateTimeRange" className="border-b">
+              <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline">
+                Date & Time Range
+              </AccordionTrigger>
+              <AccordionContent className="px-4 py-3">
+                <div className="space-y-4">
+                  <div>
+                    <p className="mb-2 font-medium">From Date:</p>
+                    <div className="relative">
+                      <Input 
+                        placeholder="Select start date" 
+                        className="pl-3 h-12" 
+                        value={dateRange?.from ? format(dateRange.from, "MMM dd, yyyy") : ""}
+                        readOnly
+                      />
+                      <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="mb-2 font-medium">From Time:</p>
+                    <div className="relative">
+                      <Select 
+                        defaultValue={fromTime} 
+                        onValueChange={setFromTime}
+                      >
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select time" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {["12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", 
+                            "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+                            "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
+                            "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"
+                          ].map(time => (
+                            <SelectItem key={time} value={time}>{time}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Clock className="absolute right-9 top-3 text-gray-400" size={20} />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="mb-2 font-medium">To Date:</p>
+                    <div className="relative">
+                      <Input 
+                        placeholder="Select end date" 
+                        className="pl-3 h-12" 
+                        value={dateRange?.to ? format(dateRange.to, "MMM dd, yyyy") : ""}
+                        readOnly
+                      />
+                      <Calendar className="absolute right-3 top-3 text-gray-400" size={20} />
+                    </div>
+                  </div>
+                  <div>
+                    <p className="mb-2 font-medium">To Time:</p>
+                    <div className="relative">
+                      <Select 
+                        defaultValue={toTime} 
+                        onValueChange={setToTime}
+                      >
+                        <SelectTrigger className="h-12">
+                          <SelectValue placeholder="Select time" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {["12:00 AM", "1:00 AM", "2:00 AM", "3:00 AM", "4:00 AM", "5:00 AM", 
+                            "6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM",
+                            "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM",
+                            "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:59 PM"
+                          ].map(time => (
+                            <SelectItem key={time} value={time}>{time}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <Clock className="absolute right-9 top-3 text-gray-400" size={20} />
+                    </div>
+                  </div>
+                  <DateRangePicker 
+                    date={dateRange} 
+                    onDateChange={setDateRange} 
+                    className="hidden"
+                  />
+                  <Button 
+                    className="w-full bg-gray-500 hover:bg-gray-600 text-white"
+                    onClick={applyDateTimeRange}
+                  >
+                    Apply Date & Time Range
+                  </Button>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
           </Accordion>
-          
-          <div className="w-full px-4 py-3 hover:bg-gray-50">
-            <button className="w-full flex items-center justify-between" onClick={() => handleFilterSelection('dateRange')}>
-              <span className="text-base font-medium">Date Range</span>
-              <ChevronDown className="h-5 w-5 text-gray-500" />
-            </button>
-          </div>
-          
-          <div className="w-full px-4 py-3 hover:bg-gray-50">
-            <button className="w-full flex items-center justify-between" onClick={() => handleFilterSelection('dateTimeRange')}>
-              <span className="text-base font-medium">Date & Time Range</span>
-              <ChevronDown className="h-5 w-5 text-gray-500" />
-            </button>
-          </div>
         </div>
       </PopoverContent>
     </Popover>
