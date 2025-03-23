@@ -9,7 +9,8 @@ import {
   Info,
   Filter,
   Inbox,
-  Calendar
+  Calendar,
+  Database
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -372,7 +373,19 @@ const Index = () => {
             <OrderFilterDropdown onFilterChange={handleFilterChange} />
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <Card className="card-stats bg-gradient-to-br from-gray-50 to-gray-100 border-gray-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">All Orders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">54</div>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-gray-500">
+                <Database size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
           <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">New Orders</CardTitle>
