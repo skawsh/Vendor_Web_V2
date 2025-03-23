@@ -1,10 +1,11 @@
 
 import React from 'react';
-import { ShoppingBag, DollarSign, TrendingUp, Users, BarChart } from 'lucide-react';
+import { ShoppingBag, DollarSign, TrendingUp, Users, BarChart, Box, Clock, CheckCircle, Truck, AlertTriangle, UserCheck } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart as RechartsBarChart, Bar } from 'recharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Mock data for charts
 const revenueData = [
@@ -43,83 +44,107 @@ const Dashboard: React.FC = () => {
         <p className="text-muted-foreground">Overview of your laundry business performance</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="card-stats card-stats-pink animate-scale-in">
-          <CardHeader className="pb-2">
-            <div className="absolute top-4 right-4 p-2.5 bg-pink-200/80 rounded-full text-pink-700">
-              <ShoppingBag className="h-4 w-4" />
+      {/* Orders Section */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold">Orders</h2>
+        <Select defaultValue="all">
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="All Orders" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Orders</SelectItem>
+            <SelectItem value="today">Today's Orders</SelectItem>
+            <SelectItem value="week">This Week</SelectItem>
+            <SelectItem value="month">This Month</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* First row */}
+        <Card className="bg-blue-50 border-blue-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">Total Orders</p>
+              <p className="text-4xl font-bold">26</p>
             </div>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Today Orders
-            </CardTitle>
-            <CardDescription className="text-3xl font-bold text-foreground">
-              2,450
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="pt-2">
-            <p className="text-xs text-green-600 flex items-center gap-1">
-              <TrendingUp className="h-3 w-3" />
-              +5% from yesterday
-            </p>
-          </CardFooter>
+            <div className="bg-blue-500 rounded-full p-3">
+              <Box className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
         </Card>
 
-        <Card className="card-stats card-stats-blue animate-scale-in">
-          <CardHeader className="pb-2">
-            <div className="absolute top-4 right-4 p-2.5 bg-laundry-200/80 rounded-full text-laundry-700">
-              <ShoppingBag className="h-4 w-4" />
+        <Card className="bg-blue-50 border-blue-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">New Orders</p>
+              <p className="text-4xl font-bold">10</p>
             </div>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Orders
-            </CardTitle>
-            <CardDescription className="text-3xl font-bold text-foreground">
-              18,465
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="pt-2">
-            <p className="text-xs text-muted-foreground">
-              Payment Date: 18 Dec
-            </p>
-          </CardFooter>
+            <div className="bg-blue-500 rounded-full p-3">
+              <Box className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
         </Card>
 
-        <Card className="card-stats card-stats-green animate-scale-in">
-          <CardHeader className="pb-2">
-            <div className="absolute top-4 right-4 p-2.5 bg-mint-200/80 rounded-full text-mint-700">
-              <DollarSign className="h-4 w-4" />
+        <Card className="bg-amber-50 border-amber-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">In Progress</p>
+              <p className="text-4xl font-bold">2</p>
             </div>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Today Revenue
-            </CardTitle>
-            <CardDescription className="text-3xl font-bold text-foreground">
-              $20,340
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="pt-2">
-            <p className="text-xs text-muted-foreground">
-              Payment Date: 11 Dec
-            </p>
-          </CardFooter>
+            <div className="bg-amber-500 rounded-full p-3">
+              <Clock className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
         </Card>
 
-        <Card className="card-stats card-stats-yellow animate-scale-in">
-          <CardHeader className="pb-2">
-            <div className="absolute top-4 right-4 p-2.5 bg-cream-200/80 rounded-full text-amber-700">
-              <DollarSign className="h-4 w-4" />
+        <Card className="bg-amber-50 border-amber-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">Ready for Collection</p>
+              <p className="text-4xl font-bold">7</p>
             </div>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Total Revenue
-            </CardTitle>
-            <CardDescription className="text-3xl font-bold text-foreground">
-              $45,565
-            </CardDescription>
-          </CardHeader>
-          <CardFooter className="pt-2">
-            <p className="text-xs text-green-600 flex items-center gap-1">
-              <TrendingUp className="h-3 w-3" />
-              +5% from yesterday
-            </p>
-          </CardFooter>
+            <div className="bg-amber-500 rounded-full p-3">
+              <CheckCircle className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Second row */}
+        <Card className="bg-green-50 border-green-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">Delivered</p>
+              <p className="text-4xl font-bold">5</p>
+            </div>
+            <div className="bg-green-500 rounded-full p-3">
+              <Truck className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-red-50 border-red-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">Cancelled</p>
+              <p className="text-4xl font-bold">1</p>
+            </div>
+            <div className="bg-red-500 rounded-full p-3">
+              <AlertTriangle className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-cyan-50 border-cyan-100">
+          <CardContent className="pt-6 px-6 pb-4 flex justify-between items-center">
+            <div>
+              <p className="text-muted-foreground text-sm font-medium mb-1">Assigned</p>
+              <p className="text-4xl font-bold">10</p>
+            </div>
+            <div className="bg-cyan-500 rounded-full p-3">
+              <UserCheck className="h-6 w-6 text-white" />
+            </div>
+          </CardContent>
         </Card>
       </div>
 
