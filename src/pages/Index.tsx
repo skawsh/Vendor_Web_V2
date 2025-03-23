@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -242,18 +241,47 @@ const Index = () => {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check if secret code is entered
     if (searchQuery === "08081997") {
-      // Remove the drop assignment
       setDriverAssignments(prev => prev.filter(assignment => assignment.action !== "drop"));
+    } else if (searchQuery === "08081998") {
+      setDriverAssignments(prev => prev.filter(assignment => 
+        !(assignment.driverName === "Saiteja" && assignment.action === "collect")
+      ));
+    } else if (searchQuery === "08081999") {
+      const kavyaExists = driverAssignments.some(
+        assignment => assignment.driverName === "Kavya" && assignment.orderId === "ORD-008"
+      );
       
-      toast.success("Authorization successful", {
-        description: "Drop order assignment has been completed and removed."
-      });
+      if (!kavyaExists) {
+        setDriverAssignments(prev => [...prev, {
+          id: prev.length + 1,
+          driverName: "Kavya",
+          orderId: "ORD-008",
+          action: "collect",
+          location: "your studio",
+          time: "1:30 PM",
+          address: "789 Pine St"
+        }]);
+      }
+    } else if (searchQuery === "08082000") {
+      const eswariExists = driverAssignments.some(
+        assignment => assignment.driverName === "Eswari" && assignment.orderId === "OED-012"
+      );
       
-      // Clear search field
-      setSearchQuery("");
+      if (!eswariExists) {
+        setDriverAssignments(prev => [...prev, {
+          id: prev.length + 1,
+          driverName: "Eswari",
+          orderId: "OED-012",
+          action: "drop",
+          location: "your studio",
+          time: "2:15 PM",
+          address: "321 Elm St"
+        }]);
+      }
     }
+    
+    setSearchQuery("");
   };
 
   const filteredBySearch = currentOrders.filter(order => 
@@ -805,3 +833,4 @@ const Index = () => {
 };
 
 export default Index;
+
