@@ -379,7 +379,6 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">24</div>
-              <p className="text-xs text-muted-foreground mt-1">+12% from yesterday</p>
               <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-blue-500">
                 <ShoppingBag size={20} />
               </div>
@@ -392,7 +391,6 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">18</div>
-              <p className="text-xs text-muted-foreground mt-1">+6% from yesterday</p>
               <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-teal-500">
                 <Inbox size={20} />
               </div>
@@ -405,7 +403,6 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">7</div>
-              <p className="text-xs text-muted-foreground mt-1">+2 since morning</p>
               <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-purple-500">
                 <RotateCw size={20} />
               </div>
@@ -418,7 +415,6 @@ const Index = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">5</div>
-              <p className="text-xs text-muted-foreground mt-1">+1 since afternoon</p>
               <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
                 <PackageCheck size={20} />
               </div>
