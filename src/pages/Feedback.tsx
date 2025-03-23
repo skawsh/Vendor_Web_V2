@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,14 +30,11 @@ const mockReviews = [
   }
 ];
 
-// Mock data for reported studios
+// Mock data for reported issues
 const reportedStudios = [
   {
     id: 1,
     userName: "Rahul Sharma",
-    mobileNumber: "+91 9876543210",
-    studioId: "STU-001",
-    studioName: "Cleaners Hub",
     issueReported: "Unhygienic washing process",
     reportsCount: 3,
     date: "Oct 15, 2023",
@@ -47,9 +43,6 @@ const reportedStudios = [
   {
     id: 2,
     userName: "Priya Patel",
-    mobileNumber: "+91 8765432109",
-    studioId: "STU-005",
-    studioName: "Eco Laundry",
     issueReported: "Wrong service provided",
     reportsCount: 1,
     date: "Oct 14, 2023",
@@ -58,9 +51,6 @@ const reportedStudios = [
   {
     id: 3,
     userName: "Amit Singh",
-    mobileNumber: "+91 7654321098",
-    studioId: "STU-008",
-    studioName: "Quick Wash",
     issueReported: "Poor quality of cleaning, stains",
     reportsCount: 5,
     date: "Oct 13, 2023",
@@ -106,7 +96,7 @@ const FeedbackPage = () => {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="mb-6">
         <TabsList className="w-full sm:w-auto">
           <TabsTrigger value="reviews" className="flex-1 sm:flex-initial">Customer Reviews</TabsTrigger>
-          <TabsTrigger value="reported" className="flex-1 sm:flex-initial">Reported Studios</TabsTrigger>
+          <TabsTrigger value="reported" className="flex-1 sm:flex-initial">Reported Issues</TabsTrigger>
         </TabsList>
         
         <TabsContent value="reviews">
@@ -229,21 +219,18 @@ const FeedbackPage = () => {
           <div className="mb-6">
             <div className="flex items-center gap-2 text-red-500 mb-2">
               <AlertTriangle className="w-6 h-6" />
-              <h2 className="text-2xl font-bold">Reported Studios</h2>
+              <h2 className="text-2xl font-bold">Reported Issues</h2>
             </div>
-            <p className="text-gray-500">Studios that have been reported by users for various issues</p>
+            <p className="text-gray-500">Issues that have been reported by users</p>
           </div>
           
-          {/* Reported Studios Table */}
+          {/* Reported Issues Table */}
           <div className="border rounded-md overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-16">S.NO</TableHead>
                   <TableHead className="w-40">User Name</TableHead>
-                  <TableHead className="w-40">Mobile Number</TableHead>
-                  <TableHead className="w-32">Studio ID</TableHead>
-                  <TableHead className="w-40">Studio Name</TableHead>
                   <TableHead>Issue Reported</TableHead>
                   <TableHead className="w-32 text-center">Reports Count</TableHead>
                   <TableHead className="w-40">Date & Time</TableHead>
@@ -254,9 +241,6 @@ const FeedbackPage = () => {
                   <TableRow key={studio.id}>
                     <TableCell>{studio.id}</TableCell>
                     <TableCell>{studio.userName}</TableCell>
-                    <TableCell className="font-mono text-sm">{studio.mobileNumber}</TableCell>
-                    <TableCell className="font-mono text-sm">{studio.studioId}</TableCell>
-                    <TableCell>{studio.studioName}</TableCell>
                     <TableCell>{studio.issueReported}</TableCell>
                     <TableCell className="text-center">
                       <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
