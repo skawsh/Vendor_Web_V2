@@ -813,7 +813,7 @@ const Index = () => {
                     </div>
                     <div>
                       <p className="font-medium">
-                        {assignment.driverName} has assigned to {assignment.action} the {assignment.orderId} at {assignment.location}
+                        {assignment.driverName} has assigned to {assignment.action} the {assignment.orderId} {assignment.action === "collect" ? "from" : "at"} {assignment.location}
                       </p>
                       <p className="text-sm text-muted-foreground">{assignment.time} - {assignment.address}</p>
                     </div>
@@ -833,4 +833,3 @@ const Index = () => {
 };
 
 export default Index;
-
