@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -141,6 +142,26 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("new");
   const [selectedDateFilter, setSelectedDateFilter] = useState<string | null>(null);
+  const [driverAssignments, setDriverAssignments] = useState([
+    {
+      id: 1,
+      driverName: "Deepak",
+      orderId: "ORD-001",
+      action: "drop",
+      location: "your studio",
+      time: "10:30 AM",
+      address: "123 Main St"
+    },
+    {
+      id: 2,
+      driverName: "Saiteja",
+      orderId: "ORD-005",
+      action: "collect",
+      location: "your studio",
+      time: "11:45 AM",
+      address: "456 Oak Ave"
+    }
+  ]);
 
   const navigate = useNavigate();
 
@@ -216,6 +237,23 @@ const Index = () => {
     toast.success(`Filter applied: ${filterType}`, {
       description: "Orders filtered by selected criteria."
     });
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Check if secret code is entered
+    if (searchQuery === "08081997") {
+      // Remove the drop assignment
+      setDriverAssignments(prev => prev.filter(assignment => assignment.action !== "drop"));
+      
+      toast.success("Authorization successful", {
+        description: "Drop order assignment has been completed and removed."
+      });
+      
+      // Clear search field
+      setSearchQuery("");
+    }
   };
 
   const filteredBySearch = currentOrders.filter(order => 
@@ -439,18 +477,23 @@ const Index = () => {
       </div>
 
       <div className="relative mb-6">
-        <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
-          <div className="pl-4">
-            <Search className="h-5 w-5 text-gray-400" />
+        <form onSubmit={handleSearchSubmit}>
+          <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
+            <div className="pl-4">
+              <Search className="h-5 w-5 text-gray-400" />
+            </div>
+            <Input
+              type="text"
+              placeholder="Search for orders, services, status..."
+              className="border-0 py-3 px-4 w-full focus-visible:ring-0 focus-visible:ring-offset-0"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Button type="submit" variant="ghost" className="px-4">
+              Search
+            </Button>
           </div>
-          <Input
-            type="text"
-            placeholder="Search for orders, services, status..."
-            className="border-0 py-3 px-4 w-full focus-visible:ring-0 focus-visible:ring-offset-0"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        </form>
       </div>
 
       <div className="bg-white dark:bg-card rounded-xl border shadow-sm overflow-hidden mb-6">
@@ -727,28 +770,32 @@ const Index = () => {
         <Card>
           <CardHeader>
             <CardTitle>Today's orders assignment status</CardTitle>
-            <CardDescription>Current order pickups and deliveries</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-blue-100 rounded-md">
-                  <User className="h-4 w-4 text-blue-500" />
+              {driverAssignments.length > 0 ? (
+                driverAssignments.map(assignment => (
+                  <div key={assignment.id} className="flex items-start gap-3 pb-3 border-b">
+                    <div className={`p-2 ${assignment.action === "drop" ? "bg-blue-100" : "bg-green-100"} rounded-md`}>
+                      {assignment.action === "drop" ? (
+                        <User className="h-4 w-4 text-blue-500" />
+                      ) : (
+                        <Package className="h-4 w-4 text-green-500" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="font-medium">
+                        {assignment.driverName} has assigned to {assignment.action} the {assignment.orderId} at {assignment.location}
+                      </p>
+                      <p className="text-sm text-muted-foreground">{assignment.time} - {assignment.address}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-muted-foreground">No active assignments</p>
                 </div>
-                <div>
-                  <p className="font-medium">Deepak has assigned to drop the ORD-001 at your studio</p>
-                  <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-green-100 rounded-md">
-                  <Package className="h-4 w-4 text-green-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Saiteja has assigned to collect the ORD-005 from your studio</p>
-                  <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
-                </div>
-              </div>
+              )}
             </div>
           </CardContent>
         </Card>
