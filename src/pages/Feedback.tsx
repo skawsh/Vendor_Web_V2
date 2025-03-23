@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Star, Eye, Slash, Calendar } from "lucide-react";
+import { Star, Eye, ArrowLeft } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useNavigate } from 'react-router-dom';
+import { Calendar } from "lucide-react";
 
 // Mock data for the feedback reviews
 const mockReviews = [
@@ -32,6 +33,7 @@ const mockReviews = [
 const FeedbackPage = () => {
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const navigate = useNavigate();
 
   // Calculate statistics
   const totalRatings = mockReviews.length;
@@ -50,7 +52,18 @@ const FeedbackPage = () => {
 
   return (
     <div className="container p-6 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">Feedback</h1>
+      <div className="flex items-center gap-3 mb-6">
+        <Button 
+          variant="outline" 
+          size="icon"
+
+          onClick={() => navigate(-1)}
+          className="h-9 w-9"
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </Button>
+        <h1 className="text-3xl font-bold">Feedback</h1>
+      </div>
       
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
@@ -157,9 +170,6 @@ const FeedbackPage = () => {
                   <div className="flex justify-end gap-2">
                     <Button variant="outline" size="sm" className="flex items-center gap-1">
                       <Eye className="w-4 h-4" /> View Order
-                    </Button>
-                    <Button variant="outline" size="sm" className="flex items-center gap-1 text-red-500 border-red-200 hover:bg-red-50">
-                      <Slash className="w-4 h-4" /> Hide
                     </Button>
                   </div>
                 </TableCell>
