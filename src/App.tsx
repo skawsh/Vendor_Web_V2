@@ -17,6 +17,7 @@ const Support = lazy(() => import("./pages/Support"));
 const Profile = lazy(() => import("./pages/Profile"));
 const Services = lazy(() => import("./pages/Services"));
 const Customers = lazy(() => import("./pages/Customers"));
+const Feedback = lazy(() => import("./pages/Feedback"));
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
                 <Route path="/support" element={<Support />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/services" element={<Services />} />
+                <Route path="/feedback" element={<Feedback />} />
                 <Route path="/settings" element={<Navigate to="/services" replace />} />
                 <Route path="/customers" element={<Customers />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

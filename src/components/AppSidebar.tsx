@@ -9,7 +9,8 @@ import {
   User, 
   Settings,
   Menu,
-  X
+  X,
+  MessageCircle
 } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -36,6 +37,7 @@ const AppSidebar = () => {
     { name: 'Support', icon: HelpCircle, path: '/support' },
     { name: 'Profile', icon: User, path: '/profile' },
     { name: 'Services', icon: Settings, path: '/services' },
+    { name: 'Feedback', icon: MessageCircle, path: '/feedback' },
   ];
 
   const SidebarContent = () => (
