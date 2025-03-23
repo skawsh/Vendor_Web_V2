@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -15,7 +14,8 @@ import {
   PackageCheck,
   ChevronDown,
   ChevronUp,
-  Info
+  Info,
+  Filter
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -151,7 +151,6 @@ const Index = () => {
   useEffect(() => {
     setActiveFilter("new");
     
-    // Add event listener for new order notifications
     const handleNewOrder = (event: CustomEvent) => {
       if (event.detail?.orderData) {
         const newOrder = event.detail.orderData;
@@ -163,17 +162,14 @@ const Index = () => {
           ...prevOrders
         ]);
         
-        // Show toast notification for the new order
         toast.success(`New Order ${newOrder.orderId} Received`, {
           description: `${newOrder.washType} - ${newOrder.serviceType} service`
         });
       }
     };
     
-    // Listen for the custom event
     window.addEventListener('newOrder', handleNewOrder as EventListener);
     
-    // Cleanup
     return () => {
       window.removeEventListener('newOrder', handleNewOrder as EventListener);
     };
@@ -374,7 +370,13 @@ const Index = () => {
         className="mb-6"
       >
         <CollapsibleTrigger className="flex w-full justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
-          <h2 className="text-lg font-medium">Dashboard Stats</h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-medium">Orders</h2>
+            <Button variant="outline" size="sm" className="h-8 flex items-center gap-1.5">
+              <Filter className="h-4 w-4" />
+              <span>Filter</span>
+            </Button>
+          </div>
           {isStatCardsCollapsed ? (
             <ChevronDown className="h-5 w-5" />
           ) : (
