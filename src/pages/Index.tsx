@@ -10,7 +10,9 @@ import {
   Filter,
   Inbox,
   Calendar,
-  Database
+  Database,
+  User,
+  Package
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -720,49 +722,31 @@ const Index = () => {
       
       <div className="mb-6">
         <div className="flex justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
-          <h2 className="text-lg font-medium">Today's Schedule</h2>
+          <h2 className="text-lg font-medium">Today's orders assignment status</h2>
         </div>
         <Card>
           <CardHeader>
-            <CardTitle>Today's Schedule</CardTitle>
-            <CardDescription>Upcoming pickups and deliveries</CardDescription>
+            <CardTitle>Today's orders assignment status</CardTitle>
+            <CardDescription>Current order pickups and deliveries</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start gap-3 pb-3 border-b">
                 <div className="p-2 bg-blue-100 rounded-md">
-                  <Calendar className="h-4 w-4 text-blue-500" />
+                  <User className="h-4 w-4 text-blue-500" />
                 </div>
                 <div>
-                  <p className="font-medium">Pickup - Sarah Johnson</p>
+                  <p className="font-medium">Deepak has assigned to drop the ORD-001 at your studio</p>
                   <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
                 </div>
               </div>
               <div className="flex items-start gap-3 pb-3 border-b">
                 <div className="p-2 bg-green-100 rounded-md">
-                  <PackageCheck className="h-4 w-4 text-green-500" />
+                  <Package className="h-4 w-4 text-green-500" />
                 </div>
                 <div>
-                  <p className="font-medium">Delivery - John Smith</p>
+                  <p className="font-medium">Saiteja has assigned to collect the ORD-005 from your studio</p>
                   <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-purple-100 rounded-md">
-                  <Calendar className="h-4 w-4 text-purple-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Pickup - Robert Williams</p>
-                  <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3 pb-3 border-b">
-                <div className="p-2 bg-amber-100 rounded-md">
-                  <PackageCheck className="h-4 w-4 text-amber-500" />
-                </div>
-                <div>
-                  <p className="font-medium">Delivery - Emma Davis</p>
-                  <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
                 </div>
               </div>
             </div>
