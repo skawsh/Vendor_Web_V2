@@ -13,7 +13,8 @@ import {
   RotateCw,
   PackageCheck,
   Info,
-  Filter
+  Filter,
+  Inbox
 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -376,7 +377,7 @@ const Index = () => {
             <OrderFilterDropdown onFilterChange={handleFilterChange} />
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">New Orders</CardTitle>
@@ -386,6 +387,19 @@ const Index = () => {
               <p className="text-xs text-muted-foreground mt-1">+12% from yesterday</p>
               <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-blue-500">
                 <ShoppingBag size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-teal-50 to-teal-100 border-teal-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Received Orders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">18</div>
+              <p className="text-xs text-muted-foreground mt-1">+6% from yesterday</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-teal-500">
+                <Inbox size={20} />
               </div>
             </CardContent>
           </Card>
