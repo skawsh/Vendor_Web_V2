@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -150,17 +149,6 @@ const dateFilterOptions = [
   { id: "thisWeek", label: "This Week" },
   { id: "thisMonth", label: "This Month" },
   { id: "customRange", label: "Custom Range" },
-];
-
-// Order statistics data
-const orderStats = [
-  { title: "Total Orders", count: 26, bgColor: "bg-blue-50", iconColor: "bg-blue-500", icon: <Box className="text-white" /> },
-  { title: "New Orders", count: 10, bgColor: "bg-blue-50", iconColor: "bg-blue-500", icon: <Box className="text-white" /> },
-  { title: "In Progress", count: 2, bgColor: "bg-yellow-50", iconColor: "bg-amber-500", icon: <Box className="text-white" /> },
-  { title: "Ready for Collection", count: 7, bgColor: "bg-yellow-50", iconColor: "bg-amber-500", icon: <CheckCircle className="text-white" /> },
-  { title: "Delivered", count: 5, bgColor: "bg-green-50", iconColor: "bg-green-500", icon: <Truck className="text-white" /> },
-  { title: "Cancelled", count: 1, bgColor: "bg-red-50", iconColor: "bg-red-500", icon: <AlertTriangle className="text-white" /> },
-  { title: "Assigned", count: 10, bgColor: "bg-cyan-50", iconColor: "bg-cyan-500", icon: <UserCheck className="text-white" /> }
 ];
 
 const Orders = () => {
@@ -468,40 +456,6 @@ const Orders = () => {
       <div className="mb-6">
         <h1 className="text-2xl md:text-3xl font-bold">Order management</h1>
         <p className="text-gray-600">Manage all your studio order in one place</p>
-      </div>
-      
-      {/* Order Statistics Cards */}
-      <div className="mb-8">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Orders</h2>
-          <Select value={filterValue} onValueChange={setFilterValue}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="All Orders">All Orders</SelectItem>
-              <SelectItem value="Today">Today</SelectItem>
-              <SelectItem value="This Week">This Week</SelectItem>
-              <SelectItem value="This Month">This Month</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {orderStats.map((stat, index) => (
-            <Card key={index} className={`${stat.bgColor} border-none`}>
-              <CardContent className="p-4 flex justify-between items-center">
-                <div>
-                  <p className="text-gray-700 mb-1">{stat.title}</p>
-                  <h3 className="text-5xl font-bold">{stat.count}</h3>
-                </div>
-                <div className={`${stat.iconColor} rounded-full p-4 flex items-center justify-center h-16 w-16`}>
-                  {stat.icon}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
       </div>
       
       <div className="flex flex-col space-y-4 mb-6">
