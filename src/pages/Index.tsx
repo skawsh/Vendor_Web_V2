@@ -12,8 +12,6 @@ import {
   TrendingUp,
   RotateCw,
   PackageCheck,
-  ChevronDown,
-  ChevronUp,
   Info,
   Filter
 } from 'lucide-react';
@@ -377,11 +375,6 @@ const Index = () => {
               <span>Filter</span>
             </Button>
           </div>
-          {isStatCardsCollapsed ? (
-            <ChevronDown className="h-5 w-5" />
-          ) : (
-            <ChevronUp className="h-5 w-5" />
-          )}
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -755,11 +748,6 @@ const Index = () => {
       >
         <CollapsibleTrigger className="flex w-full justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
           <h2 className="text-lg font-medium">Today's Schedule</h2>
-          {isScheduleCollapsed ? (
-            <ChevronDown className="h-5 w-5" />
-          ) : (
-            <ChevronUp className="h-5 w-5" />
-          )}
         </CollapsibleTrigger>
         <CollapsibleContent>
           <Card>
