@@ -404,19 +404,6 @@ const Index = () => {
             </CardContent>
           </Card>
           
-          <Card className="card-stats bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-muted-foreground">Completed Orders</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">18</div>
-              <p className="text-xs text-muted-foreground mt-1">+8% from yesterday</p>
-              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
-                <CheckCircle size={20} />
-              </div>
-            </CardContent>
-          </Card>
-          
           <Card className="card-stats bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
@@ -426,6 +413,19 @@ const Index = () => {
               <p className="text-xs text-muted-foreground mt-1">+2 since morning</p>
               <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-purple-500">
                 <RotateCw size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Ready for Collection</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">5</div>
+              <p className="text-xs text-muted-foreground mt-1">+1 since afternoon</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
+                <PackageCheck size={20} />
               </div>
             </CardContent>
           </Card>
@@ -809,3 +809,4 @@ const Index = () => {
 };
 
 export default Index;
+
