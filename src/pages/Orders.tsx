@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -8,6 +9,7 @@ import { DateRange } from "react-day-picker";
 import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
+import OrderFilterDropdown from "@/components/OrderFilterDropdown";
 import {
   Tooltip,
   TooltipContent,
@@ -453,9 +455,26 @@ const Orders = () => {
 
   return (
     <div className="container mx-auto p-3 md:p-6">
-      <div className="mb-6">
-        <h1 className="text-2xl md:text-3xl font-bold">Order management</h1>
-        <p className="text-gray-600">Manage all your studio order in one place</p>
+      <div className="mb-6 flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold">Order management</h1>
+          <p className="text-gray-600">Manage all your studio order in one place</p>
+        </div>
+        <div>
+          <OrderFilterDropdown onFilterChange={(filterType, value) => {
+            console.log("Filter selected:", filterType, value);
+            if (filterType === 'appliedDateRange' || filterType === 'appliedDateTimeRange') {
+              setDateRange(value);
+              toast.success(`Date filter applied`, {
+                description: "Orders filtered by selected date range"
+              });
+            } else {
+              toast.success(`Filter applied: ${filterType}`, {
+                description: "Orders filtered successfully"
+              });
+            }
+          }} />
+        </div>
       </div>
       
       <div className="flex flex-col space-y-4 mb-6">
