@@ -815,7 +815,7 @@ const Index = () => {
                       <p className="font-medium">
                         {assignment.driverName} has assigned to {assignment.action} the {assignment.orderId} {assignment.action === "collect" ? "from" : "at"} {assignment.location}
                       </p>
-                      <p className="text-sm text-muted-foreground">{assignment.time} - {assignment.address}</p>
+                      <p className="text-sm text-muted-foreground">{assignment.address}</p>
                     </div>
                   </div>
                 ))
