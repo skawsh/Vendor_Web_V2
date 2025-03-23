@@ -24,7 +24,6 @@ import { Switch } from '@/components/ui/switch';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Tooltip,
   TooltipContent,
@@ -141,8 +140,6 @@ const Index = () => {
   const [isStudioActive, setIsStudioActive] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFilter, setActiveFilter] = useState("new");
-  const [isStatCardsCollapsed, setIsStatCardsCollapsed] = useState(false);
-  const [isScheduleCollapsed, setIsScheduleCollapsed] = useState(false);
 
   const navigate = useNavigate();
 
@@ -362,12 +359,8 @@ const Index = () => {
         </div>
       </header>
 
-      <Collapsible 
-        open={!isStatCardsCollapsed}
-        onOpenChange={(open) => setIsStatCardsCollapsed(!open)}
-        className="mb-6"
-      >
-        <CollapsibleTrigger className="flex w-full justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-medium">Orders</h2>
             <Button variant="outline" size="sm" className="h-8 flex items-center gap-1.5">
@@ -375,89 +368,87 @@ const Index = () => {
               <span>Filter</span>
             </Button>
           </div>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">New Orders</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">24</div>
-                <p className="text-xs text-muted-foreground mt-1">+12% from yesterday</p>
-                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-blue-500">
-                  <ShoppingBag size={20} />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="card-stats bg-gradient-to-br from-green-50 to-green-100 border-green-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Completed Orders</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">18</div>
-                <p className="text-xs text-muted-foreground mt-1">+8% from yesterday</p>
-                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
-                  <CheckCircle size={20} />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="card-stats bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">7</div>
-                <p className="text-xs text-muted-foreground mt-1">+2 since morning</p>
-                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-purple-500">
-                  <RotateCw size={20} />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="card-stats bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Today's Revenue</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₹20,340</div>
-                <p className="text-xs text-muted-foreground mt-1">+15% from yesterday</p>
-                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-amber-500">
-                  <DollarSign size={20} />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="card-stats bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Active Services</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">8</div>
-                <p className="text-xs text-muted-foreground mt-1">+2 services added</p>
-                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-rose-500">
-                  <Shirt size={20} />
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="card-stats bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Growth</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">+24%</div>
-                <p className="text-xs text-muted-foreground mt-1">Compared to last month</p>
-                <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-cyan-500">
-                  <TrendingUp size={20} />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Card className="card-stats bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">New Orders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">24</div>
+              <p className="text-xs text-muted-foreground mt-1">+12% from yesterday</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-blue-500">
+                <ShoppingBag size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Completed Orders</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">18</div>
+              <p className="text-xs text-muted-foreground mt-1">+8% from yesterday</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-green-500">
+                <CheckCircle size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">In Progress</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">7</div>
+              <p className="text-xs text-muted-foreground mt-1">+2 since morning</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-purple-500">
+                <RotateCw size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Today's Revenue</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">₹20,340</div>
+              <p className="text-xs text-muted-foreground mt-1">+15% from yesterday</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-amber-500">
+                <DollarSign size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-rose-50 to-rose-100 border-rose-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Active Services</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">8</div>
+              <p className="text-xs text-muted-foreground mt-1">+2 services added</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-rose-500">
+                <Shirt size={20} />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="card-stats bg-gradient-to-br from-cyan-50 to-cyan-100 border-cyan-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Monthly Growth</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">+24%</div>
+              <p className="text-xs text-muted-foreground mt-1">Compared to last month</p>
+              <div className="absolute right-4 top-4 p-2 bg-white/80 rounded-full text-cyan-500">
+                <TrendingUp size={20} />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
 
       <div className="relative mb-6">
         <div className="flex items-center border rounded-lg overflow-hidden shadow-sm">
@@ -741,63 +732,57 @@ const Index = () => {
         </Tabs>
       </div>
       
-      <Collapsible
-        open={!isScheduleCollapsed}
-        onOpenChange={(open) => setIsScheduleCollapsed(!open)}
-        className="mb-6"
-      >
-        <CollapsibleTrigger className="flex w-full justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
+      <div className="mb-6">
+        <div className="flex justify-between items-center mb-2 p-2 bg-gray-50 dark:bg-card rounded-lg">
           <h2 className="text-lg font-medium">Today's Schedule</h2>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <Card>
-            <CardHeader>
-              <CardTitle>Today's Schedule</CardTitle>
-              <CardDescription>Upcoming pickups and deliveries</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-start gap-3 pb-3 border-b">
-                  <div className="p-2 bg-blue-100 rounded-md">
-                    <Calendar className="h-4 w-4 text-blue-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Pickup - Sarah Johnson</p>
-                    <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
-                  </div>
+        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Today's Schedule</CardTitle>
+            <CardDescription>Upcoming pickups and deliveries</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3 pb-3 border-b">
+                <div className="p-2 bg-blue-100 rounded-md">
+                  <Calendar className="h-4 w-4 text-blue-500" />
                 </div>
-                <div className="flex items-start gap-3 pb-3 border-b">
-                  <div className="p-2 bg-green-100 rounded-md">
-                    <PackageCheck className="h-4 w-4 text-green-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Delivery - John Smith</p>
-                    <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 pb-3 border-b">
-                  <div className="p-2 bg-purple-100 rounded-md">
-                    <Calendar className="h-4 w-4 text-purple-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Pickup - Robert Williams</p>
-                    <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3 pb-3 border-b">
-                  <div className="p-2 bg-amber-100 rounded-md">
-                    <PackageCheck className="h-4 w-4 text-amber-500" />
-                  </div>
-                  <div>
-                    <p className="font-medium">Delivery - Emma Davis</p>
-                    <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
-                  </div>
+                <div>
+                  <p className="font-medium">Pickup - Sarah Johnson</p>
+                  <p className="text-sm text-muted-foreground">10:30 AM - 123 Main St</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </CollapsibleContent>
-      </Collapsible>
+              <div className="flex items-start gap-3 pb-3 border-b">
+                <div className="p-2 bg-green-100 rounded-md">
+                  <PackageCheck className="h-4 w-4 text-green-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Delivery - John Smith</p>
+                  <p className="text-sm text-muted-foreground">11:45 AM - 456 Oak Ave</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 pb-3 border-b">
+                <div className="p-2 bg-purple-100 rounded-md">
+                  <Calendar className="h-4 w-4 text-purple-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Pickup - Robert Williams</p>
+                  <p className="text-sm text-muted-foreground">2:15 PM - 789 Pine St</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3 pb-3 border-b">
+                <div className="p-2 bg-amber-100 rounded-md">
+                  <PackageCheck className="h-4 w-4 text-amber-500" />
+                </div>
+                <div>
+                  <p className="font-medium">Delivery - Emma Davis</p>
+                  <p className="text-sm text-muted-foreground">3:30 PM - 567 Elm St</p>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
