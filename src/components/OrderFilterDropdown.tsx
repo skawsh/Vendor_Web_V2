@@ -1,28 +1,30 @@
 
-import React from 'react';
-import { ChevronRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ChevronDown, ChevronUp, Filter } from 'lucide-react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Filter } from 'lucide-react';
-import { DateRangePicker } from "@/components/ui/date-range-picker";
 import { DateRange } from "react-day-picker";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface OrderFilterDropdownProps {
   onFilterChange?: (filterType: string, value?: any) => void;
 }
 
 const OrderFilterDropdown: React.FC<OrderFilterDropdownProps> = ({ onFilterChange }) => {
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>();
+  const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    relativeTime: true,
+    relativeDate: true
+  });
 
   const handleFilterSelection = (filterType: string) => {
     if (onFilterChange) {
@@ -47,48 +49,105 @@ const OrderFilterDropdown: React.FC<OrderFilterDropdownProps> = ({ onFilterChang
       </PopoverTrigger>
       <PopoverContent className="w-[280px] p-0" align="start">
         <div className="rounded-md border shadow-sm divide-y">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50">
-                <span className="text-base font-medium">Relative Time</span>
-                <ChevronRight className="h-5 w-5 text-gray-500" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleFilterSelection('today')}>Today</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('yesterday')}>Yesterday</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('thisWeek')}>This Week</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('lastWeek')}>Last Week</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="w-full flex items-center justify-between px-4 py-3 hover:bg-gray-50">
-                <span className="text-base font-medium">Relative Date</span>
-                <ChevronRight className="h-5 w-5 text-gray-500" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleFilterSelection('last7days')}>Last 7 Days</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('last30days')}>Last 30 Days</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('last90days')}>Last 90 Days</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('thisMonth')}>This Month</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleFilterSelection('lastMonth')}>Last Month</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Accordion type="multiple" defaultValue={["relativeTime", "relativeDate"]} className="w-full">
+            <AccordionItem value="relativeTime" className="border-b">
+              <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline">
+                Relative Time
+              </AccordionTrigger>
+              <AccordionContent className="px-0 pb-0">
+                <div className="grid grid-cols-2 gap-2 p-2">
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('last15minutes')}
+                  >
+                    Last 15 minutes
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('last4hours')}
+                  >
+                    Last 4 hours
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('last30minutes')}
+                  >
+                    Last 30 minutes
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('last24hours')}
+                  >
+                    Last 24 hours
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('last60minutes')}
+                  >
+                    Last 60 minutes
+                  </button>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            
+            <AccordionItem value="relativeDate" className="border-b">
+              <AccordionTrigger className="px-4 py-3 text-base font-medium hover:no-underline">
+                Relative Date
+              </AccordionTrigger>
+              <AccordionContent className="px-0 pb-0">
+                <div className="grid grid-cols-2 gap-2 p-2">
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('daily')}
+                  >
+                    Daily
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('monthly')}
+                  >
+                    Monthly
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('yesterday')}
+                  >
+                    Yesterday
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('yearly')}
+                  >
+                    Yearly
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('weekly')}
+                  >
+                    Weekly
+                  </button>
+                  <button 
+                    className="text-blue-500 text-left px-3 py-2 hover:bg-gray-50 rounded"
+                    onClick={() => handleFilterSelection('allTime')}
+                  >
+                    All time
+                  </button>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
           
           <div className="w-full px-4 py-3 hover:bg-gray-50">
             <button className="w-full flex items-center justify-between" onClick={() => handleFilterSelection('dateRange')}>
               <span className="text-base font-medium">Date Range</span>
-              <ChevronRight className="h-5 w-5 text-gray-500" />
+              <ChevronDown className="h-5 w-5 text-gray-500" />
             </button>
           </div>
           
           <div className="w-full px-4 py-3 hover:bg-gray-50">
             <button className="w-full flex items-center justify-between" onClick={() => handleFilterSelection('dateTimeRange')}>
               <span className="text-base font-medium">Date & Time Range</span>
-              <ChevronRight className="h-5 w-5 text-gray-500" />
+              <ChevronDown className="h-5 w-5 text-gray-500" />
             </button>
           </div>
         </div>
