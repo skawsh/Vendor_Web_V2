@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -108,19 +109,21 @@ const ForgotPassword: React.FC = () => {
         </div>
         
         <Card className="w-full border-gray-200 shadow-sm relative z-10 bg-white">
-          <CardHeader className="pb-2 pt-6 relative">
-            <Button 
-              variant="ghost" 
-              className="absolute left-4 top-4 p-2 h-auto w-auto text-gray-600" 
-              onClick={handleBackToLogin}
-              aria-label="Back to login"
-            >
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <CardTitle className="text-2xl font-bold text-center">
-              {step === 'phone' ? 'Reset your password' : 
-               step === 'otp' ? 'Verify OTP' : 'Reset Password'}
-            </CardTitle>
+          <CardHeader className="pb-2 pt-6">
+            <div className="flex items-center mb-2">
+              <Button 
+                variant="ghost" 
+                className="p-2 h-9 w-9 mr-3 text-gray-600" 
+                onClick={handleBackToLogin}
+                aria-label="Back to login"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+              <CardTitle className="text-2xl font-bold">
+                {step === 'phone' ? 'Reset your password' : 
+                 step === 'otp' ? 'Verify OTP' : 'Reset Password'}
+              </CardTitle>
+            </div>
           </CardHeader>
           <CardContent>
             {step === 'phone' && (
