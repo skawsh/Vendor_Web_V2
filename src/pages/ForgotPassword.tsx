@@ -81,7 +81,7 @@ const ForgotPassword: React.FC = () => {
               <ArrowLeft className="h-4 w-4" />
               <span>Back</span>
             </Button>
-            <CardTitle className="text-2xl font-bold text-left flex-1">
+            <CardTitle className="text-2xl font-bold text-center flex-1 mr-auto">
               {step === 'phone' ? 'Reset your password' : 
                step === 'otp' ? 'Verify OTP' : 'Reset Password'}
             </CardTitle>
