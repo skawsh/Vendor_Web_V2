@@ -10,8 +10,11 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { useAuth } from '@/context/AuthContext';
+
 const Profile = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: 'Rajesh Kumar',
@@ -22,7 +25,6 @@ const Profile = () => {
     joinDate: 'January 15, 2023'
   });
 
-  // Studio information state
   const [studioInfo, setStudioInfo] = useState({
     basic: {
       ownerName: 'Saiteja Samala',
@@ -76,6 +78,7 @@ const Profile = () => {
     'studio': false,
     'payment': false
   });
+
   const handleInputChange = e => {
     const {
       name,
@@ -86,21 +89,24 @@ const Profile = () => {
       [name]: value
     }));
   };
+
   const handleSaveProfile = () => {
     setIsEditing(false);
     toast.success('Profile updated successfully', {
       description: 'Your profile information has been saved.'
     });
   };
+
   const handleEditProfile = () => {
     setIsEditing(true);
   };
+
   const handleLogout = () => {
+    logout();
     toast.success('Logged out successfully');
-    navigate('/'); // Redirect to home page
+    navigate('/login');
   };
 
-  // Function to toggle edit mode for a specific section
   const toggleEditSection = (section: keyof typeof studioInfo) => {
     setStudioInfo(prev => ({
       ...prev,
@@ -111,7 +117,6 @@ const Profile = () => {
     }));
   };
 
-  // Function to handle input changes in a section
   const handleInfoChange = (section: keyof typeof studioInfo, field: string, value: string) => {
     setStudioInfo(prev => ({
       ...prev,
@@ -122,7 +127,6 @@ const Profile = () => {
     }));
   };
 
-  // Function to save changes in a section
   const saveInfoChanges = (section: keyof typeof studioInfo) => {
     setStudioInfo(prev => ({
       ...prev,
@@ -134,10 +138,7 @@ const Profile = () => {
     toast.success(`${section.charAt(0).toUpperCase() + section.slice(1)} information updated successfully`);
   };
 
-  // Function to cancel edit mode without saving changes
   const cancelInfoEdit = (section: keyof typeof studioInfo) => {
-    // Here we would revert to previous values, but for simplicity
-    // we'll just exit edit mode in this implementation
     setStudioInfo(prev => ({
       ...prev,
       [section]: {
@@ -147,12 +148,14 @@ const Profile = () => {
     }));
     toast.info('Edit canceled');
   };
+
   const toggleInfoSection = (section: string) => {
     setExpandedInfoSections(prev => ({
       ...prev,
       [section]: !prev[section]
     }));
   };
+
   return <div className="container mx-auto p-4 md:p-6">
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-1 flex items-center gap-2">
@@ -578,4 +581,5 @@ const Profile = () => {
       </div>
     </div>;
 };
+
 export default Profile;
