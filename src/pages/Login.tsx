@@ -45,14 +45,14 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8">
-      <div className="mb-8">
+      <div className="mb-6">
         <LaundryLogo />
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
           <CardDescription className="text-center">
-            Enter your credentials to access your account
+            Enter your credentials to access the Skawsh Vendor Panel
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -62,7 +62,7 @@ const Login: React.FC = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="busybee@example.com"
+                placeholder="email@skawsh.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -85,11 +85,6 @@ const Login: React.FC = () => {
             </Button>
           </form>
         </CardContent>
-        <CardFooter className="flex justify-center">
-          <p className="text-sm text-muted-foreground text-center">
-            Use email: Busybee@gmail.com and password: Skawsh@123
-          </p>
-        </CardFooter>
       </Card>
     </div>
   );

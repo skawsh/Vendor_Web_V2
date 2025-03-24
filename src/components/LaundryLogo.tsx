@@ -1,14 +1,14 @@
 
 import React from 'react';
-import { Shirt } from 'lucide-react';
 
 const LaundryLogo: React.FC = () => {
   return (
-    <div className="flex items-center gap-2 font-display">
-      <div className="h-8 w-8 rounded-full bg-laundry-500 flex items-center justify-center">
-        <Shirt className="h-5 w-5 text-white" />
-      </div>
-      <span className="font-semibold text-lg tracking-tight text-laundry-800">LAUNDRY</span>
+    <div className="flex flex-col items-center gap-2 font-display">
+      <img 
+        src="/lovable-uploads/60102504-6789-4ff5-b2f2-708130ca1131.png" 
+        alt="Skawsh Logo" 
+        className="h-20 w-auto" 
+      />
     </div>
   );
 };
