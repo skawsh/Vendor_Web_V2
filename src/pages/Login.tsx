@@ -79,9 +79,9 @@ const Login: React.FC = () => {
       {/* Logo and Welcome Text - with enhanced visibility */}
       <div className="relative z-10 mt-16 mb-6 text-center">
         <LaundryLogo />
-        <div className="bg-white/90 backdrop-blur-sm px-6 py-4 rounded-lg shadow-md mt-4 mx-auto max-w-xs">
-          <h1 className="text-2xl font-bold text-gray-800">Welcome to Skawsh</h1>
-          <p className="text-gray-600 mt-2">Enter the Credentials to start the journey.</p>
+        <div className="bg-gradient-to-br from-white/95 to-white/85 backdrop-blur-md px-8 py-5 rounded-xl shadow-lg mt-4 mx-auto max-w-sm border border-white/20 animate-fade-in">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Skawsh</h1>
+          <p className="text-gray-600">Enter the Credentials to start the journey.</p>
         </div>
       </div>
 
