@@ -76,11 +76,13 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Logo and Welcome Text - positioned higher up with more margin */}
+      {/* Logo and Welcome Text - with enhanced visibility */}
       <div className="relative z-10 mt-16 mb-6 text-center">
         <LaundryLogo />
-        <h1 className="text-2xl font-bold text-gray-800 mt-4">Welcome to Skawsh</h1>
-        <p className="text-gray-600 mt-1">Enter the Credentials to start the journey.</p>
+        <div className="bg-white/90 backdrop-blur-sm px-6 py-4 rounded-lg shadow-md mt-4 mx-auto max-w-xs">
+          <h1 className="text-2xl font-bold text-gray-800">Welcome to Skawsh</h1>
+          <p className="text-gray-600 mt-2">Enter the Credentials to start the journey.</p>
+        </div>
       </div>
 
       {/* Sign-in Card - properly spaced from the logo section */}
