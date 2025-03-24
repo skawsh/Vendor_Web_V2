@@ -40,7 +40,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ phoneNumber, onVerifi
     setIsVerifying(true);
     // Simulate OTP verification
     setTimeout(() => {
-      if (otp.length === 6) {
+      if (otp.length === 4) {
         toast({
           title: 'OTP Verified',
           description: 'Your OTP has been verified successfully.',
@@ -49,7 +49,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ phoneNumber, onVerifi
       } else {
         toast({
           title: 'Invalid OTP',
-          description: 'Please enter a valid 6-digit OTP.',
+          description: 'Please enter a valid 4-digit OTP.',
           variant: 'destructive',
         });
       }
@@ -60,12 +60,12 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ phoneNumber, onVerifi
   return (
     <div className="space-y-4">
       <p className="text-center text-sm text-gray-600 mb-4">
-        Enter the 6-digit code sent to {phoneNumber}
+        Enter the 4-digit code sent to {phoneNumber}
       </p>
       
       <div className="flex justify-center">
         <InputOTP
-          maxLength={6}
+          maxLength={4}
           value={otp}
           onChange={(value) => setOtp(value)}
         >
@@ -74,14 +74,12 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ phoneNumber, onVerifi
             <InputOTPSlot index={1} />
             <InputOTPSlot index={2} />
             <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
           </InputOTPGroup>
         </InputOTP>
       </div>
       
       <div className="flex flex-col gap-2 pt-2">
-        <Button onClick={handleVerifyOTP} disabled={otp.length !== 6 || isVerifying}>
+        <Button onClick={handleVerifyOTP} disabled={otp.length !== 4 || isVerifying}>
           {isVerifying ? 'Verifying...' : 'Verify OTP'}
         </Button>
         
