@@ -6,19 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import LaundryLogo from '@/components/LaundryLogo';
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const {
+    login
+  } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
     try {
       const success = await login(email, password);
       if (success) {
@@ -27,22 +28,20 @@ const Login: React.FC = () => {
         toast({
           title: 'Login Failed',
           description: 'Invalid email or password. Please try again.',
-          variant: 'destructive',
+          variant: 'destructive'
         });
       }
     } catch (error) {
       toast({
         title: 'Login Error',
         description: 'An unexpected error occurred. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       });
     } finally {
       setIsLoading(false);
     }
   };
-
-  return (
-    <div className="relative flex items-center justify-center min-h-screen w-full">
+  return <div className="relative flex items-center justify-center min-h-screen w-full">
       {/* Background with colored sections and hangers */}
       <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2">
         <div className="bg-yellow-500 flex items-center justify-center">
@@ -67,21 +66,13 @@ const Login: React.FC = () => {
       </div>
 
       {/* Sign-in Card */}
-      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mt-32">
+      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mt-32 py-[9px]">
         <h2 className="text-center text-2xl font-bold mb-6">Sign in</h2>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="block text-gray-700">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@skawsh.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-2 border rounded"
-              />
+              <Input id="email" type="email" placeholder="email@skawsh.com" value={email} onChange={e => setEmail(e.target.value)} required className="w-full p-2 border rounded" />
             </div>
             
             <div className="space-y-2">
@@ -91,28 +82,15 @@ const Login: React.FC = () => {
                   <Link to="/forgot-password">Forgot password?</Link>
                 </Button>
               </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-2 border rounded"
-              />
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-2 border rounded" />
             </div>
             
-            <Button 
-              type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md mt-4" 
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md mt-4" disabled={isLoading}>
               {isLoading ? 'Signing in...' : 'Sign in'}
             </Button>
           </div>
         </form>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Login;
