@@ -21,6 +21,16 @@ const ForgotPassword: React.FC = () => {
 
   const handleGenerateOTP = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!phoneNumber.trim()) {
+      toast({
+        title: 'Error',
+        description: 'Please enter a valid mobile number',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
     setIsLoading(true);
 
     // Simulate OTP generation

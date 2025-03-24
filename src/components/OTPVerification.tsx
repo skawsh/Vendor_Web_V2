@@ -68,14 +68,13 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ phoneNumber, onVerifi
           maxLength={6}
           value={otp}
           onChange={(value) => setOtp(value)}
-          render={({ slots }) => (
-            <InputOTPGroup>
-              {slots.map((slot, index) => (
-                <InputOTPSlot key={index} {...slot} index={index} />
-              ))}
-            </InputOTPGroup>
-          )}
-        />
+        >
+          <InputOTPGroup>
+            {Array.from({ length: 6 }).map((_, index) => (
+              <InputOTPSlot key={index} />
+            ))}
+          </InputOTPGroup>
+        </InputOTP>
       </div>
       
       <div className="flex flex-col gap-2 pt-2">
