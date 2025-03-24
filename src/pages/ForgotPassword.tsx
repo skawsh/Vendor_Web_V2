@@ -74,7 +74,7 @@ const ForgotPassword: React.FC = () => {
           <div className="flex items-center">
             <Button 
               variant="ghost" 
-              className="mr-2 flex items-center gap-1" 
+              className="mr-auto flex items-center gap-1 pl-0" 
               onClick={handleBackToLogin}
               aria-label="Back to login"
             >
