@@ -75,12 +75,12 @@ const ForgotPassword: React.FC = () => {
           <div className="flex items-center">
             <Button 
               variant="ghost" 
-              size="icon" 
-              className="mr-2" 
+              className="mr-2 flex items-center gap-1" 
               onClick={handleBackToLogin}
               aria-label="Back to login"
             >
               <ArrowLeft className="h-4 w-4" />
+              <span>Back</span>
             </Button>
             <CardTitle className="text-2xl font-bold text-center flex-1">
               {step === 'phone' ? 'Forgot Password' : 
