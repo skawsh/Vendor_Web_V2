@@ -5,9 +5,9 @@ const LaundryLogo: React.FC = () => {
   return (
     <div className="flex flex-col items-center gap-2 font-display">
       <img 
-        src="/lovable-uploads/60102504-6789-4ff5-b2f2-708130ca1131.png" 
+        src="/lovable-uploads/f9dd580f-7b7b-4442-9468-38a90fb95ec4.png" 
         alt="Skawsh Logo" 
-        className="h-36 w-auto" // Increased the height from h-28 to h-36
+        className="h-36 w-auto" 
       />
     </div>
   );
