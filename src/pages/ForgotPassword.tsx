@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -101,27 +100,23 @@ const ForgotPassword: React.FC = () => {
             <LaundryLogo />
           </div>
           
-          <div className="w-full flex items-center mt-2 mb-4">
-            <Button 
-              variant="ghost" 
-              className="flex items-center gap-1 p-0 h-auto text-gray-600" 
-              onClick={handleBackToLogin}
-              aria-label="Back to login"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back</span>
-            </Button>
-            <div className="flex-grow">
-              <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-md mx-auto max-w-xs">
-                <h2 className="text-xl font-medium text-gray-700 text-center">Welcome to Skawsh</h2>
-              </div>
+          <div className="w-full flex justify-center mt-2 mb-4">
+            <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-md mx-auto max-w-xs">
+              <h2 className="text-xl font-medium text-gray-700 text-center">Welcome to Skawsh</h2>
             </div>
-            <div className="w-[60px]"></div> {/* Spacer to balance the layout */}
           </div>
         </div>
         
         <Card className="w-full border-gray-200 shadow-sm relative z-10 bg-white">
-          <CardHeader className="pb-2 pt-6">
+          <CardHeader className="pb-2 pt-6 relative">
+            <Button 
+              variant="ghost" 
+              className="absolute left-4 top-4 p-2 h-auto w-auto text-gray-600" 
+              onClick={handleBackToLogin}
+              aria-label="Back to login"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
             <CardTitle className="text-2xl font-bold text-center">
               {step === 'phone' ? 'Reset your password' : 
                step === 'otp' ? 'Verify OTP' : 'Reset Password'}
