@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,6 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import LaundryLogo from '@/components/LaundryLogo';
 import OTPVerification from '@/components/OTPVerification';
 import ResetPassword from '@/components/ResetPassword';
+import { ArrowLeft } from 'lucide-react';
 
 type Step = 'phone' | 'otp' | 'reset';
 
@@ -56,6 +57,10 @@ const ForgotPassword: React.FC = () => {
     navigate('/login');
   };
 
+  const handleBackToLogin = () => {
+    navigate('/login');
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8">
       <div className="mb-4">
@@ -67,10 +72,21 @@ const ForgotPassword: React.FC = () => {
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">
-            {step === 'phone' ? 'Forgot Password' : 
-             step === 'otp' ? 'Verify OTP' : 'Reset Password'}
-          </CardTitle>
+          <div className="flex items-center">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="mr-2" 
+              onClick={handleBackToLogin}
+              aria-label="Back to login"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <CardTitle className="text-2xl font-bold text-center flex-1">
+              {step === 'phone' ? 'Forgot Password' : 
+               step === 'otp' ? 'Verify OTP' : 'Reset Password'}
+            </CardTitle>
+          </div>
         </CardHeader>
         <CardContent>
           {step === 'phone' && (
