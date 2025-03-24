@@ -45,10 +45,10 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center relative px-4 py-8">
-      {/* Background Image */}
+      {/* Colorful Hangers Background */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/lovable-uploads/50d857da-3bae-4c88-852b-f642f5268af1.png')` }}
+        style={{ backgroundImage: `url('/lovable-uploads/c001f261-3a8a-4e63-8142-adc567d5e24a.png')` }}
       ></div>
       
       <div className="mb-4 relative z-10">
