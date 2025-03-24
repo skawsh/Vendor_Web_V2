@@ -12,6 +12,7 @@ import { lazy, Suspense } from "react";
 import AppSidebar from "./components/AppSidebar";
 import OrderDetails from "./pages/OrderDetails";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 // Lazy load the pages
@@ -33,6 +34,7 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/login" element={<Login />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             
             {/* Protected routes */}
             <Route path="/" element={
