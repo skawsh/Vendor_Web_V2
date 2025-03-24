@@ -7,7 +7,7 @@ const LaundryLogo: React.FC = () => {
       <img 
         src="/lovable-uploads/60102504-6789-4ff5-b2f2-708130ca1131.png" 
         alt="Skawsh Logo" 
-        className="h-28 w-auto" // Increased the height from h-20 to h-28
+        className="h-36 w-auto" // Increased the height from h-28 to h-36
       />
     </div>
   );

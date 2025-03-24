@@ -47,16 +47,14 @@ const Login: React.FC = () => {
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8">
       <div className="mb-4">
         <LaundryLogo />
-        <p className="text-center text-gray-700 font-medium mt-3 text-lg">
-          Welcome to Skawsh, Enter the credentials to start the journey.
-        </p>
+        <div className="text-center text-gray-700 font-medium mt-3">
+          <p className="text-xl">Welcome to Skawsh</p>
+          <p className="text-lg mt-1">Enter the Credentials to start the journey.</p>
+        </div>
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
-          <CardDescription className="text-center">
-            Enter your credentials to access the Skawsh Vendor Panel
-          </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -74,6 +72,9 @@ const Login: React.FC = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
+                <Button variant="link" className="p-0 h-auto text-sm" type="button">
+                  Forgot password?
+                </Button>
               </div>
               <Input
                 id="password"
