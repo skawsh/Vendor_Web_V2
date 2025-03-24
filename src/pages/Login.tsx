@@ -46,32 +46,32 @@ const Login: React.FC = () => {
     <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden">
       {/* Background with colored sections */}
       <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2 z-0">
-        <div className="bg-yellow-500 flex items-center justify-center">
+        <div className="bg-yellow-500 flex items-center justify-center overflow-hidden">
           <img 
             src="/lovable-uploads/cae8fd33-47dd-46bc-82b2-32604324480c.png" 
             alt="Yellow hanger" 
-            className="w-48 h-48 object-contain opacity-90" 
+            className="w-48 h-48 object-contain mix-blend-multiply opacity-95" 
           />
         </div>
-        <div className="bg-blue-600 flex items-center justify-center">
+        <div className="bg-blue-600 flex items-center justify-center overflow-hidden">
           <img 
             src="/lovable-uploads/caf4357d-4cb4-4382-98d1-8c800d6e96ec.png" 
             alt="Blue hanger" 
-            className="w-48 h-48 object-contain opacity-90" 
+            className="w-48 h-48 object-contain mix-blend-screen opacity-95" 
           />
         </div>
-        <div className="bg-teal-500 flex items-center justify-center">
+        <div className="bg-teal-500 flex items-center justify-center overflow-hidden">
           <img 
             src="/lovable-uploads/6fb402a7-70b8-466d-9b6d-5a28bc6f27a9.png" 
             alt="Teal hanger" 
-            className="w-48 h-48 object-contain opacity-90" 
+            className="w-48 h-48 object-contain mix-blend-multiply opacity-95" 
           />
         </div>
-        <div className="bg-pink-500 flex items-center justify-center">
+        <div className="bg-pink-500 flex items-center justify-center overflow-hidden">
           <img 
             src="/lovable-uploads/f5346382-47ac-4689-af84-6351a9f4785c.png" 
             alt="Pink hanger" 
-            className="w-48 h-48 object-contain opacity-90" 
+            className="w-48 h-48 object-contain mix-blend-multiply opacity-95" 
           />
         </div>
       </div>
