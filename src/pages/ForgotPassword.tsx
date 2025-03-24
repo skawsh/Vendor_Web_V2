@@ -62,8 +62,40 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8">
-      <div className="w-full max-w-md">
+    <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden">
+      {/* Background with colored sections */}
+      <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2 z-0">
+        <div className="bg-yellow-500 flex items-center justify-center overflow-hidden">
+          <img 
+            src="/lovable-uploads/cae8fd33-47dd-46bc-82b2-32604324480c.png" 
+            alt="Yellow hanger" 
+            className="w-48 h-48 object-contain mix-blend-multiply opacity-95" 
+          />
+        </div>
+        <div className="bg-blue-600 flex items-center justify-center overflow-hidden">
+          <img 
+            src="/lovable-uploads/caf4357d-4cb4-4382-98d1-8c800d6e96ec.png" 
+            alt="Blue hanger" 
+            className="w-48 h-48 object-contain mix-blend-screen opacity-95" 
+          />
+        </div>
+        <div className="bg-teal-500 flex items-center justify-center overflow-hidden">
+          <img 
+            src="/lovable-uploads/6fb402a7-70b8-466d-9b6d-5a28bc6f27a9.png" 
+            alt="Teal hanger" 
+            className="w-48 h-48 object-contain mix-blend-multiply opacity-95" 
+          />
+        </div>
+        <div className="bg-pink-500 flex items-center justify-center overflow-hidden">
+          <img 
+            src="/lovable-uploads/f5346382-47ac-4689-af84-6351a9f4785c.png" 
+            alt="Pink hanger" 
+            className="w-48 h-48 object-contain mix-blend-multiply opacity-95" 
+          />
+        </div>
+      </div>
+      
+      <div className="relative z-10 w-full max-w-md px-4">
         <div className="flex flex-col items-center mb-6">
           <div className="w-full max-w-[250px] mb-3">
             <LaundryLogo />
@@ -79,14 +111,16 @@ const ForgotPassword: React.FC = () => {
               <ArrowLeft className="h-4 w-4" />
               <span>Back</span>
             </Button>
-            <div className="flex-grow text-center">
-              <h2 className="text-xl font-medium text-gray-700">Welcome to Skawsh</h2>
+            <div className="flex-grow">
+              <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-lg shadow-md mx-auto max-w-xs">
+                <h2 className="text-xl font-medium text-gray-700 text-center">Welcome to Skawsh</h2>
+              </div>
             </div>
             <div className="w-[60px]"></div> {/* Spacer to balance the layout */}
           </div>
         </div>
         
-        <Card className="w-full border-gray-200 shadow-sm">
+        <Card className="w-full border-gray-200 shadow-sm relative z-10 bg-white">
           <CardHeader className="pb-2 pt-6">
             <CardTitle className="text-2xl font-bold text-center">
               {step === 'phone' ? 'Reset your password' : 
