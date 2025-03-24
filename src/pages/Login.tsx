@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -7,15 +6,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
 import LaundryLogo from '@/components/LaundryLogo';
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const {
+    login
+  } = useAuth();
   const navigate = useNavigate();
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -40,67 +41,56 @@ const Login: React.FC = () => {
       setIsLoading(false);
     }
   };
+  return <div className="relative flex items-center justify-center min-h-screen w-full">
+      {/* Background with colored sections and hangers */}
+      <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2">
+        <div className="bg-yellow-500 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+        <div className="bg-blue-600 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+        <div className="bg-teal-500 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+        <div className="bg-pink-500 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+      </div>
 
-  return (
-    <div className="relative w-full h-screen flex items-center justify-center bg-gray-100">
-      {/* Background Sections */}
-      <div className="absolute top-0 left-0 w-1/2 h-1/2 bg-yellow-500"></div>
-      <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-blue-600"></div>
-      <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-teal-500"></div>
-      <div className="absolute bottom-0 right-0 w-1/2 h-1/2 bg-pink-500"></div>
-
-      {/* Hanger Images */}
-      <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="absolute top-10 left-10 w-20 opacity-90" />
-      <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="absolute top-10 right-10 w-20 opacity-90" />
-      <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="absolute bottom-10 left-10 w-20 opacity-90" />
-      <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="absolute bottom-10 right-10 w-20 opacity-90" />
-
-      {/* Logo and Welcome Text */}
-      <div className="absolute top-20 text-center">
+      {/* Skawsh Logo and Welcome Text */}
+      <div className="absolute top-10 text-center z-10">
         <LaundryLogo />
-        <h1 className="text-xl font-bold text-gray-900 mt-2">Welcome to Skawsh</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mt-2">Welcome to Skawsh</h1>
         <p className="text-gray-600">Enter the Credentials to start the journey.</p>
       </div>
 
-      {/* Sign-In Form */}
-      <div className="bg-white shadow-lg rounded-lg p-6 w-96 text-center z-10">
-        <h2 className="text-2xl font-semibold mb-4">Sign in</h2>
+      {/* Sign-in Card */}
+      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mt-32 py-[9px]">
+        <h2 className="text-center text-2xl font-bold mb-6">Sign in</h2>
         <form onSubmit={handleSubmit}>
-          <Input 
-            id="email" 
-            type="email" 
-            placeholder="email@skawsh.com" 
-            value={email} 
-            onChange={e => setEmail(e.target.value)} 
-            required 
-            className="w-full p-2 border rounded mb-3" 
-          />
-          <Input 
-            id="password" 
-            type="password" 
-            placeholder="Password" 
-            value={password} 
-            onChange={e => setPassword(e.target.value)} 
-            required 
-            className="w-full p-2 border rounded mb-3" 
-          />
-          <div className="flex justify-between text-sm text-blue-600 mb-4">
-            <span></span>
-            <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
-              <Link to="/forgot-password">Forgot password?</Link>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="block text-gray-700">Email</Label>
+              <Input id="email" type="email" placeholder="email@skawsh.com" value={email} onChange={e => setEmail(e.target.value)} required className="w-full p-2 border rounded" />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="block text-gray-700">Password</Label>
+                <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
+                  <Link to="/forgot-password">Forgot password?</Link>
+                </Button>
+              </div>
+              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-2 border rounded" />
+            </div>
+            
+            <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md mt-4" disabled={isLoading}>
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </Button>
           </div>
-          <Button 
-            type="submit" 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded" 
-            disabled={isLoading}
-          >
-            {isLoading ? 'Signing in...' : 'Sign in'}
-          </Button>
         </form>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Login;
