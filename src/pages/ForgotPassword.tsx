@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -62,7 +61,17 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8 relative">
+      <Button 
+        variant="ghost" 
+        className="absolute top-4 left-4 flex items-center gap-1 pl-0" 
+        onClick={handleBackToLogin}
+        aria-label="Back to login"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        <span>Back</span>
+      </Button>
+      
       <div className="mb-4">
         <LaundryLogo />
         <div className="text-center text-gray-700 font-medium mt-3">
@@ -71,21 +80,10 @@ const ForgotPassword: React.FC = () => {
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <div className="flex items-center">
-            <Button 
-              variant="ghost" 
-              className="mr-auto flex items-center gap-1 pl-0" 
-              onClick={handleBackToLogin}
-              aria-label="Back to login"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back</span>
-            </Button>
-            <CardTitle className="text-2xl font-bold text-center flex-1 mr-auto">
-              {step === 'phone' ? 'Reset your password' : 
-               step === 'otp' ? 'Verify OTP' : 'Reset Password'}
-            </CardTitle>
-          </div>
+          <CardTitle className="text-2xl font-bold text-center">
+            {step === 'phone' ? 'Reset your password' : 
+             step === 'otp' ? 'Verify OTP' : 'Reset Password'}
+          </CardTitle>
         </CardHeader>
         <CardContent>
           {step === 'phone' && (
