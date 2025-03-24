@@ -45,8 +45,11 @@ const Login: React.FC = () => {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-8">
-      <div className="mb-6">
+      <div className="mb-4">
         <LaundryLogo />
+        <p className="text-center text-gray-700 font-medium mt-3 text-lg">
+          Welcome to Skawsh, Enter the credentials to start the journey.
+        </p>
       </div>
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
