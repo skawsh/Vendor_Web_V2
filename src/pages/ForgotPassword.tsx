@@ -67,7 +67,6 @@ const ForgotPassword: React.FC = () => {
         <LaundryLogo />
         <div className="text-center text-gray-700 font-medium mt-3">
           <p className="text-xl">Welcome to Skawsh</p>
-          <p className="text-lg mt-1">Reset your password</p>
         </div>
       </div>
       <Card className="w-full max-w-md">
@@ -82,7 +81,7 @@ const ForgotPassword: React.FC = () => {
               <ArrowLeft className="h-4 w-4" />
               <span>Back</span>
             </Button>
-            <CardTitle className="text-2xl font-bold text-center flex-1">
+            <CardTitle className="text-2xl font-bold text-left flex-1">
               {step === 'phone' ? 'Reset your password' : 
                step === 'otp' ? 'Verify OTP' : 'Reset Password'}
             </CardTitle>
