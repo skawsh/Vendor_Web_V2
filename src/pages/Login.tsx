@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import LaundryLogo from '@/components/LaundryLogo';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -44,58 +43,60 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center relative px-4 py-8">
-      {/* Colorful Hangers Background */}
+    <div className="flex min-h-screen flex-col items-center justify-center relative">
+      {/* Background Image - Skawsh Design */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/lovable-uploads/c001f261-3a8a-4e63-8142-adc567d5e24a.png')` }}
+        style={{ backgroundImage: `url('/lovable-uploads/34b4ffb8-02ba-44c7-a632-8077e86a1918.png')` }}
       ></div>
       
-      <div className="mb-4 relative z-10">
-        <LaundryLogo />
-        <div className="text-center text-gray-700 font-medium mt-3 bg-white/80 p-3 rounded-lg backdrop-blur-sm">
-          <p className="text-xl">Welcome to Skawsh</p>
-          <p className="text-lg mt-1">Enter the Credentials to start the journey.</p>
-        </div>
-      </div>
-      <Card className="w-full max-w-md relative z-10 backdrop-blur-sm bg-white/90 border-gray-200 shadow-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@skawsh.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
-                <Button variant="link" className="p-0 h-auto text-sm" type="button" asChild>
-                  <Link to="/forgot-password">Forgot password?</Link>
-                </Button>
+      {/* Content Area */}
+      <div className="w-full max-w-md z-10 px-4">
+        {/* Logo and Welcome Text are part of the background image in this design */}
+        
+        <Card className="w-full bg-white border-0 shadow-lg">
+          <CardHeader className="pb-2 pt-6">
+            <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="email@skawsh.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
               </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
+                    <Link to="/forgot-password">Forgot password?</Link>
+                  </Button>
+                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <Button 
+                type="submit" 
+                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md mt-4" 
+                disabled={isLoading}
+              >
+                {isLoading ? 'Signing in...' : 'Sign in'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
