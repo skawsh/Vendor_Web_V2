@@ -70,9 +70,12 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({ phoneNumber, onVerifi
           onChange={(value) => setOtp(value)}
         >
           <InputOTPGroup>
-            {Array.from({ length: 6 }).map((_, index) => (
-              <InputOTPSlot key={index} />
-            ))}
+            <InputOTPSlot index={0} />
+            <InputOTPSlot index={1} />
+            <InputOTPSlot index={2} />
+            <InputOTPSlot index={3} />
+            <InputOTPSlot index={4} />
+            <InputOTPSlot index={5} />
           </InputOTPGroup>
         </InputOTP>
       </div>
