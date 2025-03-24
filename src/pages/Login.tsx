@@ -5,8 +5,9 @@ import { useAuth } from '../context/AuthContext';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
+import LaundryLogo from '@/components/LaundryLogo';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -43,59 +44,74 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center relative">
-      {/* Background Image - Skawsh Design */}
-      <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url('/lovable-uploads/34b4ffb8-02ba-44c7-a632-8077e86a1918.png')` }}
-      ></div>
-      
-      {/* Content Area */}
-      <div className="w-full max-w-md z-10 px-4">
-        {/* Logo and Welcome Text are part of the background image in this design */}
-        
-        <Card className="w-full bg-white border-0 shadow-lg">
-          <CardHeader className="pb-2 pt-6">
-            <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="email@skawsh.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
+    <div className="relative flex items-center justify-center min-h-screen w-full">
+      {/* Background with colored sections and hangers */}
+      <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2">
+        <div className="bg-yellow-500 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+        <div className="bg-blue-600 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+        <div className="bg-teal-500 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+        <div className="bg-pink-500 flex items-center justify-center">
+          <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
+        </div>
+      </div>
+
+      {/* Skawsh Logo and Welcome Text */}
+      <div className="absolute top-10 text-center z-10">
+        <LaundryLogo />
+        <h1 className="text-2xl font-bold text-gray-800 mt-2">Welcome to Skawsh</h1>
+        <p className="text-gray-600">Enter the Credentials to start the journey.</p>
+      </div>
+
+      {/* Sign-in Card */}
+      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mt-32">
+        <h2 className="text-center text-2xl font-bold mb-6">Sign in</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="block text-gray-700">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="email@skawsh.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" className="block text-gray-700">Password</Label>
+                <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
+                  <Link to="/forgot-password">Forgot password?</Link>
+                </Button>
               </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
-                    <Link to="/forgot-password">Forgot password?</Link>
-                  </Button>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                />
-              </div>
-              <Button 
-                type="submit" 
-                className="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-md mt-4" 
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign in'}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full p-2 border rounded"
+              />
+            </div>
+            
+            <Button 
+              type="submit" 
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md mt-4" 
+              disabled={isLoading}
+            >
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </Button>
+          </div>
+        </form>
       </div>
     </div>
   );
