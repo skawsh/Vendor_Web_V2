@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -42,9 +43,9 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen w-full">
-      {/* Background with colored sections and hangers */}
-      <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2">
+    <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden">
+      {/* Background with colored sections */}
+      <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2 z-0">
         <div className="bg-yellow-500 flex items-center justify-center">
           <img src="/lovable-uploads/f4ceb65a-0b52-445b-b24a-11ee2064d0c9.png" alt="hanger" className="w-20 opacity-80" />
         </div>
@@ -59,56 +60,54 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Skawsh Logo and Welcome Text */}
-      <div className="absolute top-10 text-center z-10">
+      {/* Logo and Welcome Text - positioned higher up with more margin */}
+      <div className="relative z-10 mt-16 mb-6 text-center">
         <LaundryLogo />
-        <h1 className="text-2xl font-bold text-gray-800 mt-2">Welcome to Skawsh</h1>
-        <p className="text-gray-600">Enter the Credentials to start the journey.</p>
+        <h1 className="text-2xl font-bold text-gray-800 mt-4">Welcome to Skawsh</h1>
+        <p className="text-gray-600 mt-1">Enter the Credentials to start the journey.</p>
       </div>
 
-      {/* Sign-in Card */}
-      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mt-32">
+      {/* Sign-in Card - properly spaced from the logo section */}
+      <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mb-16">
         <h2 className="text-center text-2xl font-bold mb-6">Sign in</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="block text-gray-700">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="email@skawsh.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="block text-gray-700">Password</Label>
-                <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
-                  <Link to="/forgot-password">Forgot password?</Link>
-                </Button>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="w-full p-2 border rounded"
-              />
-            </div>
-            
-            <Button 
-              type="submit" 
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md mt-4" 
-              disabled={isLoading}
-            >
-              {isLoading ? 'Signing in...' : 'Sign in'}
-            </Button>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-2">
+            <Label htmlFor="email" className="block text-gray-700">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="email@skawsh.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full p-2 border rounded"
+            />
           </div>
+          
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" className="block text-gray-700">Password</Label>
+              <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
+                <Link to="/forgot-password">Forgot password?</Link>
+              </Button>
+            </div>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          
+          <Button 
+            type="submit" 
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md"
+            disabled={isLoading}
+          >
+            {isLoading ? 'Signing in...' : 'Sign in'}
+          </Button>
         </form>
       </div>
     </div>
