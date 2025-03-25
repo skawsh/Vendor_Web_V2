@@ -111,7 +111,12 @@ const Login: React.FC = () => {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password" className="block text-gray-700">Password</Label>
-              <Button variant="link" className="p-0 h-auto text-sm text-[#5B7897]" type="button" asChild>
+              <Button 
+                variant="link" 
+                className="p-0 h-auto text-sm font-medium bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-blue-600 to-pink-500 hover:from-yellow-600 hover:via-blue-700 hover:to-pink-600" 
+                type="button" 
+                asChild
+              >
                 <Link to="/forgot-password">Forgot password?</Link>
               </Button>
             </div>
@@ -137,10 +142,16 @@ const Login: React.FC = () => {
           
           <Button 
             type="submit" 
-            className="w-full bg-[#5B7897] hover:bg-[#4A6683] text-white p-2 rounded-md"
+            className="w-full p-2 rounded-md relative overflow-hidden text-white font-medium shadow-md"
+            style={{
+              background: "linear-gradient(45deg, #F5B041 0%, #5B7897 30%, #EC7063 60%, #5B7897 80%, #F5B041 100%)",
+              backgroundSize: "200% auto",
+            }}
             disabled={isLoading}
           >
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            <span className="relative z-10 flex items-center justify-center">
+              {isLoading ? 'Signing in...' : 'Sign in'}
+            </span>
           </Button>
         </form>
       </div>
