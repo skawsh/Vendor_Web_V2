@@ -111,7 +111,7 @@ const Login: React.FC = () => {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password" className="block text-gray-700">Password</Label>
-              <Button variant="link" className="p-0 h-auto text-sm text-blue-500" type="button" asChild>
+              <Button variant="link" className="p-0 h-auto text-sm text-[#5B7897]" type="button" asChild>
                 <Link to="/forgot-password">Forgot password?</Link>
               </Button>
             </div>
@@ -137,7 +137,7 @@ const Login: React.FC = () => {
           
           <Button 
             type="submit" 
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-md"
+            className="w-full bg-[#5B7897] hover:bg-[#4A6683] text-white p-2 rounded-md"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign in'}
