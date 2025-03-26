@@ -392,7 +392,7 @@ const Index = () => {
       <header className="mb-6 flex flex-col md:flex-row justify-between md:items-center">
         <div className="mb-4 md:mb-0">
           <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Laundry Studio Dashboard</h1>
-          <p className="text-muted-foreground">Welcome to your laundry management system</p>
+          <p className="text-muted-foreground">Welcome to your Studio management system</p>
         </div>
         <div className="flex items-center gap-3">
           <NotificationsDropdown />
