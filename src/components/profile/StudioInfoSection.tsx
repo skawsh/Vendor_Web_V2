@@ -8,14 +8,62 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
+// Define the structure of the studioInfo object
+interface StudioInfo {
+  basic: {
+    ownerName: string;
+    studioName: string;
+    emailAddress: string;
+    primaryNumber: string;
+    secondaryNumber: string;
+    isEditing: boolean;
+  };
+  address: {
+    streetAddress: string;
+    city: string;
+    state: string;
+    zipCode: string;
+    latitude: string;
+    longitude: string;
+    isEditing: boolean;
+  };
+  business: {
+    businessName: string;
+    businessRegistrationNumber: string;
+    gstNumber: string;
+    panNumber: string;
+    openingTime: string;
+    closingTime: string;
+    priceAdjustment: string;
+    isEditing: boolean;
+  };
+  studio: {
+    numberOfEmployees: string;
+    dailyCapacity: string;
+    specialEquipment: string;
+    selectedWashCategory: string;
+    isEditing: boolean;
+  };
+  payment: {
+    accountHolderName: string;
+    bankName: string;
+    accountNumber: string;
+    ifscCode: string;
+    branchName: string;
+    upiId: string;
+    selectedPaymentSchedule: string;
+    isEditing: boolean;
+  };
+}
+
 interface StudioInfoSectionProps {
-  studioInfo: any;
+  studioInfo: StudioInfo;
   expandedInfoSections: Record<string, boolean>;
   toggleInfoSection: (section: string) => void;
-  toggleEditSection: (section: keyof typeof studioInfo) => void;
-  handleInfoChange: (section: keyof typeof studioInfo, field: string, value: string) => void;
-  saveInfoChanges: (section: keyof typeof studioInfo) => void;
-  cancelInfoEdit: (section: keyof typeof studioInfo) => void;
+  toggleEditSection: (section: keyof StudioInfo) => void;
+  handleInfoChange: (section: keyof StudioInfo, field: string, value: string) => void;
+  saveInfoChanges: (section: keyof StudioInfo) => void;
+  cancelInfoEdit: (section: keyof StudioInfo) => void;
 }
 
 const StudioInfoSection: React.FC<StudioInfoSectionProps> = ({
