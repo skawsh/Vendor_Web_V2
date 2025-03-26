@@ -5,9 +5,9 @@ const LaundryLogo: React.FC = () => {
   return (
     <div className="flex items-center justify-center">
       <img 
-        src="/lovable-uploads/e60f6176-fa6d-4322-b165-942e64d6b847.png" 
+        src="/lovable-uploads/c20b5705-ae86-408f-8dd3-be31ca22e294.png" 
         alt="Skawsh Logo" 
-        className="h-12 w-auto" 
+        className="h-10 w-auto" 
       />
     </div>
   );
