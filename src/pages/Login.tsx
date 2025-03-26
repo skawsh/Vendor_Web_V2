@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -50,7 +49,6 @@ const Login: React.FC = () => {
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen w-full overflow-hidden">
-      {/* Background with colored sections */}
       <div className="absolute top-0 left-0 w-full h-full grid grid-cols-2 grid-rows-2 z-0">
         <div className="bg-yellow-500 flex items-center justify-center overflow-hidden">
           <img 
@@ -82,16 +80,18 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Logo and Welcome Text - with enhanced visibility */}
       <div className="relative z-10 mt-16 mb-6 text-center">
-        <LaundryLogo />
+        <img 
+          src="/lovable-uploads/ebbdcdf1-7506-446e-82b3-1800dce8f42a.png" 
+          alt="Skawsh Logo" 
+          className="h-24 w-auto mx-auto mb-4" 
+        />
         <div className="bg-gradient-to-br from-white/95 to-white/85 backdrop-blur-md px-8 py-5 rounded-xl shadow-lg mt-4 mx-auto max-w-sm border border-white/20 animate-fade-in">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Skawsh</h1>
           <p className="text-gray-600">Enter the Credentials to start the journey.</p>
         </div>
       </div>
 
-      {/* Sign-in Card - properly spaced from the logo section */}
       <div className="relative z-10 bg-white p-8 rounded-lg shadow-lg w-96 mb-16">
         <h2 className="text-center text-2xl font-bold mb-6">Sign in</h2>
         <form onSubmit={handleSubmit} className="space-y-5">
