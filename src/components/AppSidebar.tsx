@@ -1,8 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, ShoppingBag, DollarSign, HelpCircle, User, Settings, Menu, X, MessageCircle } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import LaundryLogo from './LaundryLogo';
+
 const AppSidebar = () => {
   const location = useLocation();
   const isActive = (path: string) => location.pathname === path;
@@ -61,7 +64,7 @@ const AppSidebar = () => {
     return <>
         <div className="fixed top-0 left-0 right-0 h-16 bg-white border-b border-sidebar-border z-30 flex items-center px-4">
           <div className="flex-1 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-primary">Skawsh Laundry</h2>
+            <LaundryLogo />
             <Sheet>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon" className="ml-auto">
@@ -72,7 +75,7 @@ const AppSidebar = () => {
               <SheetContent side="left" className="bg-sidebar border-r border-sidebar-border w-64 p-0">
                 <div className="p-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-primary">Skawsh Laundry</h2>
+                    <LaundryLogo />
                   </div>
                 </div>
                 <SidebarContent />
@@ -87,7 +90,7 @@ const AppSidebar = () => {
   // Desktop sidebar
   return <aside className="h-screen w-64 bg-sidebar border-r border-sidebar-border flex-shrink-0 fixed left-0 top-0 hidden lg:block">
       <div className="p-6">
-        <h2 className="text-xl font-bold text-primary mb-6"></h2>
+        <LaundryLogo />
       </div>
       <SidebarContent />
     </aside>;
