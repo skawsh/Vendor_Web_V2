@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User, LogOut, Pencil, X, ChevronDown, ChevronRight, Building2, Store, CreditCard } from 'lucide-react';
+import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User, LogOut, Pencil, X, ChevronDown, ChevronRight, Building2, Store, CreditCard, FileText, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -76,7 +76,8 @@ const Profile = () => {
     'address': false,
     'business': false,
     'studio': false,
-    'payment': false
+    'payment': false,
+    'legal': false
   });
 
   const handleInputChange = e => {
@@ -490,6 +491,49 @@ const Profile = () => {
                           Save
                         </Button>
                       </div>}
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
+            </Card>
+
+            {/* Legal Information - New Section */}
+            <Card className="border shadow-sm">
+              <Collapsible open={expandedInfoSections['legal']} className="w-full">
+                <CollapsibleTrigger onClick={() => toggleInfoSection('legal')} className="w-full">
+                  <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
+                    <div className="flex items-center gap-3">
+                      <Shield className="h-5 w-5 text-muted-foreground" />
+                      <h3 className="font-semibold text-base">Legal</h3>
+                    </div>
+                    <div className="flex items-center">
+                      {expandedInfoSections['legal'] ? <ChevronDown className="h-5 w-5 text-muted-foreground" /> : <ChevronRight className="h-5 w-5 text-muted-foreground" />}
+                    </div>
+                  </div>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="border-t">
+                  <div className="p-4 space-y-3">
+                    <a 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toast.info("Terms and Conditions document opened");
+                      }}
+                      className="flex items-center gap-2 p-3 text-primary rounded-md hover:bg-primary/5 transition-colors cursor-pointer"
+                    >
+                      <FileText className="h-5 w-5" />
+                      <span className="font-medium">Terms and Conditions</span>
+                    </a>
+                    <a 
+                      href="#" 
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toast.info("Privacy Policy document opened");
+                      }}
+                      className="flex items-center gap-2 p-3 text-primary rounded-md hover:bg-primary/5 transition-colors cursor-pointer"
+                    >
+                      <Shield className="h-5 w-5" />
+                      <span className="font-medium">Privacy Policy</span>
+                    </a>
                   </div>
                 </CollapsibleContent>
               </Collapsible>
