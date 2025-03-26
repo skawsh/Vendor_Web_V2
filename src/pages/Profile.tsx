@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User, LogOut, Pencil, X, ChevronDown, ChevronRight, Building2, Store, CreditCard, FileText, Shield } from 'lucide-react';
+import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User, LogOut, Pencil, X, ChevronDown, ChevronRight, Building2, Store, CreditCard, FileText, Shield, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,17 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useAuth } from '@/context/AuthContext';
 import TermsAndConditions from '@/components/legal/TermsAndConditions';
 import PrivacyPolicy from '@/components/legal/PrivacyPolicy';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -573,7 +584,36 @@ const Profile = () => {
               </TabsContent>
             </Tabs>
           </CardContent>
-          <CardFooter className="flex justify-end">
+          <CardFooter className="flex justify-between">
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="flex items-center gap-2">
+                  <AlertTriangle className="h-4 w-4" />
+                  Deactivate Account
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will deactivate your account. All your data will be preserved, but you won't be able to access the platform until you contact support to reactivate your account.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction 
+                    onClick={() => {
+                      toast.success('Account deactivation request submitted', {
+                        description: 'Our team will process your request shortly.'
+                      });
+                    }}
+                  >
+                    Deactivate
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+            
             <Button variant="destructive" onClick={handleLogout} className="flex items-center gap-2">
               <LogOut className="h-4 w-4" />
               Logout
