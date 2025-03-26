@@ -1,10 +1,10 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
-import { Star, Eye, ArrowLeft, AlertTriangle } from "lucide-react";
+import { Star, Eye, AlertTriangle } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useNavigate } from 'react-router-dom';
 import { Calendar } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
@@ -61,7 +61,6 @@ const reportedStudios = [
 const FeedbackPage = () => {
   const [filter, setFilter] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("reviews");
 
   // Calculate statistics
@@ -81,15 +80,7 @@ const FeedbackPage = () => {
 
   return (
     <div className="container p-6 max-w-6xl">
-      <div className="flex items-center gap-3 mb-6">
-        <Button 
-          variant="outline" 
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="h-9 w-9"
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </Button>
+      <div className="mb-6">
         <h1 className="text-3xl font-bold">Feedback</h1>
       </div>
       
