@@ -7,7 +7,7 @@ const LaundryLogo: React.FC = () => {
       <img 
         src="/lovable-uploads/04670a46-5259-421d-a882-e343f0426321.png" 
         alt="Skawsh Logo" 
-        className="h-10 w-auto" 
+        className="h-14 w-auto transition-all duration-300 hover:scale-105" 
       />
     </div>
   );

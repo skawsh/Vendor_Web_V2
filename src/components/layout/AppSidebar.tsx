@@ -41,7 +41,7 @@ const SidebarLink: React.FC<SidebarLinkProps> = ({ to, icon, children }) => (
 const AppSidebar: React.FC = () => {
   return (
     <Sidebar className="border-r border-border">
-      <SidebarHeader className="p-4">
+      <SidebarHeader className="p-5">
         <div className="flex items-center justify-between">
           <LaundryLogo />
           <SidebarTrigger className="lg:flex">
@@ -52,6 +52,7 @@ const AppSidebar: React.FC = () => {
           </SidebarTrigger>
         </div>
       </SidebarHeader>
+      
       <SidebarContent className="px-3 py-4">
         <div className="space-y-1">
           <SidebarLink to="/" icon={<LayoutDashboard className="h-4 w-4" />}>
@@ -74,9 +75,10 @@ const AppSidebar: React.FC = () => {
           </SidebarLink>
         </div>
       </SidebarContent>
+      
       <SidebarFooter className="p-4 text-xs text-muted-foreground">
         <div className="flex flex-col space-y-1">
-          <span>© {new Date().getFullYear()} Skawsh Laundry Studio</span>
+          <span>© {new Date().getFullYear()} Laundry Studio</span>
           <span>v1.0.0</span>
         </div>
       </SidebarFooter>
