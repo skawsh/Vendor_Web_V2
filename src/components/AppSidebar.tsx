@@ -1,7 +1,6 @@
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShoppingBag, DollarSign, HelpCircle, User, Settings, Menu, X, MessageCircle } from 'lucide-react';
+import { LayoutDashboard, ShoppingBag, IndianRupee, HelpCircle, User, Settings, Menu, X, MessageCircle } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import LaundryLogo from './LaundryLogo';
@@ -29,7 +28,7 @@ const AppSidebar = () => {
     path: '/orders'
   }, {
     name: 'Revenue',
-    icon: DollarSign,
+    icon: IndianRupee,
     path: '/revenue'
   }, {
     name: 'Support',
