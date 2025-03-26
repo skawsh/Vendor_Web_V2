@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   ShoppingBag, 
-  DollarSign, 
+  IndianRupee, 
   HelpCircle, 
   UserCircle, 
   Settings,
@@ -61,7 +61,7 @@ const AppSidebar: React.FC = () => {
           <SidebarLink to="/orders" icon={<ShoppingBag className="h-4 w-4" />}>
             Orders
           </SidebarLink>
-          <SidebarLink to="/revenue" icon={<DollarSign className="h-4 w-4" />}>
+          <SidebarLink to="/revenue" icon={<IndianRupee className="h-4 w-4" />}>
             Revenue
           </SidebarLink>
           <SidebarLink to="/profile" icon={<UserCircle className="h-4 w-4" />}>
