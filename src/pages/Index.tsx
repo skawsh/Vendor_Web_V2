@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
@@ -390,7 +391,7 @@ const Index = () => {
     <div className="container mx-auto p-3 md:p-6">
       <header className="mb-6 flex flex-col md:flex-row justify-between md:items-center">
         <div className="mb-4 md:mb-0">
-          <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Skawsh Laundry Studio Dashboard</h1>
+          <h1 className="text-2xl md:text-4xl font-bold tracking-tight mb-2">Laundry Studio Dashboard</h1>
           <p className="text-muted-foreground">Welcome to your laundry management system</p>
         </div>
         <div className="flex items-center gap-3">
@@ -831,4 +832,3 @@ const Index = () => {
 };
 
 export default Index;
-
