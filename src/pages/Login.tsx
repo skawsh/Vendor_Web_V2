@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -81,11 +82,13 @@ const Login: React.FC = () => {
       </div>
 
       <div className="relative z-10 mt-16 mb-6 text-center">
-        <img 
-          src="/lovable-uploads/ebbdcdf1-7506-446e-82b3-1800dce8f42a.png" 
-          alt="Skawsh Logo" 
-          className="h-24 w-auto mx-auto mb-4" 
-        />
+        <div className="rounded-full bg-white p-3 inline-flex items-center justify-center shadow-md mx-auto mb-4">
+          <img 
+            src="/lovable-uploads/ebbdcdf1-7506-446e-82b3-1800dce8f42a.png" 
+            alt="Skawsh Logo" 
+            className="h-24 w-auto" 
+          />
+        </div>
         <div className="bg-gradient-to-br from-white/95 to-white/85 backdrop-blur-md px-8 py-5 rounded-xl shadow-lg mt-4 mx-auto max-w-sm border border-white/20 animate-fade-in">
           <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome to Skawsh</h1>
           <p className="text-gray-600">Enter the Credentials to start the journey.</p>
