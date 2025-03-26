@@ -14,6 +14,8 @@ import OrderDetails from "./pages/OrderDetails";
 import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
+import TermsAndConditionsPage from "./pages/legal/TermsAndConditionsPage";
+import PrivacyPolicyPage from "./pages/legal/PrivacyPolicyPage";
 
 // Lazy load the pages
 const Revenue = lazy(() => import("./pages/Revenue"));
@@ -35,6 +37,10 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            
+            {/* Legal pages */}
+            <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             
             {/* Protected routes */}
             <Route path="/" element={
