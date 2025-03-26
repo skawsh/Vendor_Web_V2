@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User, LogOut, Pencil, X, ChevronDown, ChevronRight, Building2, Store, CreditCard, FileText, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -76,8 +77,7 @@ const Profile = () => {
     'address': false,
     'business': false,
     'studio': false,
-    'payment': false,
-    'legal': false
+    'payment': false
   });
 
   const handleInputChange = e => {
@@ -177,7 +177,7 @@ const Profile = () => {
           
         </Card>
 
-        {/* Studio Information Section - Moved from Settings */}
+        {/* Studio Information Section */}
         <Card className="md:col-span-3">
           <CardHeader>
             <CardTitle>Studio Information</CardTitle>
@@ -495,49 +495,47 @@ const Profile = () => {
                 </CollapsibleContent>
               </Collapsible>
             </Card>
+          </CardContent>
+        </Card>
 
-            {/* Legal Information - New Section */}
-            <Card className="border shadow-sm">
-              <Collapsible open={expandedInfoSections['legal']} className="w-full">
-                <CollapsibleTrigger onClick={() => toggleInfoSection('legal')} className="w-full">
-                  <div className="flex justify-between items-center p-4 hover:bg-gray-50 transition w-full">
-                    <div className="flex items-center gap-3">
-                      <Shield className="h-5 w-5 text-muted-foreground" />
-                      <h3 className="font-semibold text-base">Legal</h3>
-                    </div>
-                    <div className="flex items-center">
-                      {expandedInfoSections['legal'] ? <ChevronDown className="h-5 w-5 text-muted-foreground" /> : <ChevronRight className="h-5 w-5 text-muted-foreground" />}
-                    </div>
-                  </div>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="border-t">
-                  <div className="p-4 space-y-3">
-                    <a 
-                      href="#" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toast.info("Terms and Conditions document opened");
-                      }}
-                      className="flex items-center gap-2 p-3 text-primary rounded-md hover:bg-primary/5 transition-colors cursor-pointer"
-                    >
-                      <FileText className="h-5 w-5" />
-                      <span className="font-medium">Terms and Conditions</span>
-                    </a>
-                    <a 
-                      href="#" 
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toast.info("Privacy Policy document opened");
-                      }}
-                      className="flex items-center gap-2 p-3 text-primary rounded-md hover:bg-primary/5 transition-colors cursor-pointer"
-                    >
-                      <Shield className="h-5 w-5" />
-                      <span className="font-medium">Privacy Policy</span>
-                    </a>
-                  </div>
-                </CollapsibleContent>
-              </Collapsible>
-            </Card>
+        {/* Legal Section - Added as separate card */}
+        <Card className="md:col-span-3">
+          <CardHeader>
+            <CardTitle>Legal</CardTitle>
+            <CardDescription>View legal documents and policies</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast.info("Terms and Conditions document opened");
+                }}
+                className="flex items-center gap-3 p-4 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <FileText className="h-6 w-6 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Terms and Conditions</h3>
+                  <p className="text-sm text-muted-foreground">View our service terms and conditions</p>
+                </div>
+              </a>
+
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  toast.info("Privacy Policy document opened");
+                }}
+                className="flex items-center gap-3 p-4 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer"
+              >
+                <Shield className="h-6 w-6 text-primary" />
+                <div>
+                  <h3 className="font-semibold">Privacy Policy</h3>
+                  <p className="text-sm text-muted-foreground">Learn how we handle your data</p>
+                </div>
+              </a>
+            </div>
           </CardContent>
         </Card>
 
