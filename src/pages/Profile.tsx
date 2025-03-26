@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { UserCircle, Mail, Phone, MapPin, Building, Calendar, Save, Edit2, User, LogOut, Pencil, X, ChevronDown, ChevronRight, Building2, Store, CreditCard, FileText, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,8 @@ import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useAuth } from '@/context/AuthContext';
+import TermsAndConditions from '@/components/legal/TermsAndConditions';
+import PrivacyPolicy from '@/components/legal/PrivacyPolicy';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -79,6 +80,9 @@ const Profile = () => {
     'studio': false,
     'payment': false
   });
+
+  const [termsDialogOpen, setTermsDialogOpen] = useState(false);
+  const [privacyDialogOpen, setPrivacyDialogOpen] = useState(false);
 
   const handleInputChange = e => {
     const {
@@ -169,12 +173,9 @@ const Profile = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Profile Card */}
         
-
         {/* Edit Profile */}
         <Card className="md:col-span-2">
-          
-          
-          
+          {/* ... keep existing code */}
         </Card>
 
         {/* Studio Information Section */}
@@ -588,12 +589,8 @@ const Profile = () => {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <a 
-                href="#" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  toast.info("Terms and Conditions document opened");
-                }}
+              <button 
+                onClick={() => setTermsDialogOpen(true)}
                 className="flex items-center gap-3 p-4 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <FileText className="h-6 w-6 text-primary" />
@@ -601,14 +598,10 @@ const Profile = () => {
                   <h3 className="font-semibold">Terms and Conditions</h3>
                   <p className="text-sm text-muted-foreground">View our service terms and conditions</p>
                 </div>
-              </a>
+              </button>
 
-              <a 
-                href="#" 
-                onClick={(e) => {
-                  e.preventDefault();
-                  toast.info("Privacy Policy document opened");
-                }}
+              <button 
+                onClick={() => setPrivacyDialogOpen(true)}
                 className="flex items-center gap-3 p-4 rounded-lg border hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <Shield className="h-6 w-6 text-primary" />
@@ -616,11 +609,15 @@ const Profile = () => {
                   <h3 className="font-semibold">Privacy Policy</h3>
                   <p className="text-sm text-muted-foreground">Learn how we handle your data</p>
                 </div>
-              </a>
+              </button>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Dialog Components */}
+      <TermsAndConditions open={termsDialogOpen} onOpenChange={setTermsDialogOpen} />
+      <PrivacyPolicy open={privacyDialogOpen} onOpenChange={setPrivacyDialogOpen} />
     </div>;
 };
 
