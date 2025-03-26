@@ -172,6 +172,40 @@ const Profile = () => {
     }));
   };
 
+  const handleDeactivateAccount = () => {
+    const businessName = studioInfo.business.businessName || 'Saiteja Laundry Services';
+    const email = studioInfo.basic.emailAddress || 'saitejasamala0808@gmail.com';
+    const phone = studioInfo.basic.primaryNumber || '8099830308';
+    const ownerName = studioInfo.basic.ownerName || 'Saiteja Samala';
+
+    const subject = "Request for Account Deactivation";
+    const body = `Dear Skawsh Support Team,
+
+I am writing to request the deactivation of my vendor account on Skawsh.
+
+Vendor Details:
+
+Business Name: ${businessName}
+Registered Email: ${email}
+Contact Number: ${phone}
+Reason for Deactivation: [Optional - Please specify your reason here]
+
+Please confirm once the deactivation process has been completed or if any further actions are required from my side.
+
+Thank you for your support.
+
+Best regards,
+${ownerName}
+${businessName}`;
+
+    const mailtoLink = `mailto:Help@Skawsh.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailtoLink, '_blank');
+    
+    toast.success('Deactivation email drafted', {
+      description: 'Please complete and send the email to proceed with account deactivation.'
+    });
+  };
+
   return <div className="container mx-auto p-4 md:p-6">
       <header className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight mb-1 flex items-center gap-2">
@@ -186,7 +220,7 @@ const Profile = () => {
         
         {/* Edit Profile */}
         <Card className="md:col-span-2">
-          {/* ... keep existing code */}
+          {/* ... keep existing code (Profile data card) */}
         </Card>
 
         {/* Studio Information Section */}
@@ -602,11 +636,7 @@ const Profile = () => {
                 <AlertDialogFooter>
                   <AlertDialogCancel>Cancel</AlertDialogCancel>
                   <AlertDialogAction 
-                    onClick={() => {
-                      toast.success('Account deactivation request submitted', {
-                        description: 'Our team will process your request shortly.'
-                      });
-                    }}
+                    onClick={handleDeactivateAccount}
                   >
                     Deactivate
                   </AlertDialogAction>
